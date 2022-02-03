@@ -15,11 +15,11 @@ function Home() {
 
         <Link
           to="/hire/register"
-          className="bg-secondary text-white rounded-full px-4 py-2 mt-10 w-fit hover:bg-tertiary-100 active:px-3"
+          className="bg-secondary text-black rounded-full px-4 py-2 mt-10 w-fit hover:bg-tertiary-100 active:px-3"
         >
           <p className="flex flex-row items-center">
             Hire for your company{" "}
-            <span className="text-[#ddbe4e] mx-1 font-bold">FREE</span>
+            <span className="text-accent mx-1 font-bold">FREE</span>
             <CgArrowLongRight />{" "}
           </p>
         </Link>

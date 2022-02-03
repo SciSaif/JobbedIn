@@ -48,7 +48,7 @@ function Header() {
               className="ml-4 profilePic cursor-pointer"
               onClick={toggleDrawer}
             >
-              <FaBars size="25px" color="#9d4edd" />
+              <FaBars size="25px" color="#82f2e5" />
             </div>
           </div>
 
@@ -58,7 +58,7 @@ function Header() {
             onClick={toggleDrawer}
           >
             <div>
-              <FaBars size="25px" color="#9d4edd" />
+              <FaBars size="25px" color="#82f2e5" />
             </div>
           </div>
         </div>
@@ -70,7 +70,7 @@ function Header() {
         className="hidden absolute top-0 right-0 w-screen h-screen bg-black/50 z-10"
         ref={drawerRef}
       >
-        <div className="absolute top-0 right-0 w-2/3 xl:w-1/3 h-full bg-primary/100 z-10 p-2">
+        <div className="absolute top-0 right-0 w-2/3 xl:w-1/3 h-full bg-primary z-10 p-2">
           <div
             className="mt-2 ml-2 rounded-full bg-secondary/50 w-fit p-2 cursor-pointer"
             onClick={toggleDrawer}
