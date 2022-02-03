@@ -1,0 +1,33 @@
+module.exports = {
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  theme: {
+    colors: {
+      transparent: "transparent",
+      current: "currentColor",
+      white: "#ffffff",
+      black: "#000000",
+      purple: "#3f3cbb",
+      midnight: "#121063",
+      metal: "#565584",
+      tahiti: "#3ab7bf",
+      silver: "#ecebff",
+      "bubble-gum": "#ff77e9",
+      bermuda: "#78dcca",
+      tertiary: {
+        900: "#ff7900",
+        800: "#ff8500",
+        700: "#ff9100",
+        600: "#ff9e00",
+        500: "#3a0ca3",
+        400: "#240046",
+        300: "#3c096c",
+        200: "#5a189a",
+        100: "#7b2cbf",
+      },
+      primary: "#240046",
+      secondary: "#9d4edd",
+      accent: "#ff6d00",
+    },
+  },
+  plugins: [],
+};
