@@ -93,11 +93,20 @@ function Header() {
 
                 <div className="flex flex-row">
                   <button
-                    className="flex-1 text-xl text-center shadow bg-secondary rounded-l-lg py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
+                    className="flex-1 text-xl text-center shadow bg-secondary rounded-lg py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
                     onClick={onLogout}
                   >
                     Logout
                   </button>
+                </div>
+                <div className="flex flex-row mt-2">
+                  <Link
+                    to="/employer-dashboard"
+                    className="flex-1 text-xl text-center shadow bg-accent rounded-lg py-2 hover:bg-accentD focus:ring-4 focus:ring-secondary"
+                    onClick={toggleDrawer}
+                  >
+                    Go to Dashboard
+                  </Link>
                 </div>
               </div>
             </>

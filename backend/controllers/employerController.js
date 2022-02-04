@@ -60,6 +60,10 @@ const registerEmployer = asyncHandler(async (req, res) => {
       _id: employer._id,
       name: employer.name,
       email: employer.email,
+      mobileNumber: employer.mobileNumber,
+      companyName: employer.companyName,
+      address: employer.address,
+      description: employer.description,
       token: generateToken(employer._id),
     });
   } else {
@@ -87,6 +91,10 @@ const loginEmployer = asyncHandler(async (req, res) => {
       _id: employer.id,
       name: employer.name,
       email: employer.email,
+      mobileNumber: employer.mobileNumber,
+      companyName: employer.companyName,
+      address: employer.address,
+      description: employer.description,
       token: generateToken(employer._id),
     });
   } else {
