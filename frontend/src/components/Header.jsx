@@ -2,48 +2,32 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaBars, FaAngleRight } from "react-icons/fa";
 import { useState, useRef } from "react";
+import Logo from "./Logo";
+import { AiOutlineHome } from "react-icons/ai";
 
 function Header() {
   const [employer, setEmployer] = useState(null);
   const drawerRef = useRef(false);
 
   const toggleDrawer = (e) => {
+    console.log("r");
     drawerRef.current.classList.toggle("hidden");
   };
 
   return (
-    <nav className="bg-black/25 shadow-lg fixed w-screen">
+    <nav className="bg-black/25 shadow-lg   min-w-screen">
       <div className=" mx-2  py-3">
         <div className="flex justify-between items-center ">
           <Link
             to="/"
             className="ml-2 text-3xl cursor-pointer font-bold text-secondary"
           >
-            Jobbedin
+            <div className="flex flex-row items-center ">
+              <p className="mr-1">Jobbed</p>
+              <Logo width={35} />
+            </div>
           </Link>
           <div className="items-center hidden md:flex text-white">
-            {employer === null ? (
-              <>
-                <Link to="/sign-in" className="pl-3 btn btn-sm btn-ghost">
-                  Login
-                </Link>
-                <Link
-                  to="/sign-up"
-                  className="pl-3  ml-2 btn btn-sm btn-outline  btn-primary"
-                >
-                  Sign Up
-                </Link>
-              </>
-            ) : (
-              <Link
-                to="/"
-                className="pl-3 btn btn-sm btn-ghost"
-                // onClick={onLogout}
-              >
-                Logout
-              </Link>
-            )}
-
             <div
               className="ml-4 profilePic cursor-pointer"
               onClick={toggleDrawer}
@@ -67,15 +51,65 @@ function Header() {
       {/* Drawer */}
 
       <div
-        className="hidden absolute top-0 right-0 w-screen h-screen bg-black/50 z-10"
+        className="hidden fixed top-0 right-0 w-screen h-screen bg-black/50 z-10"
         ref={drawerRef}
       >
-        <div className="absolute top-0 right-0 w-2/3 xl:w-1/3 h-full bg-primary z-10 p-2">
+        {/* to click away the drawer  */}
+        <div
+          className="absolute top-0 left-0 w-1/3 xl:w-1/3 h-full z-11"
+          onClick={toggleDrawer}
+        ></div>
+        <div className="absolute top-0 right-0 w-2/3 xl:w-1/3 h-full bg-primary z-11">
           <div
             className="mt-2 ml-2 rounded-full bg-secondary/50 w-fit p-2 cursor-pointer"
             onClick={toggleDrawer}
           >
             <FaAngleRight size="30px" />
+          </div>
+
+          <Link to="/" className="w-full flex justify-center my-3">
+            <AiOutlineHome color="white" size="40px" />
+          </Link>
+
+          <div className=" w-full bg-black/25 text-white py-4 px-4 rounded">
+            <h1 className="font-bold">Want to Hire?</h1>
+
+            <div className="flex flex-row">
+              <Link
+                to="/login-employer"
+                className="flex-1 text-xl text-center shadow bg-secondary rounded-l-lg py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
+                onClick={toggleDrawer}
+              >
+                Login
+              </Link>
+              <Link
+                to="/register-employer"
+                className="flex-1 text-xl text-center shadow bg-accent rounded-r-lg py-2 hover:bg-accentD focus:ring-4 focus:ring-secondary"
+                onClick={toggleDrawer}
+              >
+                Register
+              </Link>
+            </div>
+          </div>
+          <div className=" w-full bg-black/25 text-white py-4 px-4 rounded">
+            <h1 className="font-bold">Looking for a Job?</h1>
+
+            <div className="flex flex-row">
+              <Link
+                to="/login-candidate"
+                className="flex-1 text-xl text-center shadow bg-secondary rounded-l-lg py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
+                onClick={toggleDrawer}
+              >
+                Login
+              </Link>
+              <Link
+                to="/register-candidate"
+                className="flex-1 text-xl text-center shadow bg-accent rounded-r-lg py-2 hover:bg-accentD focus:ring-4 focus:ring-secondary"
+                onClick={toggleDrawer}
+              >
+                Register
+              </Link>
+            </div>
           </div>
 
           <Link
