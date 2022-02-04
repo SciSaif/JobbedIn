@@ -1,21 +1,22 @@
 import React from "react";
-import { useState } from "react";
-import { CgArrowLongRight } from "react-icons/cg";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { registerEmployer } from "../features/auth/authSlice";
+import { registerEmployer, reset } from "../features/auth/authSlice";
 import InputError from "../components/InputError";
 import { BsFillPersonLinesFill } from "react-icons/bs";
 
 function RegisterEmployer() {
   const [inputMessage, setInputMessage] = useState(null);
 
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    number: "",
+    mobileNumber: "",
     companyName: "",
     address: "",
     description: "",
@@ -26,7 +27,7 @@ function RegisterEmployer() {
     email,
     password,
     confirmPassword,
-    number,
+    mobileNumber,
     companyName,
     address,
     description,
@@ -34,9 +35,22 @@ function RegisterEmployer() {
 
   const dispatch = useDispatch();
 
-  const { employer, isLoading, isSuccess, message } = useSelector(
+  const { employer, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.auth
   );
+
+  useEffect(() => {
+    if (isError) {
+      setInputMessage(message);
+    }
+
+    // Redirect when logged in
+    if (isSuccess || employer) {
+      navigate("/");
+    }
+
+    dispatch(reset());
+  }, [isError, isSuccess, employer, message, navigate, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -53,8 +67,8 @@ function RegisterEmployer() {
         setInputMessage(null);
       }, 3000);
       return;
-    } else if (number.length < 10 || number.length > 12) {
-      setInputMessage("Please input a correct mobile number");
+    } else if (mobileNumber.length < 10 || mobileNumber.length > 12) {
+      setInputMessage("Please input a correct mobile Number");
       setTimeout(() => {
         setInputMessage(null);
       }, 3000);
@@ -146,16 +160,16 @@ function RegisterEmployer() {
               />
             </div>
 
-            <label htmlFor="number" className="required">
-              Mobile number
+            <label htmlFor="mobileNumber" className="required">
+              Mobile Number
             </label>
             <div className="flex w-full flex-wrap items-stretch mb-3">
               <input
                 type="text"
-                id="number"
-                placeholder="Mobile number"
+                id="mobileNumber"
+                placeholder="Mobile Number"
                 className="px-3 py-1 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
-                value={number}
+                value={mobileNumber}
                 onChange={onChange}
                 required
               />
@@ -212,6 +226,13 @@ function RegisterEmployer() {
               Submit
             </button>
           </form>
+
+          <p className="mt-3">
+            Already have an account?{" "}
+            <Link to="/login-employer" className="underline text-accent">
+              Register
+            </Link>
+          </p>
         </div>
       </main>
     </div>

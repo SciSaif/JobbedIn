@@ -16,9 +16,9 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", (req, res) => {
   res.send("hello");
 });
+app.use("/api/employers", require("./routes/employerRoute"));
 
 //Routes
-app.use("/api/employers", require("./routes/employerRoute"));
 
 app.use(errorHandler);
 

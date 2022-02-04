@@ -71,7 +71,7 @@ function Header() {
             <AiOutlineHome color="white" size="40px" />
           </Link>
 
-          <div className=" w-full bg-black/25 text-white py-4 px-4 rounded">
+          <div className=" w-full bg-black/25 text-white py-4 px-4 rounded-t-xl">
             <h1 className="font-bold">Want to Hire?</h1>
 
             <div className="flex flex-row">
@@ -91,7 +91,7 @@ function Header() {
               </Link>
             </div>
           </div>
-          <div className=" w-full bg-black/25 text-white py-4 px-4 rounded">
+          <div className=" w-full bg-black/25 text-white py-4 px-4  rounded-b-xl">
             <h1 className="font-bold">Looking for a Job?</h1>
 
             <div className="flex flex-row">
