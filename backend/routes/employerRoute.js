@@ -6,7 +6,6 @@ const {
   getMe,
 } = require("../controllers/employerController");
 const router = express.Router();
-console.log("r1");
 
 router.post("/", registerEmployer);
 router.post("/login", loginEmployer);

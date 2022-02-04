@@ -1,13 +1,15 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CgArrowLongRight } from "react-icons/cg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { loginEmployer } from "../features/auth/authSlice";
+import { loginEmployer, reset } from "../features/auth/authSlice";
 import InputError from "../components/InputError";
 import { GrLogin } from "react-icons/gr";
+import Spinner from "../components/Spinner";
 
 function LoginEmployer() {
+  const navigate = useNavigate();
   const [inputMessage, setInputMessage] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -19,9 +21,22 @@ function LoginEmployer() {
 
   const dispatch = useDispatch();
 
-  const { employer, isLoading, isSuccess, message } = useSelector(
+  const { employer, isLoading, isSuccess, message, isError } = useSelector(
     (state) => state.auth
   );
+
+  useEffect(() => {
+    if (isError) {
+      setInputMessage(message);
+    }
+
+    // Redirect when logged in
+    if (isSuccess || employer) {
+      navigate("/");
+    }
+
+    dispatch(reset());
+  }, [isError, isSuccess, employer, message, navigate, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -41,6 +56,7 @@ function LoginEmployer() {
 
   return (
     <div className=" flex justify-center items-center align-bottom min-w-screen min-h-screen shadow-lg ">
+      {isLoading ? <Spinner /> : ""}
       <main className="flex flex-col bg-[#F2FFFF] rounded-lg mb-4 overflow-hidden">
         <div className="w-full pl-4 py-2 mb-2  bg-secondary">
           <h4>Login to start hiring :) </h4>

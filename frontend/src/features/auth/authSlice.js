@@ -2,8 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // import { response } from "express";
 import authService from "./authService";
 
+const employer = JSON.parse(localStorage.getItem("employer"));
+
 const initiaState = {
-  employer: null,
+  employer: employer ? employer : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -15,7 +17,7 @@ export const registerEmployer = createAsyncThunk(
   "auth/registerEmployer",
   async (employer, thunkAPI) => {
     try {
-      return await authService.register(employer);
+      return await authService.registerEmployer(employer);
     } catch (error) {
       const message =
         (error.response && error.response.data && error.data.message) ||
@@ -32,7 +34,27 @@ export const registerEmployer = createAsyncThunk(
 export const loginEmployer = createAsyncThunk(
   "auth/loginEmployer",
   async (employer, thunkAPI) => {
-    console.log(employer);
+    try {
+      return await authService.loginEmployer(employer);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      // in builder, for rejected , action payload will carry this message
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Logout employer
+export const logoutEmployer = createAsyncThunk(
+  "auth/logoutEmployer",
+  async () => {
+    await authService.logoutEmployer();
   }
 );
 
@@ -64,6 +86,23 @@ export const authSlice = createSlice({
         state.employer = null;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(loginEmployer.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(loginEmployer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.employer = action.payload;
+      })
+      .addCase(loginEmployer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.employer = null;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(logoutEmployer.fulfilled, (state) => {
+        state.employer = null;
       });
   },
 });

@@ -1,17 +1,28 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaAngleRight } from "react-icons/fa";
 import { useState, useRef } from "react";
 import Logo from "./Logo";
+import { logoutEmployer, reset } from "../features/auth/authSlice";
 import { AiOutlineHome } from "react-icons/ai";
 
 function Header() {
-  const [employer, setEmployer] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { employer } = useSelector((state) => state.auth);
+
   const drawerRef = useRef(false);
 
   const toggleDrawer = (e) => {
-    console.log("r");
     drawerRef.current.classList.toggle("hidden");
+  };
+
+  const onLogout = () => {
+    toggleDrawer();
+    dispatch(logoutEmployer());
+    dispatch(reset());
+    navigate("/");
   };
 
   return (
@@ -67,50 +78,73 @@ function Header() {
             <FaAngleRight size="30px" />
           </div>
 
-          <Link to="/" className="w-full flex justify-center my-3">
+          <Link
+            to="/"
+            className="w-full flex justify-center my-3"
+            onClick={toggleDrawer}
+          >
             <AiOutlineHome color="white" size="40px" />
           </Link>
 
-          <div className=" w-full bg-black/25 text-white py-4 px-4 rounded-t-xl">
-            <h1 className="font-bold">Want to Hire?</h1>
+          {employer ? (
+            <>
+              <div className=" w-full bg-black/25 text-white py-4 px-4 rounded-t-xl">
+                <h1 className="font-bold">Welcome {employer.name}</h1>
 
-            <div className="flex flex-row">
-              <Link
-                to="/login-employer"
-                className="flex-1 text-xl text-center shadow bg-secondary rounded-l-lg py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
-                onClick={toggleDrawer}
-              >
-                Login
-              </Link>
-              <Link
-                to="/register-employer"
-                className="flex-1 text-xl text-center shadow bg-accent rounded-r-lg py-2 hover:bg-accentD focus:ring-4 focus:ring-secondary"
-                onClick={toggleDrawer}
-              >
-                Register
-              </Link>
-            </div>
-          </div>
-          <div className=" w-full bg-black/25 text-white py-4 px-4  rounded-b-xl">
-            <h1 className="font-bold">Looking for a Job?</h1>
+                <div className="flex flex-row">
+                  <button
+                    className="flex-1 text-xl text-center shadow bg-secondary rounded-l-lg py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
+                    onClick={onLogout}
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className=" w-full bg-black/25 text-white py-4 px-4 rounded-t-xl">
+                <h1 className="font-bold">Want to Hire?</h1>
 
-            <div className="flex flex-row">
-              <Link
-                to="/login-candidate"
-                className="flex-1 text-xl text-center shadow bg-secondary rounded-l-lg py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
-                onClick={toggleDrawer}
-              >
-                Login
-              </Link>
-              <Link
-                to="/register-candidate"
-                className="flex-1 text-xl text-center shadow bg-accent rounded-r-lg py-2 hover:bg-accentD focus:ring-4 focus:ring-secondary"
-                onClick={toggleDrawer}
-              >
-                Register
-              </Link>
-            </div>
-          </div>
+                <div className="flex flex-row">
+                  <Link
+                    to="/login-employer"
+                    className="flex-1 text-xl text-center shadow bg-secondary rounded-l-lg py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
+                    onClick={toggleDrawer}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register-employer"
+                    className="flex-1 text-xl text-center shadow bg-accent rounded-r-lg py-2 hover:bg-accentD focus:ring-4 focus:ring-secondary"
+                    onClick={toggleDrawer}
+                  >
+                    Register
+                  </Link>
+                </div>
+              </div>
+              <div className=" w-full bg-black/25 text-white py-4 px-4  rounded-b-xl">
+                <h1 className="font-bold">Looking for a Job?</h1>
+
+                <div className="flex flex-row">
+                  <Link
+                    to="/login-candidate"
+                    className="flex-1 text-xl text-center shadow bg-secondary rounded-l-lg py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
+                    onClick={toggleDrawer}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register-candidate"
+                    className="flex-1 text-xl text-center shadow bg-accent rounded-r-lg py-2 hover:bg-accentD focus:ring-4 focus:ring-secondary"
+                    onClick={toggleDrawer}
+                  >
+                    Register
+                  </Link>
+                </div>
+              </div>
+            </>
+          )}
 
           <Link
             to="/about"

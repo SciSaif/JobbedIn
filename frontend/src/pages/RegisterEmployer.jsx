@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { registerEmployer, reset } from "../features/auth/authSlice";
 import InputError from "../components/InputError";
 import { BsFillPersonLinesFill } from "react-icons/bs";
+import Spinner from "../components/Spinner";
 
 function RegisterEmployer() {
   const [inputMessage, setInputMessage] = useState(null);
@@ -84,6 +85,7 @@ function RegisterEmployer() {
 
   return (
     <div className=" flex justify-center items-center align-bottom min-w-screen min-h-screen shadow-lg ">
+      {isLoading ? <Spinner /> : ""}
       <main className="flex flex-col bg-[#F2FFFF] rounded-lg mb-4 overflow-hidden">
         <div className="w-full pl-4 py-2 mb-2  bg-secondary">
           <h4>Register your company with us </h4>
