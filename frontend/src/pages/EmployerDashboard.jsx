@@ -1,15 +1,25 @@
 import React from "react";
+import { useEffect } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { BsBuilding } from "react-icons/bs";
 import { BsFillBriefcaseFill } from "react-icons/bs";
+import { reset, getJobs } from "../features/jobs/jobsSlice";
 import { useSelector, useDispatch } from "react-redux";
+import JobCard from "../components/JobCard";
 
 function EmployerDashboard() {
-  const { employer, isLoading, isSuccess, isError, message } = useSelector(
-    (state) => state.auth
-  );
+  const { employer } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const { name, email, mobileNumber, companyName, address, description } =
     employer;
+
+  const { jobs, isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.jobs
+  );
+
+  useEffect(() => {
+    dispatch(getJobs());
+  }, [dispatch]);
 
   return (
     <div className="bg-[#c5f5f5] dashboard min-w-screen min-h-screen shadow-lg text-white flex flex-col md:flex-row ">
@@ -51,20 +61,20 @@ function EmployerDashboard() {
             <BsFillBriefcaseFill size="60px" color="white" />
             <p className="font-bold text-lg">Your Jobs</p>
           </div>
-          <div className="py-3 px-2">
-            <h1 className="font-bold text-lg">Company</h1>
-            <h1 className="font-bold text-4xl">Sci Tech Enterprises</h1>
-            <h1 className=" text-4 mt-2 italic">
-              <span className="font-bold not-italic">Address:</span> Zakir
-              Nager, New Delhi -110025
-            </h1>
-            <h1 className=" text-4 mt-2">
-              <p>
-                A company devoted to serving the community and stuff like that,
-                i just need to put something here. So great place actually{" "}
-              </p>
-            </h1>
-          </div>
+
+          {jobs &&
+            jobs.map((job) => (
+              <JobCard
+                key={job._id}
+                title={job.title}
+                employmentType={job.employmentType}
+                workplaceType={job.workplaceType}
+              />
+            ))}
+
+          {/* <JobCard />
+          <JobCard />
+          <JobCard /> */}
         </div>
       </div>
     </div>

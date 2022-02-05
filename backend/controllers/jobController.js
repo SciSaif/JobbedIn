@@ -8,6 +8,8 @@ const Job = require("../models/jobModel");
 // @access Private
 const getJobsByEmployer = asyncHandler(async (req, res) => {
   //get employer using the id in the JWT
+  console.log("e3");
+
   const employer = await Employer.findById(req.employer.id);
 
   if (!employer) {

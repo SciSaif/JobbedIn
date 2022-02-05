@@ -9,8 +9,10 @@ const {
 const router = express.Router();
 
 const { protect } = require("../middlewares/authMiddleware");
+// console.log("e2");
 
 router.route("/").get(protect, getJobsByEmployer).post(protect, createJob);
+
 router
   .route("/:id")
   .get(protect, getJobByEmployer)
