@@ -4,9 +4,9 @@ const Employer = require("../models/employerModel");
 const Job = require("../models/jobModel");
 
 // @desc Get jobs by employer
-// @route GET /api/job
+// @route GET /api/jobs
 // @access Private
-const getJob = asyncHandler(async (req, res) => {
+const getJobsByEmployer = asyncHandler(async (req, res) => {
   //get employer using the id in the JWT
   const employer = await Employer.findById(req.employer.id);
 
@@ -19,8 +19,35 @@ const getJob = asyncHandler(async (req, res) => {
   res.status(200).json(jobs);
 });
 
+// @desc Get a particular job by employer
+// @route GET /api/jobs/:id
+// @access Private
+const getJobByEmployer = asyncHandler(async (req, res) => {
+  //get employer using the id in the JWT
+  const employer = await Employer.findById(req.employer.id);
+
+  if (!employer) {
+    res.status(401);
+    throw new Error("Employer not found");
+  }
+
+  const job = await Job.findById(req.params.id);
+
+  if (!job) {
+    res.status(404);
+    throw new Error("Job not found");
+  }
+
+  if (job.employer.toString() != req.employer.id) {
+    res.status(401);
+    throw new Error("Not Authorized");
+  }
+
+  res.status(200).json(job);
+});
+
 // @desc Create a job by employer
-// @route POST /api/job
+// @route POST /api/jobs
 // @access Private
 const createJob = asyncHandler(async (req, res) => {
   const {
@@ -76,7 +103,73 @@ const createJob = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Delete job
+// @route DELETE /api/jobs/:id
+// @access Private
+const deleteJob = asyncHandler(async (req, res) => {
+  //get employer using the id in the JWT
+  const employer = await Employer.findById(req.employer.id);
+
+  if (!employer) {
+    res.status(401);
+    throw new Error("Employer not found");
+  }
+
+  const job = await Job.findById(req.params.id);
+
+  if (!job) {
+    res.status(404);
+    throw new Error("Job not found");
+  }
+
+  if (job.employer.toString() != req.employer.id) {
+    res.status(401);
+    throw new Error("Not Authorized");
+  }
+
+  await job.remove();
+
+  res.status(200).json({ success: true });
+});
+
+// @desc update job
+// @route PUT /api/jobs/:id
+// @access Private
+const updateJob = asyncHandler(async (req, res) => {
+  //get employer using the id in the JWT
+  const employer = await Employer.findById(req.employer.id);
+
+  if (!employer) {
+    res.status(401);
+    throw new Error("Employer not found");
+  }
+
+  const job = await Job.findById(req.params.id);
+
+  if (!job) {
+    res.status(404);
+    throw new Error("Job not found");
+  }
+
+  if (job.employer.toString() != req.employer.id) {
+    res.status(401);
+    throw new Error("Not Authorized");
+  }
+
+  console.log(req.body);
+  const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, {
+    new: true, //if not already there then create it
+  });
+
+  console.log("updated", updatedJob);
+
+  res.status(200).json(updatedJob);
+});
+
 module.exports = {
-  getJob,
+  getJobsByEmployer,
   createJob,
+  getJobByEmployer,
+  deleteJob,
+  updateJob,
 };

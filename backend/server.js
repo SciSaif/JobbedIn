@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
   res.send("hello");
 });
 app.use("/api/employers", require("./routes/employerRoute"));
-app.use("/api/job", require("./routes/jobRoutes"));
+app.use("/api/jobs", require("./routes/jobRoutes"));
 
 //Routes
 
