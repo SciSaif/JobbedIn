@@ -1,7 +1,6 @@
 import React from "react";
 import { CgArrowLongRight } from "react-icons/cg";
 import { Link } from "react-router-dom";
-
 function Home() {
   return (
     <div className=" flex items-center justify-center min-w-screen h-screen ">

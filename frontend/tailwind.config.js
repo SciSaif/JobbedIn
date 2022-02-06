@@ -21,5 +21,4 @@ module.exports = {
       secondaryD: "#18E2CB",
     },
   },
-  plugins: [],
 };
