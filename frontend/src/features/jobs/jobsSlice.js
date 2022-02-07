@@ -25,6 +25,26 @@ export const getJobs = createAsyncThunk("jobs/getAll", async (_, thunkAPI) => {
   }
 });
 
+// Create job
+export const createJob = createAsyncThunk(
+  "jobs/create",
+  async (jobData, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.employer.token;
+      return await jobsService.createJob(jobData, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const jobsSlice = createSlice({
   name: "jobs",
   initialState,
@@ -42,6 +62,18 @@ export const jobsSlice = createSlice({
         state.jobs = action.payload;
       })
       .addCase(getJobs.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(createJob.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createJob.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+      })
+      .addCase(createJob.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

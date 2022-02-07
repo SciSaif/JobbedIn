@@ -61,7 +61,7 @@ const createJob = asyncHandler(async (req, res) => {
     payRange = null,
   } = req.body;
 
-  console.log(payRange);
+  console.log(req.body);
 
   if (!title || !workplaceType || !employmentType || !description) {
     res.status(400);

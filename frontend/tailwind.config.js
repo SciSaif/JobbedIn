@@ -16,9 +16,10 @@ module.exports = {
       tertiary: "#efd6ac",
       primary: "#041930",
       secondary: "#82f2e5",
-      accent: "#ff4f66",
+      accent: "#ff7070",
       accentD: "#FB133E",
       secondaryD: "#18E2CB",
+      secondaryL: "#e3feff",
     },
   },
 };
