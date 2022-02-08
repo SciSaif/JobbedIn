@@ -47,7 +47,7 @@ function RegisterEmployer() {
 
     // Redirect when logged in
     if (isSuccess || employer) {
-      navigate("/");
+      navigate("/employer-dashboard");
     }
 
     dispatch(reset());

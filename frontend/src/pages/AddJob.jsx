@@ -82,7 +82,7 @@ function AddJob() {
   return (
     <div className="flex justify-center items-center align-bottom text-white min-w-screen min-h-screen shadow-lg ">
       {isLoading ? <Spinner /> : ""}
-      <main className="flex flex-col shapesd w-full h-screen overflow-hidden">
+      <main className="flex flex-col shapesd w-full md:w-1/2 lg:w-1/3 h-screen overflow-hidden">
         <div className="w-full pl-4 py-2 mb-2  bg-primary">
           <h4>Find a great hire, fast </h4>
         </div>
