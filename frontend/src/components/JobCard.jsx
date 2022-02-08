@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { GiOfficeChair } from "react-icons/gi";
 import { FaBusinessTime } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { useSelector, useDispatch } from "react-redux";
+import { reset, deleteJob, getJobs } from "../features/jobs/jobsSlice";
 
 // const useClickOutside = (ref, callback) => {
 //   const handleClick = (e) => {
@@ -21,6 +23,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 // };
 
 function JobCard({ title, employmentType, workplaceType, id }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
   const dropdownContainerRef = useRef(null);
@@ -29,6 +32,17 @@ function JobCard({ title, employmentType, workplaceType, id }) {
   //   dropdownRef.current.classList.add("hidden");
   // });
 
+  const { isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.jobs
+  );
+
+  useEffect(() => {
+    if (isError) {
+      navigate("/employer-dashboard");
+    }
+
+    dispatch(reset());
+  }, [dispatch, isSuccess, isError, isLoading]);
   const toggleDropdown = (e) => {
     dropdownRef.current.classList.toggle("hidden");
   };
@@ -36,6 +50,11 @@ function JobCard({ title, employmentType, workplaceType, id }) {
   const onClick = () => {
     console.log(id);
     navigate(`/job/${id}`);
+  };
+
+  const onDelete = () => {
+    console.log("a");
+    dispatch(deleteJob(id));
   };
 
   return (
@@ -66,7 +85,10 @@ function JobCard({ title, employmentType, workplaceType, id }) {
           className="hidden w-[100px] bg-black/50 text-[#DCEBFF] rounded-xl  absolute right-8 top-1 flex flex-col  p-1  select-none"
           ref={dropdownRef}
         >
-          <button className="px-3 py-1 hover:bg-black/25 rounded-t-xl border-b-2 border-black/25">
+          <button
+            className="px-3 py-1 hover:bg-black/25 rounded-t-xl border-b-2 border-black/25"
+            onClick={onDelete}
+          >
             Delete
           </button>
           <button className="px-3 py-1 hover:bg-black/25 rounded-b-xl">

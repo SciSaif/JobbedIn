@@ -34,27 +34,37 @@ const getJob = async (jobId, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  console.log("a", jobId);
 
   const response = await axios.get(API_URL + jobId, config);
   return response.data;
 };
 
-// // Delete job by employer
-// const deleteJob = async (token) => {
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   };
+// Delete a job
+const deleteJob = async (jobId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
-//   const response = await axios.delete(API_URL, config);
-// };
+  const response = await axios.delete(API_URL + jobId, config);
+  // console.log(response);
+  if (
+    response &&
+    response.data &&
+    response.data.success &&
+    response.data.success === true
+  ) {
+    return { jobId };
+  }
+  return response.data;
+};
 
 const jobsService = {
   getJobs,
   createJob,
   getJob,
+  deleteJob,
 };
 
 export default jobsService;

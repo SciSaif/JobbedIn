@@ -11,19 +11,24 @@ const initialState = {
 };
 
 // Get jobs by employer
-export const getJobs = createAsyncThunk("jobs/getAll", async (_, thunkAPI) => {
-  try {
-    const token = thunkAPI.getState().auth.employer.token;
-    return await jobsService.getJobs(token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const getJobs = createAsyncThunk(
+  "jobs/getjobsByemployer",
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.employer.token;
+      return await jobsService.getJobs(token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 // Create job
 export const createJob = createAsyncThunk(
@@ -52,6 +57,26 @@ export const getJob = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.employer.token;
       return await jobsService.getJob(jobId, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Delete a particular job
+export const deleteJob = createAsyncThunk(
+  "jobs/deleteJob",
+  async (jobId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.employer.token;
+      return await jobsService.deleteJob(jobId, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -112,6 +137,22 @@ export const jobsSlice = createSlice({
         state.job = action.payload;
       })
       .addCase(getJob.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(deleteJob.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteJob.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        console.log(action.payload);
+        state.jobs = state.jobs.filter(
+          (job) => job._id !== action.payload.jobId
+        );
+      })
+      .addCase(deleteJob.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

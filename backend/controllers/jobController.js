@@ -29,6 +29,7 @@ const getJobByEmployer = asyncHandler(async (req, res) => {
   console.log(req.params.id);
 
   const job = await Job.findById(req.params.id).populate("employer");
+  Z;
   console.log("job: ", job);
 
   if (!job) {
