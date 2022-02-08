@@ -18,13 +18,13 @@ function Home() {
               to="/register-employer"
               className="bg-secondary text-black rounded px-4 py-2 mt-4 w-fit hover:bg-tertiary-100 active:px-3"
             >
-              <p className="flex flex-row items-center">
+              <div className="flex flex-row items-center">
                 <p className="border-r border-black/25 pr-3 mr-3">
                   Hire for your company
                 </p>
                 <span className="text-black mx-1 font-bold">FREE</span>
                 {/* <CgArrowLongRight />{" "} */}
-              </p>
+              </div>
             </Link>
             <Link
               to="/jobs"

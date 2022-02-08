@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { BsBuilding } from "react-icons/bs";
 import { BsFillBriefcaseFill } from "react-icons/bs";
@@ -12,6 +12,7 @@ import { MdOutlineNavigateNext } from "react-icons/md";
 import profileImg from "../components/assets/profileImg.png";
 
 function EmployerDashboard() {
+  const [inputMessage, setInputMessage] = useState("");
   const { employer } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { name, email, mobileNumber, companyName, address, description } =
@@ -20,6 +21,14 @@ function EmployerDashboard() {
   const { jobs, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.jobs
   );
+
+  useEffect(() => {
+    if (isError) {
+      setInputMessage(message);
+    }
+
+    dispatch(reset());
+  }, [isError, isSuccess, employer, message, dispatch, isLoading]);
 
   useEffect(() => {
     dispatch(getJobs());
@@ -57,7 +66,7 @@ function EmployerDashboard() {
         </div>
       </div>
 
-      <div className="mx-2">
+      <div className="mx-2 pb-5">
         <div className="mt-12 pb-2  flex flex-row items-center justify-between  box-1 border-b-2 border-accent">
           <div className="flex flex-row items-center">
             <BsFillBriefcaseFill size="30px" color="white" />
@@ -72,6 +81,18 @@ function EmployerDashboard() {
           </Link>
         </div>
 
+        {inputMessage ? (
+          <div className="text-white bg-accent w-full  p-2">
+            Sorry Could not fetch jobs{" "}
+          </div>
+        ) : null}
+
+        {isLoading ? (
+          <div className="text-white bg-primary w-full  p-2">
+            ...Loading jobs{" "}
+          </div>
+        ) : null}
+
         {jobs &&
           jobs.map((job) => (
             <JobCard
@@ -79,6 +100,7 @@ function EmployerDashboard() {
               title={job.title}
               employmentType={job.employmentType}
               workplaceType={job.workplaceType}
+              id={job._id}
             />
           ))}
       </div>

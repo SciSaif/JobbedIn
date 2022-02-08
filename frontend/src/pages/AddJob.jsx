@@ -69,10 +69,7 @@ function AddJob() {
       location,
       employmentType,
       description,
-      payRange: {
-        low,
-        high,
-      },
+      payRange: providePayRange ? { low, high } : null,
     };
 
     dispatch(createJob(jobData));

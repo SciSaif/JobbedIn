@@ -20,6 +20,7 @@ module.exports = {
       accentD: "#FB133E",
       secondaryD: "#18E2CB",
       secondaryL: "#e3feff",
+      textBlack: "#191919",
     },
   },
 };

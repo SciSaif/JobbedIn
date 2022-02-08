@@ -1,5 +1,6 @@
 import React from "react";
 import { useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { GiOfficeChair } from "react-icons/gi";
 import { FaBusinessTime } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -19,7 +20,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 //   });
 // };
 
-function JobCard({ title, employmentType, workplaceType }) {
+function JobCard({ title, employmentType, workplaceType, id }) {
+  const navigate = useNavigate();
   const dropdownRef = useRef(null);
   const dropdownContainerRef = useRef(null);
 
@@ -31,9 +33,14 @@ function JobCard({ title, employmentType, workplaceType }) {
     dropdownRef.current.classList.toggle("hidden");
   };
 
+  const onClick = () => {
+    console.log(id);
+    navigate(`/job/${id}`);
+  };
+
   return (
     <div className="border-l-2 border-secondary hover:border-accent pl-4 mt-2 mb-1 flex flex-row justify-between relative">
-      <div className=" cursor-pointer ">
+      <div className=" cursor-pointer " onClick={onClick}>
         <h1 className="font-bold text-xl mb-1">{title}</h1>
         <div className="flex flex-row  items-center">
           <GiOfficeChair color="cyan" />

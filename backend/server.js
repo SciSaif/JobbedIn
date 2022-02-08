@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", (req, res) => {
   res.send("hello");
 });
-console.log("e1");
+console.log("k");
 app.use("/api/employers", require("./routes/employerRoute"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
 

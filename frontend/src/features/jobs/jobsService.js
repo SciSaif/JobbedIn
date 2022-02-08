@@ -27,6 +27,19 @@ const createJob = async (jobData, token) => {
   return response.data;
 };
 
+//Get a particular job
+const getJob = async (jobId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  console.log("a", jobId);
+
+  const response = await axios.get(API_URL + jobId, config);
+  return response.data;
+};
+
 // // Delete job by employer
 // const deleteJob = async (token) => {
 //   const config = {
@@ -41,6 +54,7 @@ const createJob = async (jobData, token) => {
 const jobsService = {
   getJobs,
   createJob,
+  getJob,
 };
 
 export default jobsService;

@@ -45,11 +45,36 @@ export const createJob = createAsyncThunk(
   }
 );
 
+// Get a particular job
+export const getJob = createAsyncThunk(
+  "jobs/getJob",
+  async (jobId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.employer.token;
+      return await jobsService.getJob(jobId, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const jobsSlice = createSlice({
   name: "jobs",
   initialState,
   reducers: {
-    reset: (state) => initialState,
+    reset: (state) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = false;
+      state.message = "";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -74,6 +99,19 @@ export const jobsSlice = createSlice({
         state.isSuccess = true;
       })
       .addCase(createJob.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getJob.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getJob.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.job = action.payload;
+      })
+      .addCase(getJob.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

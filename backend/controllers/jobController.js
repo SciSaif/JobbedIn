@@ -25,24 +25,16 @@ const getJobsByEmployer = asyncHandler(async (req, res) => {
 // @route GET /api/jobs/:id
 // @access Private
 const getJobByEmployer = asyncHandler(async (req, res) => {
-  //get employer using the id in the JWT
-  const employer = await Employer.findById(req.employer.id);
+  console.log("c");
+  console.log(req.params.id);
 
-  if (!employer) {
-    res.status(401);
-    throw new Error("Employer not found");
-  }
-
-  const job = await Job.findById(req.params.id);
+  const job = await Job.findById(req.params.id).populate("employer");
+  console.log("job: ", job);
 
   if (!job) {
+    console.log("e");
     res.status(404);
     throw new Error("Job not found");
-  }
-
-  if (job.employer.toString() != req.employer.id) {
-    res.status(401);
-    throw new Error("Not Authorized");
   }
 
   res.status(200).json(job);
@@ -52,6 +44,7 @@ const getJobByEmployer = asyncHandler(async (req, res) => {
 // @route POST /api/jobs
 // @access Private
 const createJob = asyncHandler(async (req, res) => {
+  // console.log("p");
   const {
     title,
     workplaceType,

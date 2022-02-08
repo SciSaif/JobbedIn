@@ -7,6 +7,7 @@ import LoginEmployer from "./pages/LoginEmployer";
 import RegisterEmployer from "./pages/RegisterEmployer";
 import PrivateRoute from "./components/PrivateRoute,";
 import AddJob from "./pages/AddJob";
+import Job from "./pages/Job";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/employer-dashboard" element={<PrivateRoute />}>
             <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           </Route>
+          <Route path="/job/:id" element={<Job />} />
         </Routes>
       </div>
     </Router>
