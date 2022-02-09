@@ -1,25 +1,40 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { CgArrowLongRight } from "react-icons/cg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { createJob, reset } from "../features/jobs/jobsSlice";
+import { editJob, getJob, reset } from "../features/jobs/jobsSlice";
 import InputError from "../components/InputError";
 import { GrLogin } from "react-icons/gr";
+import { AiFillEdit } from "react-icons/ai";
 import Spinner from "../components/Spinner";
 import { MdPostAdd } from "react-icons/md";
 
-function AddJob() {
+function EditJob() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [inputMessage, setInputMessage] = useState(null);
   const [providePayRange, setProvidePayRange] = useState(false);
 
+  const { job, isLoading, isSuccess, message, isError, onAction } = useSelector(
+    (state) => state.jobs
+  );
+
+  const {
+    title: prevTitle,
+    employmentType: prevEmploymmentType,
+    workplaceType: prevWorkplaceType,
+    location: prevLocation,
+    payRange: prevPayRange,
+    description: prevDescription,
+  } = job;
+
   const [formData, setFormData] = useState({
-    title: "",
-    workplaceType: "On-Site",
-    location: "",
-    employmentType: "Full Time",
-    description: "",
+    title: prevTitle,
+    workplaceType: prevWorkplaceType,
+    location: prevLocation,
+    employmentType: prevEmploymmentType,
+    description: prevDescription,
     low: 0,
     high: 0,
   });
@@ -36,22 +51,24 @@ function AddJob() {
 
   const dispatch = useDispatch();
 
-  const { jobs, isLoading, isSuccess, message, isError } = useSelector(
-    (state) => state.jobs
-  );
-
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
     }
-
-    // Redirect when logged in
     if (isSuccess) {
+      console.log(onAction);
+    }
+    // Redirect when logged in
+    if (isSuccess && onAction === "editJob") {
+      console.log(onAction);
       navigate("/employer-dashboard");
     }
-
     dispatch(reset());
   }, [isError, isSuccess, message, navigate, dispatch]);
+
+  useEffect(() => {
+    dispatch(getJob(id));
+  }, [dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -62,7 +79,7 @@ function AddJob() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(employmentType);
+    // console.log(employmentType);
     const jobData = {
       title,
       workplaceType,
@@ -72,25 +89,26 @@ function AddJob() {
       payRange: providePayRange ? { low, high } : null,
     };
 
-    dispatch(createJob(jobData));
+    dispatch(editJob({ jobData, id }));
   };
 
   const handleCheckbox = (e) => {
     setProvidePayRange(!providePayRange);
   };
 
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <div className="flex justify-center items-center align-bottom text-white min-w-screen min-h-screen shadow-lg ">
       {isLoading ? <Spinner /> : ""}
-      <main className="flex flex-col shapesd w-full md:w-1/2 lg:w-1/3 h-screen overflow-hidden">
-        <div className="w-full pl-4 py-2 mb-2  bg-primary">
-          <h4>Find a great hire, fast </h4>
-        </div>
+      <main className="flex flex-col shapesd w-full md:w-1/2 lg:w-1/3 h-screen overflow-hidden pt-8">
         <div className="w-full pl-4 ">
           <h1 className="text-2xl font-bold mb-5">
             <div className="flex flex-row items-center ">
-              <MdPostAdd size="35px" />
-              <p className="ml-3">Post a new Job</p>
+              <AiFillEdit size="35px" />
+              <p className="ml-3">Edit Job</p>
             </div>
           </h1>
         </div>
@@ -241,4 +259,4 @@ function AddJob() {
   );
 }
 
-export default AddJob;
+export default EditJob;

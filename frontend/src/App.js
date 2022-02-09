@@ -8,6 +8,8 @@ import RegisterEmployer from "./pages/RegisterEmployer";
 import PrivateRoute from "./components/PrivateRoute,";
 import AddJob from "./pages/AddJob";
 import Job from "./pages/Job";
+import EditJob from "./pages/EditJob";
+import Jobs from "./pages/Jobs";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
             <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           </Route>
           <Route path="/job/:id" element={<Job />} />
+          <Route path="/edit-job/:id" element={<EditJob />} />
+          <Route path="/jobs/all" element={<Jobs />} />
         </Routes>
       </div>
     </Router>

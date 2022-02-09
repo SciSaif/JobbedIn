@@ -22,7 +22,7 @@ import { reset, deleteJob, getJobs } from "../features/jobs/jobsSlice";
 //   });
 // };
 
-function JobCard({ title, employmentType, workplaceType, id }) {
+function JobCard({ title, employmentType, workplaceType, id, isEmployer }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -48,17 +48,18 @@ function JobCard({ title, employmentType, workplaceType, id }) {
   };
 
   const onClick = () => {
-    console.log(id);
     navigate(`/job/${id}`);
   };
 
   const onDelete = () => {
-    console.log("a");
     dispatch(deleteJob(id));
+  };
+  const onEdit = () => {
+    navigate(`/edit-job/${id}`);
   };
 
   return (
-    <div className="border-l-2 border-secondary hover:border-accent pl-4 mt-2 mb-1 flex flex-row justify-between relative">
+    <div className="border-l-2 border-secondary hover:border-accent pl-4 mt-2 mb-2 flex flex-row justify-between relative">
       <div className=" cursor-pointer " onClick={onClick}>
         <h1 className="font-bold text-xl mb-1">{title}</h1>
         <div className="flex flex-row  items-center">
@@ -71,31 +72,40 @@ function JobCard({ title, employmentType, workplaceType, id }) {
       </div>
 
       {/* Dropdown menu */}
-      <div onClick={toggleDropdown} ref={dropdownContainerRef}>
-        <div
-          className="mx-2 mt-1 p-1  cursor-pointer hover:rounded-full hover:bg-black/50 h-fit  "
-          id="dropdownInformationButton"
-          data-dropdown-toggle="dropdownInformation"
-          type="button"
-          // onClick={toggleDropdown}
-        >
-          <BsThreeDotsVertical />
-        </div>
-        <div
-          className="hidden w-[100px] bg-black/50 text-[#DCEBFF] rounded-xl  absolute right-8 top-1 flex flex-col  p-1  select-none"
-          ref={dropdownRef}
-        >
-          <button
-            className="px-3 py-1 hover:bg-black/25 rounded-t-xl border-b-2 border-black/25"
-            onClick={onDelete}
-          >
-            Delete
-          </button>
-          <button className="px-3 py-1 hover:bg-black/25 rounded-b-xl">
-            Edit
-          </button>
-        </div>
-      </div>
+      {isEmployer ? (
+        <>
+          <div onClick={toggleDropdown} ref={dropdownContainerRef}>
+            <div
+              className="mx-2 mt-1 p-1  cursor-pointer hover:rounded-full hover:bg-black/50 h-fit  "
+              id="dropdownInformationButton"
+              data-dropdown-toggle="dropdownInformation"
+              type="button"
+              // onClick={toggleDropdown}
+            >
+              <BsThreeDotsVertical />
+            </div>
+            <div
+              className="hidden w-[100px] bg-black/50 text-[#DCEBFF] rounded-xl  absolute right-8 top-1 flex flex-col  p-1  select-none"
+              ref={dropdownRef}
+            >
+              <button
+                className="px-3 py-1 hover:bg-black/25 rounded-t-xl border-b-2 border-black/25"
+                onClick={onDelete}
+              >
+                Delete
+              </button>
+              <button
+                className="px-3 py-1 hover:bg-black/25 rounded-b-xl"
+                onClick={onEdit}
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+        </>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

@@ -29,7 +29,7 @@ const getJobByEmployer = asyncHandler(async (req, res) => {
   console.log(req.params.id);
 
   const job = await Job.findById(req.params.id).populate("employer");
-  Z;
+
   console.log("job: ", job);
 
   if (!job) {
@@ -162,10 +162,28 @@ const updateJob = asyncHandler(async (req, res) => {
   res.status(200).json(updatedJob);
 });
 
+// @desc Get a All Jobs
+// @route GET /api/jobs/all
+// @access Public
+const getAllJobs = asyncHandler(async (req, res) => {
+  const jobs = await Job.find({});
+
+  // console.log("job: ", job);
+
+  if (!jobs) {
+    // console.log("e");
+    res.status(404);
+    throw new Error("No jobs not found");
+  }
+
+  res.status(200).json(jobs);
+});
+
 module.exports = {
   getJobsByEmployer,
   createJob,
   getJobByEmployer,
   deleteJob,
   updateJob,
+  getAllJobs,
 };

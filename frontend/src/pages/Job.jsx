@@ -45,7 +45,7 @@ function Job() {
     }
 
     dispatch(reset());
-  }, [isError, isSuccess, job, message, dispatch, isLoading]);
+  }, [isError, isSuccess, job, message, isLoading]);
 
   useEffect(() => {
     dispatch(getJob(id));

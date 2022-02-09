@@ -27,7 +27,7 @@ function Home() {
               </div>
             </Link>
             <Link
-              to="/jobs"
+              to="/jobs/all"
               className=" text-black  bg-[#FBDFDF] rounded px-4 py-2 mt-4 w-full hover:bg-tertiary-100 active:px-3 text-center"
             >
               <p>I'm Looking for a Job </p>

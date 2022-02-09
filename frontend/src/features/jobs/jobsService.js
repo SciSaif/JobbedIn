@@ -36,6 +36,7 @@ const getJob = async (jobId, token) => {
   };
 
   const response = await axios.get(API_URL + jobId, config);
+  // console.log(response.data);
   return response.data;
 };
 
@@ -60,11 +61,42 @@ const deleteJob = async (jobId, token) => {
   return response.data;
 };
 
+// Edit a job
+const editJob = async (jobId, jobData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(API_URL + jobId, jobData, config);
+
+  // console.log(response.data);
+  if (
+    response &&
+    response.data &&
+    response.data.success &&
+    response.data.success === true
+  ) {
+    return { jobId };
+  }
+  return response.data;
+};
+
+//Get all Jobs
+const getAllJobs = async () => {
+  const response = await axios.get(API_URL + "all");
+
+  return response.data;
+};
+
 const jobsService = {
   getJobs,
   createJob,
   getJob,
   deleteJob,
+  editJob,
+  getAllJobs,
 };
 
 export default jobsService;

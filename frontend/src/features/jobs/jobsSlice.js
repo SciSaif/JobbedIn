@@ -7,6 +7,7 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  onAction: "",
   message: "",
 };
 
@@ -90,6 +91,47 @@ export const deleteJob = createAsyncThunk(
   }
 );
 
+// Delete a particular job
+export const editJob = createAsyncThunk(
+  "jobs/editJob",
+  async (jobDataWithId, thunkAPI) => {
+    try {
+      const jobId = jobDataWithId.id;
+      const jobData = jobDataWithId.jobData;
+      const token = thunkAPI.getState().auth.employer.token;
+      return await jobsService.editJob(jobId, jobData, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Get All Jobs
+export const getAllJobs = createAsyncThunk(
+  "jobs/getAllJobs",
+  async (_, thunkAPI) => {
+    try {
+      return await jobsService.getAllJobs();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const jobsSlice = createSlice({
   name: "jobs",
   initialState,
@@ -99,7 +141,9 @@ export const jobsSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.message = "";
+      state.onAction = "";
     },
+    // reset: (state) => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -134,6 +178,7 @@ export const jobsSlice = createSlice({
       .addCase(getJob.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.onAction = "getJob";
         state.job = action.payload;
       })
       .addCase(getJob.rejected, (state, action) => {
@@ -147,12 +192,38 @@ export const jobsSlice = createSlice({
       .addCase(deleteJob.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        console.log(action.payload);
         state.jobs = state.jobs.filter(
           (job) => job._id !== action.payload.jobId
         );
       })
       .addCase(deleteJob.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(editJob.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(editJob.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.onAction = "editJob";
+        state.jobs = state.jobs.map((job) => true);
+      })
+      .addCase(editJob.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getAllJobs.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllJobs.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.jobs = action.payload;
+      })
+      .addCase(getAllJobs.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

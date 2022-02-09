@@ -101,6 +101,7 @@ function EmployerDashboard() {
               employmentType={job.employmentType}
               workplaceType={job.workplaceType}
               id={job._id}
+              isEmployer={true}
             />
           ))}
       </div>

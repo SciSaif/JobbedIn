@@ -5,13 +5,16 @@ const {
   getJobByEmployer,
   updateJob,
   deleteJob,
+  getAllJobs,
 } = require("../controllers/jobController");
 const router = express.Router();
 
 const { protect } = require("../middlewares/authMiddleware");
-console.log("l");
+// console.log("l");
 
 router.route("/").get(protect, getJobsByEmployer).post(protect, createJob);
+
+router.route("/all").get(getAllJobs);
 
 router
   .route("/:id")
