@@ -6,7 +6,7 @@ import { MdLocationOn } from "react-icons/md";
 import { FcOk } from "react-icons/fc";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { HiExternalLink } from "react-icons/hi";
-import { reset, getJob } from "../features/jobs/jobsSlice";
+import { reset, getJob, resetJob } from "../features/jobs/jobsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
@@ -29,7 +29,6 @@ function Job() {
     status,
     payRange,
     applicants,
-    createdAt,
     description,
   } = job;
   let companyName, address;
@@ -42,16 +41,25 @@ function Job() {
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
+      console.log("reset in job");
+      dispatch(reset());
     }
 
-    dispatch(reset());
-  }, [isError, isSuccess, job, message, isLoading]);
+    if (isSuccess) {
+      console.log("reset in job");
+      dispatch(reset());
+    }
+  }, [dispatch, isError, isSuccess, message, isLoading]);
 
   useEffect(() => {
     dispatch(getJob(id));
-  }, [dispatch, id]);
 
-  if (isLoading) {
+    return () => {
+      dispatch(resetJob());
+    };
+  }, []);
+
+  if (job.length === 0 || isLoading) {
     return <Spinner />;
   }
 

@@ -34,6 +34,7 @@ function LoginEmployer() {
     if (isSuccess || employer) {
       navigate("/employer-dashboard");
     }
+    console.log("reset in login");
 
     dispatch(reset());
   }, [isError, isSuccess, employer, message, navigate, dispatch]);

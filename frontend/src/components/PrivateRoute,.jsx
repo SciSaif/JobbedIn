@@ -8,9 +8,8 @@ const PrivateRoute = () => {
   if (checkingStatus) {
     return <Spinner />;
   }
-  console.log("Rpr");
 
-  return loggedIn ? <Outlet /> : <Navigate to="/register-employer" />;
+  return loggedIn ? <Outlet /> : <Navigate to="/login-employer" />;
 };
 
 export default PrivateRoute;

@@ -50,6 +50,8 @@ function RegisterEmployer() {
       navigate("/employer-dashboard");
     }
 
+    console.log("Reset in register");
+
     dispatch(reset());
   }, [isError, isSuccess, employer, message, navigate, dispatch]);
 

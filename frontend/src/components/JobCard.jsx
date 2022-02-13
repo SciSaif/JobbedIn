@@ -32,17 +32,6 @@ function JobCard({ title, employmentType, workplaceType, id, isEmployer }) {
   //   dropdownRef.current.classList.add("hidden");
   // });
 
-  const { isLoading, isSuccess, isError, message } = useSelector(
-    (state) => state.jobs
-  );
-
-  useEffect(() => {
-    if (isError) {
-      navigate("/employer-dashboard");
-    }
-
-    dispatch(reset());
-  }, [dispatch, isSuccess, isError, isLoading]);
   const toggleDropdown = (e) => {
     dropdownRef.current.classList.toggle("hidden");
   };

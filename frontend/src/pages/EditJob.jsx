@@ -1,14 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { CgArrowLongRight } from "react-icons/cg";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { editJob, getJob, reset } from "../features/jobs/jobsSlice";
+import { editJob, getJob, reset, resetJob } from "../features/jobs/jobsSlice";
 import InputError from "../components/InputError";
-import { GrLogin } from "react-icons/gr";
 import { AiFillEdit } from "react-icons/ai";
 import Spinner from "../components/Spinner";
-import { MdPostAdd } from "react-icons/md";
 
 function EditJob() {
   const navigate = useNavigate();
@@ -20,24 +17,29 @@ function EditJob() {
     (state) => state.jobs
   );
 
-  const {
-    title: prevTitle,
-    employmentType: prevEmploymmentType,
-    workplaceType: prevWorkplaceType,
-    location: prevLocation,
-    payRange: prevPayRange,
-    description: prevDescription,
-  } = job;
-
   const [formData, setFormData] = useState({
-    title: prevTitle,
-    workplaceType: prevWorkplaceType,
-    location: prevLocation,
-    employmentType: prevEmploymmentType,
-    description: prevDescription,
+    title: "",
+    workplaceType: "",
+    location: "",
+    employmentType: "",
+    description: "",
     low: 0,
     high: 0,
   });
+
+  useEffect(() => {
+    if (job.length !== 0) {
+      setFormData({
+        title: job.title,
+        employmentType: job.employmentType,
+        workplaceType: job.workPlaceType,
+        location: job.location,
+        description: job.description,
+        low: 0,
+        high: 0,
+      });
+    }
+  }, [job]);
 
   const {
     title,
@@ -54,20 +56,21 @@ function EditJob() {
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
-    }
-    if (isSuccess) {
-      console.log(onAction);
+      dispatch(reset());
     }
     // Redirect when logged in
     if (isSuccess && onAction === "editJob") {
-      console.log(onAction);
       navigate("/employer-dashboard");
+      dispatch(reset());
     }
-    dispatch(reset());
   }, [isError, isSuccess, message, navigate, dispatch]);
 
   useEffect(() => {
     dispatch(getJob(id));
+
+    return () => {
+      dispatch(resetJob());
+    };
   }, [dispatch]);
 
   const onChange = (e) => {

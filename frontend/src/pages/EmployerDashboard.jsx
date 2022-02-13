@@ -25,14 +25,20 @@ function EmployerDashboard() {
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
+      console.log("reset in employer dashboard");
+      dispatch(reset());
     }
 
-    dispatch(reset());
-  }, [isError, isSuccess, employer, message, dispatch, isLoading]);
+    if (isSuccess) {
+      console.log("reset in employer dashboard");
+      dispatch(reset());
+    }
+  }, [isSuccess]);
 
   useEffect(() => {
+    console.log("Dispatching job in employer's dashboard");
     dispatch(getJobs());
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className="stripes max-w-screen  min-h-screen shadow-lg text-white flex flex-col md:flex-row  ">

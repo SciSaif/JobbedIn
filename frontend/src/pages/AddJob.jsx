@@ -49,6 +49,7 @@ function AddJob() {
     if (isSuccess) {
       navigate("/employer-dashboard");
     }
+    console.log("reset in add job");
 
     dispatch(reset());
   }, [isError, isSuccess, message, navigate, dispatch]);

@@ -24,8 +24,11 @@ function App() {
           <Route path="/employer-dashboard" element={<PrivateRoute />}>
             <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           </Route>
+          <Route path="/edit-job/:id" element={<PrivateRoute />}>
+            <Route path="/edit-job/:id" element={<EditJob />} />
+          </Route>
           <Route path="/job/:id" element={<Job />} />
-          <Route path="/edit-job/:id" element={<EditJob />} />
+          {/* <Route path="/edit-job/:id" element={<EditJob />} /> */}
           <Route path="/jobs/all" element={<Jobs />} />
         </Routes>
       </div>
