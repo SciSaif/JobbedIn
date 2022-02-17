@@ -34,7 +34,6 @@ function LoginEmployer() {
     if (isSuccess || employer) {
       navigate(`/employer/${employer._id}`);
     }
-    console.log("reset in login");
 
     dispatch(reset());
   }, [isError, isSuccess, employer, message, navigate, dispatch]);
