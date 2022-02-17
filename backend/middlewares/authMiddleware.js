@@ -12,6 +12,7 @@ const protect = asyncHandler(async (req, res, next) => {
     try {
       // Get token from header
       token = req.headers.authorization.split(" ")[1];
+      console.log(req.headers);
       //Verify token (gives back id)
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       //Get employer from token
@@ -25,7 +26,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
   if (!token) {
     res.status(401);
-    throw new Error("Not Authorized");
+    throw new Error("Not Authorized ");
   }
 });
 

@@ -40,6 +40,8 @@ function AddJob() {
     (state) => state.jobs
   );
 
+  const { employer } = useSelector((state) => state.auth);
+
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
@@ -47,7 +49,7 @@ function AddJob() {
 
     // Redirect when logged in
     if (isSuccess) {
-      navigate("/employer-dashboard");
+      navigate(`/employer/${employer._id}`);
     }
     console.log("reset in add job");
 
@@ -63,7 +65,6 @@ function AddJob() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(employmentType);
     const jobData = {
       title,
       workplaceType,

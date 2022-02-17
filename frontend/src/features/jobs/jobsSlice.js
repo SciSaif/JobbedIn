@@ -89,7 +89,7 @@ export const deleteJob = createAsyncThunk(
   }
 );
 
-// Delete a particular job
+// Edit a particular job
 export const editJob = createAsyncThunk(
   "jobs/editJob",
   async (jobDataWithId, thunkAPI) => {

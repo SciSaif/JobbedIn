@@ -6,6 +6,7 @@ import { useState, useRef } from "react";
 import Logo from "./Logo";
 import { logoutEmployer, reset } from "../features/auth/authSlice";
 import { AiOutlineHome } from "react-icons/ai";
+import Settings from "./Settings";
 
 function Header() {
   const navigate = useNavigate();
@@ -109,6 +110,11 @@ function Header() {
                   </Link>
                 </div>
               </div>
+              <Settings
+                closeDrawer={() => {
+                  toggleDrawer();
+                }}
+              />
             </>
           ) : (
             <>

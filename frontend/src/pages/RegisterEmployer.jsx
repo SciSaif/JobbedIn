@@ -50,8 +50,6 @@ function RegisterEmployer() {
       navigate(`/employer/${employer._id}`);
     }
 
-    console.log("Reset in register");
-
     dispatch(reset());
   }, [isError, isSuccess, employer, message, navigate, dispatch]);
 
@@ -219,6 +217,7 @@ function RegisterEmployer() {
                 className="px-3 py-1 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
                 value={description}
                 onChange={onChange}
+                rows="3"
                 required
               />
             </div>

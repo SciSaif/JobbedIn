@@ -17,6 +17,8 @@ function EditJob() {
     (state) => state.jobs
   );
 
+  const { employer } = useSelector((state) => state.auth);
+
   const [formData, setFormData] = useState({
     title: "",
     workplaceType: "",
@@ -58,9 +60,14 @@ function EditJob() {
       setInputMessage(message);
       dispatch(reset());
     }
+    console.log("issuccess", isSuccess);
+    console.log("onAction", onAction);
     // Redirect when logged in
     if (isSuccess && onAction === "editJob") {
-      navigate("/employer-dashboard");
+      console.log("edit job: useeffect success");
+      navigate(`/employer/${employer._id}`);
+      dispatch(reset());
+    } else if (isSuccess && onAction === "getJob") {
       dispatch(reset());
     }
   }, [isError, isSuccess, message, navigate, dispatch]);

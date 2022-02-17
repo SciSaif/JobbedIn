@@ -11,6 +11,7 @@ import Job from "./pages/Job";
 import EditJob from "./pages/EditJob";
 import Jobs from "./pages/Jobs";
 import Employer from "./pages/Employer";
+import EditEmployer from "./pages/EditEmployer";
 
 function App() {
   return (
@@ -23,6 +24,9 @@ function App() {
           <Route path="/login-employer" element={<LoginEmployer />} />
           <Route path="/add-job" element={<AddJob />} />
           <Route path="/employer/:id" element={<Employer />} />
+          <Route path="/employer/edit" element={<PrivateRoute />}>
+            <Route path="/employer/edit" element={<EditEmployer />} />
+          </Route>
           <Route path="/edit-job/:id" element={<PrivateRoute />}>
             <Route path="/edit-job/:id" element={<EditJob />} />
           </Route>

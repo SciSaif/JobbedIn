@@ -69,6 +69,10 @@ export const authSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
+    refresh: (state, data) => {
+      state.employer = { ...state.employer, ...data.payload };
+      localStorage.setItem("employer", JSON.stringify(state.employer));
+    },
   },
   //since we are dealing with async stuff we need to handle them here
   extraReducers: (builder) => {
@@ -107,6 +111,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { reset } = authSlice.actions;
+export const { reset, refresh } = authSlice.actions;
 
 export default authSlice.reducer;

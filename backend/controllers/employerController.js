@@ -3,6 +3,7 @@ const brcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const Employer = require("../models/employerModel");
+const Job = require("../models/jobModel");
 const bcrypt = require("bcryptjs/dist/bcrypt");
 
 // @desc Register an employer
@@ -122,7 +123,7 @@ const getMe = asyncHandler(async (req, res) => {
 // @desc Get employer details by id
 // @route /api/employers/:id
 // @access Public
-const getEmployerById = async (req, res) => {
+const getEmployerById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   console.log("id in controller", id);
   const employer = await Employer.findById(id);
@@ -134,7 +135,60 @@ const getEmployerById = async (req, res) => {
 
   // @todo remove password form employer
   res.status(200).json(employer);
-};
+});
+
+// @desc Update employer details
+// @route /api/employers
+// @access Private
+const updateEmployer = asyncHandler(async (req, res) => {
+  const { name, mobileNumber, companyName, address, description } = req.body;
+
+  if (!name || !mobileNumber || !companyName || !address || !description) {
+    res.status(400);
+    throw new Error("Please include all fields");
+  }
+
+  const employer = await Employer.findById(req.employer.id);
+
+  if (!employer) {
+    res.status(401);
+    throw new Error("Employer not found");
+  }
+
+  const updatedData = await Employer.findByIdAndUpdate(
+    req.employer.id,
+    { name, mobileNumber, companyName, address, description },
+    {
+      new: true, //if not already there then create it
+    }
+  );
+
+  // @todo remove password form employer
+  res.status(200).json(updatedData);
+});
+
+// @desc Delete employer account
+// @route DELETE /api/employers/
+// @access Private
+const deleteEmployer = asyncHandler(async (req, res) => {
+  //get employer using the id in the JWT
+  const employer = await Employer.findById(req.employer.id);
+
+  if (!employer) {
+    res.status(401);
+    throw new Error("Employer not found");
+  }
+
+  // check if employer exists and match password
+  if (await bcrypt.compare(req.headers.password, employer.password)) {
+    await Job.deleteMany({ employer: employer._id });
+    await employer.remove();
+    res.status(200).json({ success: true, type: "deleteEmployer" });
+  } else {
+    res.status(401);
+    throw new Error("Invalid Credentials");
+  }
+});
 
 //Generate token
 const generateToken = (id) => {
@@ -148,4 +202,6 @@ module.exports = {
   loginEmployer,
   getMe,
   getEmployerById,
+  updateEmployer,
+  deleteEmployer,
 };

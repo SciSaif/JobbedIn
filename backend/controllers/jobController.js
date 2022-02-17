@@ -142,12 +142,12 @@ const updateJob = asyncHandler(async (req, res) => {
     throw new Error("Not Authorized");
   }
 
-  console.log(req.body);
+  // console.log(req.body);
   const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, {
     new: true, //if not already there then create it
   });
 
-  console.log("updated", updatedJob);
+  // console.log("updated", updatedJob);
 
   res.status(200).json(updatedJob);
 });
