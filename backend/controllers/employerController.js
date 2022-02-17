@@ -119,6 +119,23 @@ const getMe = asyncHandler(async (req, res) => {
   res.status(200).json(employer);
 });
 
+// @desc Get employer details by id
+// @route /api/employers/:id
+// @access Public
+const getEmployerById = async (req, res) => {
+  const { id } = req.params;
+  console.log("id in controller", id);
+  const employer = await Employer.findById(id);
+
+  if (!employer) {
+    res.status(401);
+    throw new Error("Employer not found");
+  }
+
+  // @todo remove password form employer
+  res.status(200).json(employer);
+};
+
 //Generate token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -130,4 +147,5 @@ module.exports = {
   registerEmployer,
   loginEmployer,
   getMe,
+  getEmployerById,
 };

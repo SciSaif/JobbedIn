@@ -1,7 +1,11 @@
 import React from "react";
 import { CgArrowLongRight } from "react-icons/cg";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+
 function Home() {
+  const { employer } = useSelector((state) => state.auth);
+
   return (
     <div className=" flex items-center justify-center min-w-screen h-screen  ">
       <div className="container flex justify-center items-center align-bottom   px-3">
@@ -15,8 +19,8 @@ function Home() {
 
           <div className="flex flex-col">
             <Link
-              to="/register-employer"
-              className="bg-secondary text-black rounded px-4 py-2 mt-4 w-fit hover:bg-tertiary-100 active:px-3"
+              to={employer ? `/employer/${employer._id}` : `/register-employer`}
+              className="bg-secondary hover:bg-[#4ffbe7] text-black rounded px-4 py-2 mt-4 w-fit hover:bg-tertiary-100 active:px-3"
             >
               <div className="flex flex-row items-center">
                 <p className="border-r border-black/25 pr-3 mr-3">
@@ -28,7 +32,7 @@ function Home() {
             </Link>
             <Link
               to="/jobs/all"
-              className=" text-black  bg-[#FBDFDF] rounded px-4 py-2 mt-4 w-full hover:bg-tertiary-100 active:px-3 text-center"
+              className=" text-black  bg-[#FBDFDF] hover:bg-[#fbcece] rounded px-4 py-2 mt-4 w-full hover:bg-tertiary-100 active:px-3 text-center"
             >
               <p>I'm Looking for a Job </p>
             </Link>

@@ -47,7 +47,7 @@ function RegisterEmployer() {
 
     // Redirect when logged in
     if (isSuccess || employer) {
-      navigate("/employer-dashboard");
+      navigate(`/employer/${employer._id}`);
     }
 
     console.log("Reset in register");
@@ -234,7 +234,7 @@ function RegisterEmployer() {
           <p className="mt-3">
             Already have an account?{" "}
             <Link to="/login-employer" className="underline text-accent">
-              Register
+              Login
             </Link>
           </p>
         </div>

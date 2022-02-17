@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import EmployerDashboard from "./pages/EmployerDashboard";
+import EmployerDashboard from "./pages/Employer";
 import Home from "./pages/Home";
 import LoginEmployer from "./pages/LoginEmployer";
 import RegisterEmployer from "./pages/RegisterEmployer";
@@ -10,6 +10,7 @@ import AddJob from "./pages/AddJob";
 import Job from "./pages/Job";
 import EditJob from "./pages/EditJob";
 import Jobs from "./pages/Jobs";
+import Employer from "./pages/Employer";
 
 function App() {
   return (
@@ -21,9 +22,7 @@ function App() {
           <Route path="/register-employer" element={<RegisterEmployer />} />
           <Route path="/login-employer" element={<LoginEmployer />} />
           <Route path="/add-job" element={<AddJob />} />
-          <Route path="/employer-dashboard" element={<PrivateRoute />}>
-            <Route path="/employer-dashboard" element={<EmployerDashboard />} />
-          </Route>
+          <Route path="/employer/:id" element={<Employer />} />
           <Route path="/edit-job/:id" element={<PrivateRoute />}>
             <Route path="/edit-job/:id" element={<EditJob />} />
           </Route>

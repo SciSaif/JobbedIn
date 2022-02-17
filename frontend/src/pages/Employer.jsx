@@ -1,20 +1,30 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { FaRegUserCircle } from "react-icons/fa";
 import { BsBuilding } from "react-icons/bs";
 import { BsFillBriefcaseFill } from "react-icons/bs";
 import { reset, getJobs } from "../features/jobs/jobsSlice";
+import {
+  reset as resetEmployer,
+  emptyEmployer,
+  getEmployerById,
+} from "../features/employer/employerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import JobCard from "../components/JobCard";
-import { IoMdAddCircle } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { MdOutlineNavigateNext } from "react-icons/md";
 import profileImg from "../components/assets/profileImg.png";
 
-function EmployerDashboard() {
-  const [inputMessage, setInputMessage] = useState("");
-  const { employer } = useSelector((state) => state.auth);
+function Employer() {
   const dispatch = useDispatch();
+  const { id } = useParams();
+  const [isEmployer, setisEmployer] = useState(false);
+  const [inputMessage, setInputMessage] = useState("");
+  const { employer: loggedInEmployer } = useSelector((state) => state.auth);
+  const {
+    employer,
+    isSuccess: isSuccessEmployer,
+    isError: isErrorEmployer,
+  } = useSelector((state) => state.employer);
   const { name, email, mobileNumber, companyName, address, description } =
     employer;
 
@@ -25,20 +35,36 @@ function EmployerDashboard() {
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
-      console.log("reset in employer dashboard");
       dispatch(reset());
     }
 
     if (isSuccess) {
-      console.log("reset in employer dashboard");
       dispatch(reset());
     }
-  }, [isSuccess]);
+
+    if (isErrorEmployer) {
+      setInputMessage(message);
+      dispatch(resetEmployer());
+    }
+
+    if (isSuccessEmployer) {
+      dispatch(resetEmployer());
+    }
+  }, [isSuccess, isError, isSuccessEmployer, isErrorEmployer]);
 
   useEffect(() => {
-    console.log("Dispatching job in employer's dashboard");
-    dispatch(getJobs());
-  }, []);
+    dispatch(getEmployerById(id));
+    dispatch(getJobs(id));
+    if (loggedInEmployer && loggedInEmployer._id === id) {
+      setisEmployer(true);
+    }
+
+    return () => {
+      setisEmployer(false);
+      dispatch(resetEmployer());
+      dispatch(emptyEmployer());
+    };
+  }, [setisEmployer, dispatch, resetEmployer]);
 
   return (
     <div className="stripes max-w-screen  min-h-screen shadow-lg text-white flex flex-col md:flex-row  ">
@@ -107,7 +133,7 @@ function EmployerDashboard() {
               employmentType={job.employmentType}
               workplaceType={job.workplaceType}
               id={job._id}
-              isEmployer={true}
+              isEmployer={isEmployer}
             />
           ))}
       </div>
@@ -115,4 +141,4 @@ function EmployerDashboard() {
   );
 }
 
-export default EmployerDashboard;
+export default Employer;

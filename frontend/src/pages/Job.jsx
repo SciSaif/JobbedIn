@@ -8,7 +8,7 @@ import { HiCurrencyRupee } from "react-icons/hi";
 import { HiExternalLink } from "react-icons/hi";
 import { reset, getJob, resetJob } from "../features/jobs/jobsSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 
 function Job() {
@@ -31,11 +31,14 @@ function Job() {
     applicants,
     description,
   } = job;
-  let companyName, address;
+  let companyName, address, name, email, mobileNumber;
 
   if (employer) {
     companyName = employer.companyName;
     address = employer.address;
+    name = employer.name;
+    email = employer.email;
+    mobileNumber = employer.mobileNumber;
   }
 
   useEffect(() => {
@@ -69,8 +72,17 @@ function Job() {
         <section className="block mx-3 bg-secondaryL rounded-3xl my-3 mt-8 p-4">
           <div className="font-bold text-2xl">{title}</div>
           <div className="text-black/75 mt-2">
-            {companyName ? companyName : ""} | {(address ? address : "") + " "}{" "}
-            ({workplaceType}){"   "}
+            {companyName ? (
+              <Link
+                to={`/employer/${employer._id}`}
+                className="hover:text-bermuda hover:underline"
+              >
+                {companyName}
+              </Link>
+            ) : (
+              ""
+            )}{" "}
+            | {(address ? address : "") + " "} ({workplaceType}){"   "}
             <span className="text-black/25">
               {" "}
               2 days ago | {applicants} applicants
@@ -124,6 +136,23 @@ function Job() {
             Job description
           </div>
           <p>{description}</p>
+        </section>
+        <section className="block mx-3 bg-white rounded-3xl my-3 p-4">
+          <div className="font-bold text-lg">About Employer</div>
+          <div className="font-bold text-textBlack/75 my-2">{name}</div>
+          <p>
+            <b>Email:</b> {email}
+          </p>
+          <p className="mb-4">
+            <b>Mobile number:</b> {mobileNumber}
+          </p>
+
+          <Link
+            to={`/employer/${employer._id}`}
+            className="p-2 px-4 bg-tertiary hover:bg-[#ecc27a]  rounded-full "
+          >
+            Go to Employer's Profile
+          </Link>
         </section>
       </main>
     </div>

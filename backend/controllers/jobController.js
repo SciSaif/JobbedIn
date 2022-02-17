@@ -5,19 +5,16 @@ const Job = require("../models/jobModel");
 
 // @desc Get jobs by employer
 // @route GET /api/jobs
-// @access Private
+// @access Public
 const getJobsByEmployer = asyncHandler(async (req, res) => {
-  //get employer using the id in the JWT
-  console.log("e3");
-
-  const employer = await Employer.findById(req.employer.id);
+  const employer = await Employer.findById(req.headers.id);
 
   if (!employer) {
     res.status(401);
     throw new Error("Employer not found");
   }
 
-  const jobs = await Job.find({ employer: req.employer.id });
+  const jobs = await Job.find({ employer: req.headers.id });
   res.status(200).json(jobs);
 });
 
@@ -25,15 +22,8 @@ const getJobsByEmployer = asyncHandler(async (req, res) => {
 // @route GET /api/jobs/:id
 // @access Private
 const getJobByEmployer = asyncHandler(async (req, res) => {
-  console.log("c");
-  console.log(req.params.id);
-
   const job = await Job.findById(req.params.id).populate("employer");
-
-  console.log("job: ", job);
-
   if (!job) {
-    console.log("e");
     res.status(404);
     throw new Error("Job not found");
   }

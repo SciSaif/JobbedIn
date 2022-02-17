@@ -32,7 +32,7 @@ function LoginEmployer() {
 
     // Redirect when logged in
     if (isSuccess || employer) {
-      navigate("/employer-dashboard");
+      navigate(`/employer/${employer._id}`);
     }
     console.log("reset in login");
 
@@ -73,7 +73,7 @@ function LoginEmployer() {
 
         {inputMessage ? <InputError message={inputMessage} /> : ""}
         <div className="p-4">
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} className="mb-3">
             <label htmlFor="email" className="required" className="required">
               Email
             </label>
@@ -112,7 +112,9 @@ function LoginEmployer() {
             </button>
           </form>
 
-          <p className="mt-3">
+          <Link to="/forgot-password">Forgot Password?</Link>
+
+          <p className="mt-1">
             Don't have an account?{" "}
             <Link to="/register-employer" className="underline text-accent">
               Register

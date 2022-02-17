@@ -3,10 +3,10 @@ import axios from "axios";
 const API_URL = "/api/jobs/";
 
 // Get jobs by employer
-const getJobs = async (token) => {
+const getJobs = async (id) => {
   const config = {
     headers: {
-      Authorization: `Bearer ${token}`,
+      id: id,
     },
   };
 
@@ -29,13 +29,7 @@ const createJob = async (jobData, token) => {
 
 //Get a particular job
 const getJob = async (jobId, token) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  const response = await axios.get(API_URL + jobId, config);
+  const response = await axios.get(API_URL + jobId);
   // console.log(response.data);
   return response.data;
 };

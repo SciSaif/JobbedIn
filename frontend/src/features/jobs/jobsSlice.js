@@ -14,10 +14,9 @@ const initialState = {
 // Get jobs by employer
 export const getJobs = createAsyncThunk(
   "jobs/getjobsByemployer",
-  async (_, thunkAPI) => {
+  async (id, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.employer.token;
-      return await jobsService.getJobs(token);
+      return await jobsService.getJobs(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -56,8 +55,7 @@ export const getJob = createAsyncThunk(
   "jobs/getJob",
   async (jobId, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.employer.token;
-      return await jobsService.getJob(jobId, token);
+      return await jobsService.getJob(jobId);
     } catch (error) {
       const message =
         (error.response &&
@@ -145,6 +143,9 @@ export const jobsSlice = createSlice({
     },
     resetJob: (state) => {
       state.job = [];
+    },
+    resetJobs: (state) => {
+      state.jobs = [];
     },
     // reset: (state) => initialState,
   },
@@ -234,5 +235,5 @@ export const jobsSlice = createSlice({
   },
 });
 
-export const { reset, resetJob } = jobsSlice.actions;
+export const { reset, resetJob, resetJobs } = jobsSlice.actions;
 export default jobsSlice.reducer;

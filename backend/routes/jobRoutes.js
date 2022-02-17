@@ -10,9 +10,9 @@ const {
 const router = express.Router();
 
 const { protect } = require("../middlewares/authMiddleware");
-// console.log("l");
 
-router.route("/").get(protect, getJobsByEmployer).post(protect, createJob);
+router.route("/").get(getJobsByEmployer).post(protect, createJob);
+console.log("l");
 
 router.route("/all").get(getAllJobs);
 

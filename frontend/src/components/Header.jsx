@@ -101,7 +101,7 @@ function Header() {
                 </div>
                 <div className="flex flex-row mt-2">
                   <Link
-                    to="/employer-dashboard"
+                    to={`/employer/${employer._id}`}
                     className="flex-1 text-xl text-center shadow bg-accent rounded-lg py-2 hover:bg-accentD focus:ring-4 focus:ring-secondary"
                     onClick={toggleDrawer}
                   >

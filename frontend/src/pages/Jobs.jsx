@@ -6,7 +6,7 @@ import { MdLocationOn } from "react-icons/md";
 import { FcOk } from "react-icons/fc";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { HiExternalLink } from "react-icons/hi";
-import { reset, getAllJobs } from "../features/jobs/jobsSlice";
+import { reset, getAllJobs, resetJobs } from "../features/jobs/jobsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
@@ -31,6 +31,10 @@ function Jobs() {
 
   useEffect(() => {
     dispatch(getAllJobs());
+
+    return () => {
+      dispatch(resetJobs());
+    };
   }, [dispatch]);
 
   if (isLoading) {
