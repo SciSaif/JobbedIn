@@ -68,7 +68,7 @@ function RegisterEmployer() {
         setInputMessage(null);
       }, 3000);
       return;
-    } else if (mobileNumber.length < 10 || mobileNumber.length > 12) {
+    } else if (mobileNumber.length < 10 || mobileNumber.length > 14) {
       setInputMessage("Please input a correct mobile Number");
       setTimeout(() => {
         setInputMessage(null);

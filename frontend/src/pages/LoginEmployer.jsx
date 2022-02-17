@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { CgArrowLongRight } from "react-icons/cg";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { loginEmployer, reset } from "../features/auth/authSlice";

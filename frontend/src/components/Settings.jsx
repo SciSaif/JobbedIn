@@ -33,9 +33,6 @@ function Settings({ closeDrawer }) {
 
     if (isSuccess && message.type === "deleteEmployer") {
       setInputMessage("Deleted Account");
-      // setTimeout(() => {
-      //   setInputMessage("");
-      // }, 1000);
       dispatch(reset());
       dispatch(emptyEmployer());
       dispatch(logoutEmployer());
@@ -70,7 +67,7 @@ function Settings({ closeDrawer }) {
       <div
         className={`w-ful px-4 py-3 flex flex-row items-center ${
           open ? "text-secondary" : ""
-        } text-lg font-bold bg-black/25  hover:text-secondary  cursor-pointer rounded-xl`}
+        } text-lg font-bold bg-black/25  md:hover:text-secondary  cursor-pointer rounded-xl`}
         onClick={toggleOpen}
       >
         <AiFillSetting size="35px" />
