@@ -51,12 +51,17 @@ function AddJob() {
     if (isSuccess) {
       navigate(`/employer/${employer._id}`);
     }
-    console.log("reset in add job");
 
     dispatch(reset());
   }, [isError, isSuccess, message, navigate, dispatch]);
 
   const onChange = (e) => {
+    if (e.target.type === "number") {
+      if (e.target.value === "") {
+        e.target.value = 0;
+      }
+      e.target.value = parseInt(e.target.value);
+    }
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
@@ -65,6 +70,11 @@ function AddJob() {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (providePayRange && low > high) {
+      setInputMessage("Pay range should be from low to high");
+      return;
+    }
+
     const jobData = {
       title,
       workplaceType,
@@ -205,6 +215,7 @@ function AddJob() {
             {providePayRange ? (
               <>
                 <p>Pay Range: </p>
+
                 <div className="my-2 w-[220px] flex flex-row justify-between">
                   <input
                     type="number"
@@ -214,6 +225,7 @@ function AddJob() {
                     className="w-[100px] rounded text-black"
                     onChange={onChange}
                     min="0"
+                    max="99999999999999"
                   />
                   -
                   <input
@@ -222,9 +234,9 @@ function AddJob() {
                     id="high"
                     value={high}
                     className="w-[100px] rounded text-black"
-                    placeholder="to"
                     onChange={onChange}
                     min="0"
+                    max="99999999999999"
                   />
                 </div>
               </>

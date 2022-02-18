@@ -49,7 +49,6 @@ function Job() {
       const dateStr = createdAt;
       const str = formatDistance(new Date(dateStr), new Date());
       setTimestamp(str + " ago");
-      console.log(str);
     }
   }, [createdAt]);
 
@@ -128,7 +127,8 @@ function Job() {
               {payRange ? (
                 <>
                   <p className="text-blue font-bold ml-6 ">
-                    {payRange.low} - {payRange.high}
+                    {payRange.low.toLocaleString()} -{" "}
+                    {payRange.high.toLocaleString()}
                   </p>
                 </>
               ) : (

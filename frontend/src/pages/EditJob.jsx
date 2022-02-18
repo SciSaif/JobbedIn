@@ -60,11 +60,8 @@ function EditJob() {
       setInputMessage(message);
       dispatch(reset());
     }
-    console.log("issuccess", isSuccess);
-    console.log("onAction", onAction);
     // Redirect when logged in
     if (isSuccess && onAction === "editJob") {
-      console.log("edit job: useeffect success");
       navigate(`/employer/${employer._id}`);
       dispatch(reset());
     } else if (isSuccess && onAction === "getJob") {
@@ -81,6 +78,12 @@ function EditJob() {
   }, [dispatch]);
 
   const onChange = (e) => {
+    if (e.target.type === "number") {
+      if (e.target.value === "") {
+        e.target.value = 0;
+      }
+      e.target.value = parseInt(e.target.value);
+    }
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
@@ -89,7 +92,10 @@ function EditJob() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // console.log(employmentType);
+    if (providePayRange && low > high) {
+      setInputMessage("Pay range should be from low to high");
+      return;
+    }
     const jobData = {
       title,
       workplaceType,

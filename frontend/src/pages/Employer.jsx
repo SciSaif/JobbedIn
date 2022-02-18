@@ -67,7 +67,7 @@ function Employer() {
   }, [setisEmployer, dispatch, resetEmployer]);
 
   return (
-    <div className="stripes max-w-screen  min-h-screen shadow-lg text-white flex flex-col md:flex-row  ">
+    <div className="stripes max-w-screen  min-h-screen shadow-lg text-white flex flex-col md:flex-row lg:w-1/2 lg:m-auto ">
       <div className="w-full md:w-1/2 min-h-[200px] rounded-t-3xl border-t-2 border-white mt-[100px] relative bg-black/25 pt-[60px] px-3">
         <div className="w-[100px] h-[100px] border-white border-2 rounded-full absolute top-[-50px] left-1/2 translate-x-[-50px] z-7 ">
           <img src={profileImg} alt="profile"></img>
