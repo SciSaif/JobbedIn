@@ -123,7 +123,15 @@ function Employer() {
           <div className="text-white bg-primary w-full  p-2">
             ...Loading jobs{" "}
           </div>
-        ) : null}
+        ) : (
+          <>
+            {jobs.length === 0 && (
+              <div className="m-2 p-4 bg-secondary text-black font-bold rounded">
+                Its Empty :(
+              </div>
+            )}
+          </>
+        )}
 
         {jobs &&
           jobs.map((job) => (

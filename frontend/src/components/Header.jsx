@@ -68,7 +68,7 @@ function Header() {
       >
         {/* to click away the drawer  */}
         <div
-          className="absolute top-0 left-0 w-1/3 xl:w-1/3 h-full z-11"
+          className="absolute top-0 left-0 w-1/3 xl:w-2/3 h-full z-11"
           onClick={toggleDrawer}
         ></div>
         <div className="absolute top-0 right-0 w-2/3 xl:w-1/3 h-full bg-primary z-11">

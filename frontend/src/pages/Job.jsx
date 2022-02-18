@@ -10,8 +10,10 @@ import { reset, getJob, resetJob } from "../features/jobs/jobsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
+import formatDistance from "date-fns/formatDistance";
 
 function Job() {
+  const [timestamp, setTimestamp] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -30,6 +32,7 @@ function Job() {
     payRange,
     applicants,
     description,
+    createdAt,
   } = job;
   let companyName, address, name, email, mobileNumber;
 
@@ -42,14 +45,21 @@ function Job() {
   }
 
   useEffect(() => {
+    if (createdAt) {
+      const dateStr = createdAt;
+      const str = formatDistance(new Date(dateStr), new Date());
+      setTimestamp(str + " ago");
+      console.log(str);
+    }
+  }, [createdAt]);
+
+  useEffect(() => {
     if (isError) {
       setInputMessage(message);
-      console.log("reset in job");
       dispatch(reset());
     }
 
     if (isSuccess) {
-      console.log("reset in job");
       dispatch(reset());
     }
   }, [dispatch, isError, isSuccess, message, isLoading]);
@@ -85,7 +95,7 @@ function Job() {
             | {(address ? address : "") + " "} ({workplaceType}){"   "}
             <span className="text-black/25">
               {" "}
-              2 days ago | {applicants} applicants
+              {timestamp ? timestamp : ""} | {applicants} applicants
             </span>
           </div>
 
