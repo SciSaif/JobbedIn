@@ -64,7 +64,12 @@ const sendMail = (req, res) => {
 // Send verification email
 const sendVerificationEmail = ({ _id, email }, res) => {
   // URL to be used in the email
-  const currentUrl = "http://localhost:5000/";
+  let currentUrl;
+  if (process.env.NODE_ENV === "development") {
+    currentUrl = "http://localhost:5000/";
+  } else {
+    currentUrl = "https://jobbedin.herokuapp.com/";
+  }
 
   const uniqueString = uuidv4() + _id;
 
