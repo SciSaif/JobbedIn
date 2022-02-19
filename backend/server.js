@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/employers", require("./routes/employerRoute"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
+app.use("/api/sendmail", require("./routes/mailRoutes"));
 
 // Serve frontend
 if (process.env.NODE_ENV === "production") {

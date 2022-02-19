@@ -83,7 +83,6 @@ export const authSlice = createSlice({
       .addCase(registerEmployer.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.employer = action.payload;
       })
       .addCase(registerEmployer.rejected, (state, action) => {
         state.isLoading = false;

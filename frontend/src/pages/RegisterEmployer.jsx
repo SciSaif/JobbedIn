@@ -47,7 +47,8 @@ function RegisterEmployer() {
 
     // Redirect when logged in
     if (isSuccess || employer) {
-      navigate(`/employer/${employer._id}`);
+      // navigate(`/employer/${employer._id}`);
+      navigate(`/emailsent/${email}`);
     }
 
     dispatch(reset());

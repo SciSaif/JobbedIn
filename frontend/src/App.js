@@ -12,6 +12,7 @@ import EditJob from "./pages/EditJob";
 import Jobs from "./pages/Jobs";
 import Employer from "./pages/Employer";
 import EditEmployer from "./pages/EditEmployer";
+import EmailSent from "./pages/EmailSent";
 
 function App() {
   return (
@@ -21,6 +22,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register-employer" element={<RegisterEmployer />} />
+          <Route path="/emailsent/:userEmail" element={<EmailSent />} />
+          <Route
+            path="/login-employer/:userEmail"
+            element={<LoginEmployer />}
+          />
           <Route path="/login-employer" element={<LoginEmployer />} />
           <Route path="/add-job" element={<AddJob />} />
           <Route path="/employer/:id" element={<Employer />} />

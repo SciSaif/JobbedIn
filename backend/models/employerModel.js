@@ -30,6 +30,7 @@ const employerSchema = mongoose.Schema(
       type: String,
       required: [true, "Pleas add a description for your company"],
     },
+    verified: Boolean,
     isAdmin: {
       type: Boolean,
       required: true,

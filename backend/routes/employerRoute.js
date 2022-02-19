@@ -7,11 +7,15 @@ const {
   getEmployerById,
   updateEmployer,
   deleteEmployer,
+  verifyEmail,
+  verifiedEmail,
 } = require("../controllers/employerController");
 const { route } = require("express/lib/application");
 const router = express.Router();
 
-console.log("r er");
+console.log("hi there");
+router.get("/verify/:userId/:uniqueString", verifyEmail);
+router.get("/verified", verifiedEmail);
 
 router
   .route("/")

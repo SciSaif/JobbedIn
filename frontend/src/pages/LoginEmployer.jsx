@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { loginEmployer, reset } from "../features/auth/authSlice";
 import InputError from "../components/InputError";
@@ -9,10 +9,11 @@ import Spinner from "../components/Spinner";
 
 function LoginEmployer() {
   const navigate = useNavigate();
+  const { userEmail } = useParams();
   const [inputMessage, setInputMessage] = useState(null);
 
   const [formData, setFormData] = useState({
-    email: "",
+    email: userEmail,
     password: "",
   });
 
