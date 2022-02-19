@@ -134,7 +134,6 @@ const sendVerificationEmail = ({ _id, email }, res) => {
 
 //verify email
 const verifyEmail = (req, res) => {
-  console.log("inside verifyEmail");
   let { userId, uniqueString } = req.params;
   UserVerification.find({ userId })
     .then((result) => {

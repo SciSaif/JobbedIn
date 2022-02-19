@@ -13,7 +13,6 @@ const {
 const { route } = require("express/lib/application");
 const router = express.Router();
 
-console.log("hi there");
 router.get("/verify/:userId/:uniqueString", verifyEmail);
 router.get("/verified", verifiedEmail);
 

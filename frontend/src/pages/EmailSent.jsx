@@ -21,9 +21,12 @@ function EmailSent() {
             email: <b>{userEmail}</b>
           </div>
           <div>Check your email and come back to proceed!</div>
+          <div className="text-xs mt-3 text-black/75">
+            Sometimes it may take upto 5 mins to deliver the mail :|
+          </div>
           <Link
             to={`/login-employer/${userEmail}`}
-            className="px-8 py-2 mt-5  rounded-full bg-accent text-white text-lg md:hover:bg-accentD"
+            className="px-8 py-2 mt-6  rounded-full bg-accent text-white text-lg md:hover:bg-accentD"
           >
             Proceed
           </Link>
