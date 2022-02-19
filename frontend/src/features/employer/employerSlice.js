@@ -67,6 +67,30 @@ export const deleteEmployer = createAsyncThunk(
   }
 );
 
+// change password
+export const changePassword = createAsyncThunk(
+  "employer/changePassword",
+  async ({ oldPassword, newPassword }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.employer.token;
+      return await employerService.changePassword(
+        token,
+        oldPassword,
+        newPassword
+      );
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const employerSlice = createSlice({
   name: "employer",
   initialState,
@@ -119,6 +143,19 @@ export const employerSlice = createSlice({
         state.message = action.payload;
       })
       .addCase(deleteEmployer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(changePassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = action.payload;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

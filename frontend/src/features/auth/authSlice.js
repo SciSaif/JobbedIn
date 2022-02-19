@@ -20,7 +20,9 @@ export const registerEmployer = createAsyncThunk(
       return await authService.registerEmployer(employer);
     } catch (error) {
       const message =
-        (error.response && error.response.data && error.data.message) ||
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
         error.message ||
         error.toString();
 
@@ -80,7 +82,7 @@ export const authSlice = createSlice({
       .addCase(registerEmployer.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(registerEmployer.fulfilled, (state, action) => {
+      .addCase(registerEmployer.fulfilled, (state) => {
         state.isLoading = false;
         state.isSuccess = true;
       })

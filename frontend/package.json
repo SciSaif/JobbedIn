@@ -4,19 +4,24 @@
   "proxy": "http://localhost:5000",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.4.2",
     "@reduxjs/toolkit": "^1.7.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.25.0",
+    "clsx": "^1.1.1",
     "date-fns": "^2.28.0",
+    "hoist-non-react-statics": "^3.3.2",
+    "notistack": "^2.0.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",
-    "react-scripts": "5.0.0",
-    "react-toastify": "^8.1.1"
+    "react-scripts": "5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

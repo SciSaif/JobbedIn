@@ -13,34 +13,42 @@ import Jobs from "./pages/Jobs";
 import Employer from "./pages/Employer";
 import EditEmployer from "./pages/EditEmployer";
 import EmailSent from "./pages/EmailSent";
+import { SnackbarProvider } from "notistack";
 
 function App() {
   return (
     <Router>
-      <div className="sprinkle flex flex-col ">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register-employer" element={<RegisterEmployer />} />
-          <Route path="/emailsent/:userEmail" element={<EmailSent />} />
-          <Route
-            path="/login-employer/:userEmail"
-            element={<LoginEmployer />}
-          />
-          <Route path="/login-employer" element={<LoginEmployer />} />
-          <Route path="/add-job" element={<AddJob />} />
-          <Route path="/employer/:id" element={<Employer />} />
-          <Route path="/employer/edit" element={<PrivateRoute />}>
-            <Route path="/employer/edit" element={<EditEmployer />} />
-          </Route>
-          <Route path="/edit-job/:id" element={<PrivateRoute />}>
-            <Route path="/edit-job/:id" element={<EditJob />} />
-          </Route>
-          <Route path="/job/:id" element={<Job />} />
-          {/* <Route path="/edit-job/:id" element={<EditJob />} /> */}
-          <Route path="/jobs/all" element={<Jobs />} />
-        </Routes>
-      </div>
+      <SnackbarProvider
+        maxSnack={3}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+      >
+        <div className="sprinkle flex flex-col ">
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register-employer" element={<RegisterEmployer />} />
+            <Route path="/emailsent/:userEmail" element={<EmailSent />} />
+            <Route
+              path="/login-employer/:userEmail"
+              element={<LoginEmployer />}
+            />
+            <Route path="/login-employer" element={<LoginEmployer />} />
+            <Route path="/add-job" element={<AddJob />} />
+            <Route path="/employer/:id" element={<Employer />} />
+            <Route path="/employer/edit" element={<PrivateRoute />}>
+              <Route path="/employer/edit" element={<EditEmployer />} />
+            </Route>
+            <Route path="/edit-job/:id" element={<PrivateRoute />}>
+              <Route path="/edit-job/:id" element={<EditJob />} />
+            </Route>
+            <Route path="/job/:id" element={<Job />} />
+            <Route path="/jobs/all" element={<Jobs />} />
+          </Routes>
+        </div>
+      </SnackbarProvider>
     </Router>
   );
 }

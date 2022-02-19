@@ -34,33 +34,6 @@ transporter.verify((error, success) => {
   }
 });
 
-const sendMail = (req, res) => {
-  const { to, subject, message } = req.body;
-
-  const mailOptions = {
-    from: process.env.AUTH_EMAIL,
-    to: to,
-    subject: subject,
-    text: message,
-  };
-
-  transporter
-    .sendMail(mailOptions)
-    .then(() => {
-      res.json({
-        status: "SUCCESS",
-        message: "Message sent successfully",
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.json({
-        status: "FAILED",
-        message: "An error occured while sending mail",
-      });
-    });
-};
-
 // Send verification email
 const sendVerificationEmail = ({ _id, email }, res) => {
   // URL to be used in the email
@@ -102,7 +75,6 @@ const sendVerificationEmail = ({ _id, email }, res) => {
             .sendMail(mailOptions)
             .then(() => {
               // email send and verification record saved
-              console.log("send mail");
               res.json({
                 status: "PENDING",
                 message: "Verification email send",
@@ -324,7 +296,6 @@ const loginEmployer = asyncHandler(async (req, res) => {
 
   const employer = await Employer.findOne({ email });
 
-  // @todo proceed only if verified
   if (employer && !employer.verified) {
     res.status(400);
     throw new Error("Email is not verified yet. Check your inbox.");
@@ -369,7 +340,6 @@ const getMe = asyncHandler(async (req, res) => {
 // @access Public
 const getEmployerById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  console.log("id in controller", id);
   const employer = await Employer.findById(id);
 
   if (!employer) {
@@ -434,6 +404,39 @@ const deleteEmployer = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Change password
+// @route PUT /api/employers/changePassword
+// @access Private
+const changePassword = asyncHandler(async (req, res) => {
+  console.log("reached changePassword");
+  //get employer using the id in the JWT
+  const employer = await Employer.findById(req.employer._id);
+
+  if (!employer) {
+    res.status(401);
+    throw new Error("Employer not found");
+  }
+
+  // check if employer exists and match password
+  if (await bcrypt.compare(req.body.oldPassword, employer.password)) {
+    //Hash Password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+
+    await Employer.findByIdAndUpdate(
+      req.employer.id,
+      { password: hashedPassword },
+      {
+        new: true, //if not already there then create it
+      }
+    );
+    res.status(200).json({ success: true, type: "changePassword" });
+  } else {
+    res.status(401);
+    throw new Error("Invalid Credentials");
+  }
+});
+
 //Generate token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -448,7 +451,7 @@ module.exports = {
   getEmployerById,
   updateEmployer,
   deleteEmployer,
-  sendMail,
   verifyEmail,
   verifiedEmail,
+  changePassword,
 };
