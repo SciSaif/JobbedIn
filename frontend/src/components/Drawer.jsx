@@ -32,7 +32,7 @@ function Drawer() {
     <div
       className={`${
         drawerState && "hidden"
-      } absolute top-0 right-0 w-screen h-screen bg-black/50 z-10 overflow-y-scroll`}
+      } fixed top-0 right-0 w-screen h-screen bg-black/50 z-10 overflow-y-scroll`}
     >
       {/* to click away the drawer  */}
       <div
