@@ -102,15 +102,19 @@ function Employer() {
         <div className="mt-12 pb-2  flex flex-row items-center justify-between  box-1 border-b-2 border-accent">
           <div className="flex flex-row items-center">
             <BsFillBriefcaseFill size="30px" color="white" />
-            <p className="font-bold text-lg ml-5">Your Jobs</p>
+            <p className="font-bold text-lg ml-5">
+              {isEmployer ? <>Your Jobs</> : <>Jobs</>}{" "}
+            </p>
           </div>
-          <Link
-            to="/add-job"
-            className="text-accent flex flex-row items-center"
-          >
-            Post a new Job
-            <MdOutlineNavigateNext size="25px" />
-          </Link>
+          {isEmployer && (
+            <Link
+              to="/add-job"
+              className="text-accent flex flex-row items-center"
+            >
+              Post a new Job
+              <MdOutlineNavigateNext size="25px" />
+            </Link>
+          )}
         </div>
 
         {inputMessage ? (
