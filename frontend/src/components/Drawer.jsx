@@ -128,8 +128,6 @@ function Drawer() {
           </>
         )}
 
-        <div className="w-full h-[200px] bg-primary"></div>
-
         {/* <Link
           to="/about"
           className="absolute bottom-2 text-center w-full btn btn-ghost"
