@@ -2,10 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  changePassword,
-  reset,
-} from "../features/employer/employerSlice";
+import { changePassword, reset } from "../features/employer/employerSlice";
 import { useSnackbar } from "notistack";
 
 function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {
@@ -64,6 +61,10 @@ function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {
     }
   };
 
+  const handleFocus = (e) => {
+    e.target.scrollIntoView({ block: "start", inline: "nearest" });
+  };
+
   return (
     <div className="p-4">
       <div className="mb-3 border-b-2 pb-3 ">
@@ -99,6 +100,7 @@ function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {
             className="w-full rounded px-3 py-1 mb-2 mt-1 text-black"
             value={confirmPassword}
             onChange={onChange}
+            onFocus={handleFocus}
             required
           />
 

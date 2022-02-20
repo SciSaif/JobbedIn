@@ -1,5 +1,4 @@
 import React from "react";
-import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutEmployer, reset } from "../features/auth/authSlice";
@@ -129,7 +128,7 @@ function Drawer() {
           </>
         )}
 
-        <div className="w-full h-[800px] bg-primary"></div>
+        {/* <div className="w-full h-[800px] bg-primary"></div> */}
 
         {/* <Link
           to="/about"
