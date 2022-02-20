@@ -12,11 +12,11 @@ function Settings({ closeDrawer }) {
   const [selectedSetting, setSelectedSetting] = useState(null);
 
   return (
-    <div className="w-full mt-4  bg-black/25 text-white  rounded-xl select-none ">
+    <div className="w-full mt-4  bg-black/25 text-white  rounded-xl border-accentD border-2 select-none ">
       <div
         className={`w-ful px-4 py-3 flex flex-row items-center ${
           open ? "text-secondary" : ""
-        } text-lg font-bold bg-black/25  md:hover:text-secondary  cursor-pointer rounded-xl`}
+        } text-lg font-bold bg-black/25  md:hover:text-secondary  cursor-pointer rounded-xl border-2 border-secondary`}
         onClick={() => {
           setOpen(!open);
         }}
