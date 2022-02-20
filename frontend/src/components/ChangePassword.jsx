@@ -62,7 +62,7 @@ function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {
   };
 
   const handleFocus = (e) => {
-    e.target.scrollIntoView({ block: "start", inline: "nearest" });
+    e.target.scrollIntoView();
   };
 
   return (
