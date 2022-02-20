@@ -64,7 +64,7 @@ function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {
   const btnRef = useRef();
 
   const handleFocus = (e) => {
-    btnRef.current.scrollIntoView();
+    // btnRef.current.scrollIntoView();
   };
 
   return (
