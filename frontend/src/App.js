@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import EmployerDashboard from "./pages/Employer";
@@ -27,6 +28,7 @@ function App() {
       >
         <div className="sprinkle flex flex-col ">
           <Header />
+
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/register-employer" element={<RegisterEmployer />} />
