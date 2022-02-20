@@ -81,7 +81,7 @@ function Header() {
 
           <Link
             to="/"
-            className="w-full flex justify-center my-3"
+            className="w-full flex justify-center my-3 "
             onClick={toggleDrawer}
           >
             <AiOutlineHome color="white" size="40px" />

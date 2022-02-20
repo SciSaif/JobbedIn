@@ -217,7 +217,7 @@ const verifiedEmail = (req, res) => {
 // @route /api/employers
 // @access Public
 const registerEmployer = asyncHandler(async (req, res) => {
-  const {
+  let {
     name,
     email,
     password,
@@ -239,6 +239,8 @@ const registerEmployer = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please include all fields");
   }
+
+  email = email.toLowerCase();
 
   // Check if employer already exists
   const employerExists = await Employer.findOne({ email: email });
@@ -287,12 +289,14 @@ const registerEmployer = asyncHandler(async (req, res) => {
 // @route /api/employers/login
 // @access Public
 const loginEmployer = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
 
   if (!email || !password) {
     res.status(400);
     throw new Error("Please include all fields");
   }
+
+  email = email.toLowerCase();
 
   const employer = await Employer.findOne({ email });
 
