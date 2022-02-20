@@ -129,15 +129,15 @@ function Drawer() {
           </>
         )}
 
-        <div className="w-full h-[800px] bg-accent"></div>
+        <div className="w-full h-[800px] bg-primary"></div>
 
-        <Link
+        {/* <Link
           to="/about"
           className="absolute bottom-2 text-center w-full btn btn-ghost"
           onClick={toggleDrawer}
         >
           About
-        </Link>
+        </Link> */}
       </div>
     </div>
   );
