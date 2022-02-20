@@ -78,6 +78,7 @@ function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {
             className="w-full rounded px-3 py-1 mb-2 mt-1 text-black"
             value={oldPassword}
             onChange={onChange}
+            onFocus={handleFocus}
             required
           />
 
@@ -89,6 +90,7 @@ function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {
             className="w-full rounded px-3 py-1 mb-2 mt-1 text-black"
             value={newPassword}
             onChange={onChange}
+            onFocus={handleFocus}
             required
           />
 

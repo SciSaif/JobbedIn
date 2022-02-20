@@ -31,14 +31,14 @@ function Drawer() {
     <div
       className={`${
         drawerState && "hidden"
-      } fixed top-0 right-0 w-screen h-screen bg-black/50 z-10 overflow-y-scroll`}
+      } fixed top-0 right-0 w-screen h-screen bg-black/50 z-10 overflow-y-scroll border-2 border-secondary`}
     >
       {/* to click away the drawer  */}
       <div
-        className="absolute top-0 left-0 w-1/3 xl:w-2/3 h-full z-11"
+        className="fixed top-0 left-0 w-1/3 xl:w-2/3 h-screen z-11 border-2 border-accent"
         onClick={drawerToggle}
       ></div>
-      <div className="absolute top-0 right-0 w-2/3 xl:w-1/3 h-full bg-primary z-11">
+      <div className="absolute top-0 right-0 w-2/3 xl:w-1/3 h-full bg-primary z-11 border-2 border-secondaryD">
         <div
           className="mt-2 ml-2 rounded-full bg-secondary/50 w-fit p-2 cursor-pointer"
           onClick={drawerToggle}
