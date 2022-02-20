@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { changePassword, reset } from "../features/employer/employerSlice";
@@ -61,8 +61,10 @@ function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {
     }
   };
 
+  const btnRef = useRef();
+
   const handleFocus = (e) => {
-    e.target.scrollIntoView();
+    btnRef.current.scrollIntoView();
   };
 
   return (
@@ -112,7 +114,7 @@ function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {
             </div>
           )}
 
-          <div className="flex mt-2 w-full text-white">
+          <div className="flex mt-2 w-full text-white" ref={btnRef}>
             <button
               type="submit"
               name="confirm"
