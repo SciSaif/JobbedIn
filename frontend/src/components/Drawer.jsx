@@ -32,7 +32,7 @@ function Drawer() {
     <div
       className={`${
         drawerState && "hidden"
-      } absolute top-0 right-0 w-screen h-screen bg-black/50 z-10`}
+      } absolute top-0 right-0 w-screen h-screen bg-black/50 z-10 overflow-y-scroll`}
     >
       {/* to click away the drawer  */}
       <div
@@ -128,6 +128,8 @@ function Drawer() {
             </div>
           </>
         )}
+
+        <div className="w-full h-[800px] bg-accent"></div>
 
         <Link
           to="/about"
