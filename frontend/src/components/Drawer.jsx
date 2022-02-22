@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutEmployer, reset } from "../features/auth/authSlice";
-import { toggleDrawer } from "../features/otherSlice";
+import { toggleDrawer } from "../features/other/otherSlice";
 
 import { FaAngleRight } from "react-icons/fa";
 import { AiOutlineHome } from "react-icons/ai";

@@ -106,7 +106,7 @@ function RegisterEmployer() {
             <label htmlFor="name" className="required">
               Name
             </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
+            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
               <input
                 type="text"
                 id="name"
@@ -118,10 +118,10 @@ function RegisterEmployer() {
               />
             </div>
 
-            <label htmlFor="email" className="required" className="required">
+            <label htmlFor="email" className="required">
               Email
             </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
+            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
               <input
                 type="email"
                 id="email"
@@ -136,7 +136,7 @@ function RegisterEmployer() {
             <label htmlFor="password" className="required">
               Password
             </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
+            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
               <input
                 type="password"
                 id="password"
@@ -151,7 +151,7 @@ function RegisterEmployer() {
             <label htmlFor="confirmPassword" className="required">
               Confirm password
             </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
+            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
               <input
                 type="password"
                 id="confirmPassword"
@@ -166,7 +166,7 @@ function RegisterEmployer() {
             <label htmlFor="mobileNumber" className="required">
               Mobile Number
             </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
+            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
               <input
                 type="text"
                 id="mobileNumber"
@@ -181,7 +181,7 @@ function RegisterEmployer() {
             <label htmlFor="companyName" className="required">
               Company name
             </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
+            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
               <textarea
                 type="text"
                 id="companyName"
@@ -195,7 +195,7 @@ function RegisterEmployer() {
             <label htmlFor="address" className="required">
               Company address
             </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
+            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
               <textarea
                 type="text"
                 id="address"
@@ -210,7 +210,7 @@ function RegisterEmployer() {
             <label htmlFor="description" className="required">
               Company description
             </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
+            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
               <textarea
                 type="text"
                 id="description"

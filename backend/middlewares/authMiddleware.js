@@ -4,13 +4,13 @@ const Employer = require("../models/employerModel");
 
 const protect = asyncHandler(async (req, res, next) => {
   let token;
-  console.log("reach auth mid", req.body);
+  // console.log("reach auth mid", req.headers);
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
-      console.log("reach auth mid 2");
+      // console.log("reach auth mid 2");
       // Get token from header
       token = req.headers.authorization.split(" ")[1];
       //Verify token (gives back id)

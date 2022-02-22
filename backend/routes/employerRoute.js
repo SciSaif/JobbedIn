@@ -7,17 +7,12 @@ const {
   getEmployerById,
   updateEmployer,
   deleteEmployer,
-  verifyEmail,
-  verifiedEmail,
   changePassword,
 } = require("../controllers/employerController");
 const { route } = require("express/lib/application");
 const router = express.Router();
 
-console.log("r ");
 router.put("/changePassword", protect, changePassword);
-router.get("/verify/:userId/:uniqueString", verifyEmail);
-router.get("/verified", verifiedEmail);
 
 router
   .route("/")

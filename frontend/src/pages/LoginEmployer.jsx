@@ -73,10 +73,10 @@ function LoginEmployer() {
         {inputMessage ? <InputError message={inputMessage} /> : ""}
         <div className="p-4">
           <form onSubmit={onSubmit} className="mb-3">
-            <label htmlFor="email" className="required" className="required">
+            <label htmlFor="email" className="required ">
               Email
             </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
+            <div className="flex w-full flex-wrap items-stretch mb-4 mt-1">
               <input
                 type="email"
                 id="email"
@@ -88,8 +88,14 @@ function LoginEmployer() {
               />
             </div>
 
-            <label htmlFor="password" className="required">
-              Password
+            <label
+              htmlFor="password"
+              className="flex flex-row justify-between mb-1"
+            >
+              <p className="required">Password</p>
+              <Link to="/forgot-password" className="text-accent">
+                Forgot Password?
+              </Link>
             </label>
             <div className="flex w-full flex-wrap items-stretch mb-3">
               <input
@@ -110,8 +116,6 @@ function LoginEmployer() {
               Submit
             </button>
           </form>
-
-          <Link to="/forgot-password">Forgot Password?</Link>
 
           <p className="mt-1">
             Don't have an account?{" "}

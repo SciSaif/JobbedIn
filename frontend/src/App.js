@@ -15,6 +15,8 @@ import Employer from "./pages/Employer";
 import EditEmployer from "./pages/EditEmployer";
 import EmailSent from "./pages/EmailSent";
 import { SnackbarProvider } from "notistack";
+import ForgotPassword from "./pages/ForgotPassword";
+import SetNewPassword from "./pages/SetNewPassword";
 
 function App() {
   return (
@@ -48,6 +50,11 @@ function App() {
             </Route>
             <Route path="/job/:id" element={<Job />} />
             <Route path="/jobs/all" element={<Jobs />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route
+              path="/set-new-password/:id/:resetString"
+              element={<SetNewPassword />}
+            />
           </Routes>
         </div>
       </SnackbarProvider>
