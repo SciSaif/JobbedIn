@@ -21,6 +21,7 @@ function ForgotPassword() {
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
+      setStatus("error");
       dispatch(resetOther());
     }
     if (isLoading) {
@@ -44,7 +45,7 @@ function ForgotPassword() {
   return (
     <div className="flex justify-center items-center align-bottom min-w-screen min-h-screen shadow-lg">
       <main className="flex flex-col bg-[#F2FFFF] rounded-lg mb-4 overflow-hidden min-w-[385px] min-h-[305px]">
-        {!status && (
+        {(!status || status === "error") && (
           <>
             {" "}
             <div className="w-full pl-4 py-2   bg-secondary">

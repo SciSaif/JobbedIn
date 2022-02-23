@@ -1,3 +1,4 @@
+const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs/dist/bcrypt");
 require("dotenv").config();
 
@@ -32,241 +33,133 @@ transporter.verify((error, success) => {
   }
 });
 
-const passwordReset = (req, res) => {
+const passwordReset = asyncHandler(async (req, res) => {
   const { email, redirectUrl } = req.body;
-  Employer.find({ email })
-    .then((data) => {
-      if (data.length) {
-        //user exists
+  const employer = await Employer.findOne({ email });
 
-        //check if user is verified
-        if (!data[0].verified) {
-          res.json({
-            status: "FAILED",
-            message: "Email hasn't been verified yet. Check your inbox",
-          });
-        } else {
-          //user verified
+  if (!employer) {
+    //user doesn't exist
+    res.status(400);
+    throw new Error("No account exists with the supplied email address");
+  } else {
+    //user exists
 
-          sendResetEmail(data[0], redirectUrl, res);
-        }
-      } else {
-        //user doesn't exist
-        res.json({
-          status: "FAILED",
-          message: "No account with the supplied email exists!",
-        });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      res.json({
-        status: "FAILED",
-        message:
-          "An error occurred while checking for existing user(password Reset)",
-      });
-    });
-};
+    //check if user is verified
+    if (!employer.verified) {
+      res.status(400);
+      throw new Error("Email hasn't been verified yet. Check your inbox");
+    } else {
+      //user verified
+      sendResetEmail(employer, redirectUrl, res);
+    }
+  }
+});
 
-//send password reset email
-const sendResetEmail = (userData, redirectUrl, res) => {
+const sendResetEmail = asyncHandler(async (userData, redirectUrl, res) => {
   let { _id, email } = userData;
   email = email.toLowerCase();
   const resetString = uuidv4() + _id;
 
   // First, we clear all existing reset records
-  PasswordReset.deleteMany({ userId: _id })
-    .then((result) => {
-      //Reset records deleted successfully
+  const result = PasswordReset.deleteMany({ userId: _id });
 
-      //Now we send the email
-      const mailOptions = {
-        from: process.env.AUTH_EMAIL,
-        to: email,
-        subject: "Password Reset",
-        html: `<p>We heard that you lost the password.  </p><p>Don't worry, use the link below to reset it.</p> <p> This link <b>expires in 6 hours.</b></p> <p>Press <a href=${
-          redirectUrl + "/" + _id + "/" + resetString
-        } >here</a> to proceed.</p>`,
-      };
+  //Now we send the email
+  const mailOptions = {
+    from: process.env.AUTH_EMAIL,
+    to: email,
+    subject: "Password Reset",
+    html: `<p>We heard that you lost the password.  </p><p>Don't worry, use the link below to reset it.</p> <p> This link <b>expires in 6 hours.</b></p> <p>Press <a href=${
+      redirectUrl + "/" + _id + "/" + resetString
+    } >here</a> to proceed.</p>`,
+  };
 
-      // hash the reset string
-      const saltRounds = 10;
-      bcrypt
-        .hash(resetString, saltRounds)
-        .then((hashedResetString) => {
-          // set values in password reset collection
+  //Hash Password
+  const salt = await bcrypt.genSalt(10);
+  const hashedResetString = await bcrypt.hash(resetString, salt);
 
-          const newPasswordReset = new PasswordReset({
-            userId: _id,
-            resetString: hashedResetString,
-            createdAt: Date.now(),
-            expiresAt: Date.now() + 3600000,
-          });
+  // set values in password reset collection
 
-          newPasswordReset
-            .save()
-            .then(() => {
-              transporter
-                .sendMail(mailOptions)
-                .then(() => {
-                  // reset email send and password reset record saved
-                  res.json({
-                    status: "PENDING",
-                    message: "Password reset email sent",
-                  });
-                })
-                .catch((error) => {
-                  console.log(error);
-                  res.json({
-                    status: "FAILED",
-                    message: "Could not send mail",
-                  });
-                });
-            })
-            .catch((error) => {
-              console.log(error);
-              res.json({
-                status: "FAILED",
-                message: "Couldn't save password reset data!",
-              });
-            });
-        })
-        .catch((error) => {
-          console.log(error);
-          res.json({
-            status: "FAILED",
-            message: "An error occurred while hashign the password reset data!",
-          });
-        });
-    })
-    .catch((error) => {
-      //error while clearing existing records
-      console.log(error);
-      res.json({
-        status: "FAILED",
-        message: "Clearing existing password reset records failed",
+  const newPasswordReset = await PasswordReset.create({
+    userId: _id,
+    resetString: hashedResetString,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 3600000,
+  });
+
+  if (newPasswordReset) {
+    let info = await transporter.sendMail(mailOptions);
+
+    if (info.accepted) {
+      res.status(200).json({
+        status: "PENDING",
+        message: "Password reset email sent",
       });
-    });
-};
+    } else if (info.rejected) {
+      res.status(400);
+      throw new Error("Failed to send mail");
+    }
+  } else {
+    res.status(400);
+    throw new Error("Couldn't save password reset data");
+  }
+});
 
 // actually reset the password
-const executeResetPassword = (req, res) => {
+const executeResetPassword = asyncHandler(async (req, res) => {
   let { userId, resetString, newPassword } = req.body;
 
-  PasswordReset.find({ userId })
-    .then((result) => {
-      if (result.length > 0) {
-        //password reset record exists so we proceed
+  const result = await PasswordReset.findOne({ userId });
 
-        const { expiresAt } = result[0];
-        const hashedResetString = result[0].resetString;
+  if (!result) {
+    res.status(400);
+    throw new Error("Password reset record not found");
+  }
 
-        //Checking for expired reset string
-        if (expiresAt < Date.now()) {
-          PasswordReset.deleteOne({ userId })
-            .then(() => {
-              //reset record deleted successfully
-              res.json({
-                status: "FAILED",
-                message: "Password reset link ash expired",
-              });
-            })
-            .catch((error) => {
-              console.log(error);
-              res.json({
-                status: "FAILED",
-                message: "Clearing password reset record failed",
-              });
-            });
-        } else {
-          //valid reset record exists wo we validate the reset string
-          // first compare the hashed reset string
+  //password reset record exists so we proceed
 
-          bcrypt
-            .compare(resetString, hashedResetString)
-            .then((result) => {
-              if (result) {
-                //strings matched
-                //hash password again
+  const { expiresAt } = result;
+  const hashedResetString = result.resetString;
 
-                const saltRounds = 10;
-                bcrypt
-                  .hash(newPassword, saltRounds)
-                  .then((hashedNewPassword) => {
-                    //update user password
+  //Checking for expired reset string
+  if (expiresAt < Date.now()) {
+    //expired reset string
+    await PasswordReset.deleteOne({ userId });
+    res.status(400);
+    throw new Error("Password reset link has expired");
+  } else {
+    //valid reset record exists wo we validate the reset string
+    // first compare the hashed reset string
 
-                    Employer.updateOne(
-                      { _id: userId },
-                      { password: hashedNewPassword }
-                    )
-                      .then(() => [
-                        //update complete
-                        //now delete reset record
-                        PasswordReset.deleteOne({ userId })
-                          .then(() => {
-                            //both user record and reset record updated
-                            res.json({
-                              status: "SUCCESS",
-                              message: "Password has been reset successfully",
-                            });
-                          })
-                          .catch((error) => {
-                            console.log(error);
-                            res.json({
-                              status: "FAILED",
-                              message:
-                                "An error occurred while finalizing password reset",
-                            });
-                          }),
-                      ])
-                      .catch((error) => {
-                        console.log(error);
-                        res.json({
-                          status: "FAILED",
-                          message:
-                            "An error occurred while updating employer password",
-                        });
-                      });
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                    res.json({
-                      status: "FAILED",
-                      message: "An error occurred while hashign new password",
-                    });
-                  });
-              } else {
-                //Existing record but incorrect reset string passed
-                res.json({
-                  status: "FAILED",
-                  message: "Invalid password reset details passed",
-                });
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-              res.json({
-                status: "FAILED",
-                message: "Comparing password reset strings failed",
-              });
-            });
-        }
-      } else {
-        // password reset record doesn't exist
-        res.json({
-          status: "FAILED",
-          message: "Password reset record not found",
-        });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      res.json({
-        status: "FAILED",
-        message: "Checking for existing password reset record failed",
+    if (await bcrypt.compare(resetString, hashedResetString)) {
+      //strings matched
+      //hash the new password
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+      await Employer.updateOne(
+        { _id: userId },
+        { password: hashedNewPassword }
+      );
+
+      //update complete
+      //now delete reset record
+
+      await PasswordReset.deleteOne({ userId });
+
+      //both user record and reset record updated
+      res.status(200).json({
+        status: "SUCCESS",
+        message: "Password has been reset successfully",
       });
-    });
-};
+    } else {
+      //Existing record but incorrect reset string passed
+      res.status(400);
+      throw new Error(
+        "Check the latest password reset email, you probably clicked an old link."
+      );
+    }
+  }
+});
 
 module.exports = {
   passwordReset,
