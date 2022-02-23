@@ -3,14 +3,10 @@ const bcrypt = require("bcryptjs/dist/bcrypt");
 require("dotenv").config();
 
 const Employer = require("../models/employerModel");
-const UserVerification = require("../models/UserVerification");
 const PasswordReset = require("../models/passwordReset");
-
-const path = require("path");
 
 const nodemailer = require("nodemailer");
 const { v4: uuidv4 } = require("uuid");
-const req = require("express/lib/request");
 
 //oAuth
 const transporter = nodemailer.createTransport({

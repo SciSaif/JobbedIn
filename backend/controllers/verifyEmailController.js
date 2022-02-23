@@ -1,3 +1,4 @@
+const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs/dist/bcrypt");
 require("dotenv").config();
 
@@ -31,7 +32,7 @@ transporter.verify((error, success) => {
 });
 
 // Send verification email
-const sendVerificationEmail = ({ _id, email }, res) => {
+const sendVerificationEmail = asyncHandler(async ({ _id, email }, res) => {
   // URL to be used in the email
   let currentUrl;
   if (process.env.NODE_ENV === "development") {
@@ -51,149 +52,84 @@ const sendVerificationEmail = ({ _id, email }, res) => {
     } >here</a> to proceed.</p>`,
   };
 
-  // hash the uniqueString
-  const saltRounds = 10;
-  bcrypt
-    .hash(uniqueString, saltRounds)
-    .then((hashedUniqueString) => {
-      // set calues in user Verification colletion
-      const newVerification = new UserVerification({
-        userId: _id,
-        uniqueString: hashedUniqueString,
-        createdAt: Date.now(),
-        expiresAt: Date.now() + 21600000,
-      });
+  //Hash Password
+  const salt = await bcrypt.genSalt(10);
+  const hashedUniqueString = await bcrypt.hash(uniqueString, salt);
 
-      newVerification
-        .save()
-        .then(() => {
-          transporter
-            .sendMail(mailOptions)
-            .then(() => {
-              // email send and verification record saved
-              res.json({
-                status: "PENDING",
-                message: "Verification email send",
-              });
-            })
-            .catch((error) => {
-              console.log(error);
-              res.json({
-                status: "FAILED",
-                message: "Verification email failed",
-              });
-            });
-        })
-        .catch((error) => {
-          console.log(error);
-          res.json({
-            status: "FAILED",
-            message: "Couldn't save verification email data!",
-          });
-        });
-    })
-    .catch(() => {
-      res.json({
-        status: "FAILED",
-        message: "An error occurred while hashing email data",
+  const newVerification = await UserVerification.create({
+    userId: _id,
+    uniqueString: hashedUniqueString,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 21600000,
+  });
+
+  if (newVerification) {
+    let info = await transporter.sendMail(mailOptions);
+
+    if (info.accepted) {
+      res.status(200).json({
+        status: "PENDING",
+        message: "Verification email sent",
       });
-    });
-};
+    } else if (info.rejected) {
+      res.status(400);
+      throw new Error("Failed to send mail");
+    }
+  } else {
+    res.status(400);
+    throw new Error("Couldn't save verification email data!");
+  }
+});
 
 //verify email
-const verifyEmail = (req, res) => {
+const verifyEmail = asyncHandler(async (req, res) => {
   let { userId, uniqueString } = req.params;
-  UserVerification.find({ userId })
-    .then((result) => {
-      if (result.length > 0) {
-        // User verification record exists so we proceed
 
-        const { expiresAt } = result[0];
-        const hashedUniqueString = result[0].uniqueString;
+  const result = await UserVerification.findOne({ userId });
 
-        // Checking for expired unique string
-        if (expiresAt < Date.now()) {
-          // record has expired so we delete it
-          UserVerification.deleteOne({ userId })
-            .then((result) => {
-              Employer.deleteOne({ _id: userId })
-                .then(() => {
-                  let message = "Link has expired. Please sign up again";
-                  res.redirect(`/api/verified/error=true&message=${message}`);
-                })
-                .catch((error) => {
-                  let message =
-                    "Clearing user with expired unique string failed";
-                  res.redirect(`/api/verified/error=true&message=${message}`);
-                });
-            })
-            .catch((error) => {
-              console.log(error);
-              let message =
-                "An error occurred while clearing expired user verification record";
-              res.redirect(`/api/verified/error=true&message=${message}`);
-            });
-        } else {
-          // valid record exists so we validate the user string
-          // First compare the hashed unique string
+  console.log(result);
 
-          bcrypt
-            .compare(uniqueString, hashedUniqueString)
-            .then((result) => {
-              if (result) {
-                //Strings match
+  if (result) {
+    // User verification record exists so we proceed
 
-                Employer.updateOne({ _id: userId }, { verified: true })
-                  .then(() => {
-                    UserVerification.deleteOne({ userId })
-                      .then(() => {
-                        res.sendFile(
-                          path.join(__dirname, "./../views/verified.html")
-                        );
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                        let message =
-                          "An error occurred while finalizing successful";
-                        res.redirect(
-                          `/api/verified/error=true&message=${message}`
-                        );
-                      });
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                    let message =
-                      "An error occurred while updating user record to show verified";
-                    res.redirect(`/api/verified/error=true&message=${message}`);
-                  });
-              } else {
-                //existing record but incorrect verification details passed
-                let message =
-                  "Invalid verifiation details passed. Check your inbox";
-                res.redirect(`/api/verified/error=true&message=${message}`);
-              }
-            })
-            .catch((error) => {
-              let message = "An error occurred while comparing unique string";
-              res.redirect(`/api/verified/error=true&message=${message}`);
-            });
-        }
+    const { expiresAt } = result;
+    const hashedUniqueString = result.uniqueString;
+
+    // Checking for expired unique string
+    if (expiresAt < Date.now()) {
+      // record has expired so we delete it
+      await UserVerification.deleteOne({ userId });
+      await Employer.deleteOne({ _id: userId });
+      let message = "Link has expired. Please sign up again";
+      res.redirect(`/api/verified/?error=true&message=${message}`);
+    } else {
+      // valid record exists so we validate the user string
+      // First compare the hashed unique string
+
+      if (await bcrypt.compare(uniqueString, hashedUniqueString)) {
+        //string match
+
+        await Employer.updateOne({ _id: userId }, { verified: true });
+        await UserVerification.deleteOne({ userId });
+        res.sendFile(path.join(__dirname, "./../views/verified.html"));
       } else {
-        // user verification record doesn't exist
-        let message =
-          "Account record doesn't exist or has been verified already. Please sign up or log in";
-        res.redirect(`/api/verified/error=true&message=${message}`);
+        //existing record but incorrect verification details passed
+        let message = "Invalid verifiation details passed. Check your inbox";
+        res.redirect(`/api/verified/?error=true&message=${message}`);
       }
-    })
-    .catch((error) => {
-      console.log(error);
-      let message =
-        "An error occurred while checking for existing user verification record";
-      res.redirect(`/api/verified/error=true&message=${message}`);
-    });
-};
+    }
+  } else {
+    // user verification record doesn't exist
+    let message =
+      "Account record doesn't exist or has been verified already. Please sign up or log in";
+    res.redirect(`/api/verified/?error=true&message=${message}`);
+  }
+});
 
 const verifiedEmail = (req, res) => {
+  if (req.query.error) {
+    res.sendFile(path.join(__dirname, "./../views/error.html"));
+  }
   res.sendFile(path.join(__dirname, "./../views/verified.html"));
 };
 
