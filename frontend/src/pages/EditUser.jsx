@@ -3,18 +3,16 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiFillEdit } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
-import { updateEmployer, reset } from "../features/employer/employerSlice";
+import { updateUser, reset } from "../features/user/userSlice";
 import { refresh } from "../features/auth/authSlice";
 import InputError from "../components/InputError";
 
-function EditEmployer() {
+function EditUser() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [inputMessage, setInputMessage] = useState(null);
-  const { employer } = useSelector((state) => state.auth);
-  const { isSuccess, isError, message } = useSelector(
-    (state) => state.employer
-  );
+  const { user } = useSelector((state) => state.auth);
+  const { isSuccess, isError, message } = useSelector((state) => state.user);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -34,29 +32,29 @@ function EditEmployer() {
 
     if (isSuccess) {
       dispatch(refresh(formData));
-      navigate(`/employer/${employer._id}`);
+      navigate(`/user/${user._id}`);
     }
 
     return () => {};
   }, [isSuccess, isError, message]);
 
   useEffect(() => {
-    if (employer) {
+    if (user) {
       setFormData({
-        name: employer.name,
-        mobileNumber: employer.mobileNumber,
-        companyName: employer.companyName,
-        address: employer.address,
-        description: employer.description,
+        name: user.name,
+        mobileNumber: user.mobileNumber,
+        companyName: user.companyName,
+        address: user.address,
+        description: user.description,
       });
     }
 
     return () => {};
-  }, [employer]);
+  }, [user]);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateEmployer(formData));
+    dispatch(updateUser(formData));
   };
 
   const onChange = (e) => {
@@ -171,4 +169,4 @@ function EditEmployer() {
   );
 }
 
-export default EditEmployer;
+export default EditUser;

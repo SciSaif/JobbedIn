@@ -1,28 +1,29 @@
 const asyncHandler = require("express-async-handler");
 
-const Employer = require("../models/employerModel");
+const User = require("../models/userModel");
 const Job = require("../models/jobModel");
+const Company = require("../models/companyModel");
 
-// @desc Get jobs by employer
+// @desc Get jobs by user
 // @route GET /api/jobs
 // @access Public
-const getJobsByEmployer = asyncHandler(async (req, res) => {
-  const employer = await Employer.findById(req.headers.id);
+const getJobsByUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.headers.id);
 
-  if (!employer) {
+  if (!user) {
     res.status(401);
-    throw new Error("Employer not found");
+    throw new Error("User not found");
   }
 
-  const jobs = await Job.find({ employer: req.headers.id });
+  const jobs = await Job.find({ user: req.headers.id });
   res.status(200).json(jobs);
 });
 
-// @desc Get a particular job by employer
+// @desc Get a particular job by id
 // @route GET /api/jobs/:id
-// @access Private
-const getJobByEmployer = asyncHandler(async (req, res) => {
-  const job = await Job.findById(req.params.id).populate("employer");
+// @access Public
+const getJobById = asyncHandler(async (req, res) => {
+  const job = await Job.findById(req.params.id).populate("user");
   if (!job) {
     res.status(404);
     throw new Error("Job not found");
@@ -31,7 +32,7 @@ const getJobByEmployer = asyncHandler(async (req, res) => {
   res.status(200).json(job);
 });
 
-// @desc Create a job by employer
+// @desc Create a job by user
 // @route POST /api/jobs
 // @access Private
 const createJob = asyncHandler(async (req, res) => {
@@ -43,49 +44,64 @@ const createJob = asyncHandler(async (req, res) => {
     employmentType,
     description,
     payRange = null,
+    companyID,
   } = req.body;
 
-  console.log(req.body);
-
-  if (!title || !workplaceType || !employmentType || !description) {
+  if (
+    !title ||
+    !workplaceType ||
+    !employmentType ||
+    !description ||
+    !companyID
+  ) {
     res.status(400);
     throw new Error("Please include all fields");
   }
 
-  //get employer using the id in the JWT
-  const employer = await Employer.findById(req.employer.id);
+  //get user using the id in the JWT
+  const user = await User.findById(req.user.id);
 
-  if (!employer) {
+  if (!user) {
     res.status(401);
-    throw new Error("Employer not found");
+    throw new Error("User not found");
+  }
+
+  //get company using the id in the JWT
+  const company = await Company.findById(req.user.id);
+
+  if (!company) {
+    res.status(401);
+    throw new Error("Company not found");
   }
 
   const job = await Job.create({
-    employer,
+    user,
     title,
     workplaceType,
     location,
     employmentType,
     description,
     payRange,
+    companyID,
     applicants: 0,
   });
 
   if (job) {
     res.status(201).json({
       _id: job.id,
-      employer,
+      user,
       title: job.title,
       workplaceType: job.workplaceType,
       location: job.location,
       employmentType: job.employmentType,
       description: job.description,
       payRange: job.payRange,
+      companyID,
       applicants: job.applicants,
     });
   } else {
     res.status(400);
-    throw new Error("Invalid Employer Data");
+    throw new Error("Invalid User Data");
   }
 });
 
@@ -93,12 +109,12 @@ const createJob = asyncHandler(async (req, res) => {
 // @route DELETE /api/jobs/:id
 // @access Private
 const deleteJob = asyncHandler(async (req, res) => {
-  //get employer using the id in the JWT
-  const employer = await Employer.findById(req.employer.id);
+  //get user using the id in the JWT
+  const user = await User.findById(req.user.id);
 
-  if (!employer) {
+  if (!user) {
     res.status(401);
-    throw new Error("Employer not found");
+    throw new Error("User not found");
   }
 
   const job = await Job.findById(req.params.id);
@@ -108,7 +124,7 @@ const deleteJob = asyncHandler(async (req, res) => {
     throw new Error("Job not found");
   }
 
-  if (job.employer.toString() != req.employer.id) {
+  if (job.user.toString() != req.user.id) {
     res.status(401);
     throw new Error("Not Authorized");
   }
@@ -122,12 +138,12 @@ const deleteJob = asyncHandler(async (req, res) => {
 // @route PUT /api/jobs/:id
 // @access Private
 const updateJob = asyncHandler(async (req, res) => {
-  //get employer using the id in the JWT
-  const employer = await Employer.findById(req.employer.id);
+  //get user using the id in the JWT
+  const user = await User.findById(req.user.id);
 
-  if (!employer) {
+  if (!user) {
     res.status(401);
-    throw new Error("Employer not found");
+    throw new Error("User not found");
   }
 
   const job = await Job.findById(req.params.id);
@@ -137,7 +153,7 @@ const updateJob = asyncHandler(async (req, res) => {
     throw new Error("Job not found");
   }
 
-  if (job.employer.toString() != req.employer.id) {
+  if (job.user.toString() != req.user.id) {
     res.status(401);
     throw new Error("Not Authorized");
   }
@@ -170,9 +186,9 @@ const getAllJobs = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  getJobsByEmployer,
+  getJobsByUser,
   createJob,
-  getJobByEmployer,
+  getJobById,
   deleteJob,
   updateJob,
   getAllJobs,

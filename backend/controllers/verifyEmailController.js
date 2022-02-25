@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs/dist/bcrypt");
 require("dotenv").config();
 
-const Employer = require("../models/employerModel");
+const User = require("../models/userModel");
 const UserVerification = require("../models/UserVerification");
 
 const path = require("path");
@@ -87,7 +87,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
 
   const result = await UserVerification.findOne({ userId });
 
-  console.log(result);
+  // console.log(result);
 
   if (result) {
     // User verification record exists so we proceed
@@ -99,7 +99,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
     if (expiresAt < Date.now()) {
       // record has expired so we delete it
       await UserVerification.deleteOne({ userId });
-      await Employer.deleteOne({ _id: userId });
+      await User.deleteOne({ _id: userId });
       let message = "Link has expired. Please sign up again";
       res.redirect(`/api/verified/?error=true&message=${message}`);
     } else {
@@ -109,7 +109,8 @@ const verifyEmail = asyncHandler(async (req, res) => {
       if (await bcrypt.compare(uniqueString, hashedUniqueString)) {
         //string match
 
-        await Employer.updateOne({ _id: userId }, { verified: true });
+        await User.updateOne({ _id: userId }, { verified: true });
+        console.log("rf");
         await UserVerification.deleteOne({ userId });
         res.sendFile(path.join(__dirname, "./../views/verified.html"));
       } else {

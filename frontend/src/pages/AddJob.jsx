@@ -1,15 +1,40 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { CgArrowLongRight } from "react-icons/cg";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { createJob, reset } from "../features/jobs/jobsSlice";
+import {
+  getCompanies,
+  reset as resetCompany,
+} from "../features/companies/companiesSlice";
 import InputError from "../components/InputError";
 import { GrLogin } from "react-icons/gr";
 import Spinner from "../components/Spinner";
 import { MdPostAdd } from "react-icons/md";
 
+import { Group, Avatar, Text, Select } from "@mantine/core";
+
+const SelectItem = forwardRef(
+  ({ image, label, description, ...others }, ref) => (
+    <div ref={ref} {...others}>
+      <Group noWrap>
+        <Avatar src={image} />
+
+        <div>
+          <Text>{label}</Text>
+          <Text size="xs" color="dimmed">
+            {description}
+          </Text>
+        </div>
+      </Group>
+    </div>
+  )
+);
+
 function AddJob() {
+  const [data, setData] = useState([]);
+
   const navigate = useNavigate();
   const [inputMessage, setInputMessage] = useState(null);
   const [providePayRange, setProvidePayRange] = useState(false);
@@ -39,8 +64,13 @@ function AddJob() {
   const { jobs, isLoading, isSuccess, message, isError } = useSelector(
     (state) => state.jobs
   );
+  const {
+    companies,
+    isSuccess: isSuccessCompany,
+    isError: isErrorCompany,
+  } = useSelector((state) => state.companies);
 
-  const { employer } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isError) {
@@ -49,11 +79,44 @@ function AddJob() {
 
     // Redirect when logged in
     if (isSuccess) {
-      navigate(`/employer/${employer._id}`);
+      navigate(`/employer/${user._id}`);
+    }
+
+    if (isSuccessCompany) {
+      let dataTemp = [];
+      companies.forEach((company) => {
+        dataTemp.push({
+          image: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
+          label: company.name,
+          value: company.name,
+          description: company.industry,
+        });
+      });
+
+      setData(dataTemp);
+      dispatch(resetCompany());
+    }
+
+    if (isErrorCompany) {
+      dispatch(resetCompany());
     }
 
     dispatch(reset());
-  }, [isError, isSuccess, message, navigate, dispatch]);
+  }, [
+    isError,
+    isSuccess,
+    message,
+    navigate,
+    dispatch,
+    isSuccessCompany,
+    isErrorCompany,
+  ]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getCompanies(user._id));
+    }
+  }, []);
 
   const onChange = (e) => {
     if (e.target.type === "number") {
@@ -115,7 +178,7 @@ function AddJob() {
             </label>
             <div className="flex w-full flex-wrap items-stretch mb-3">
               <input
-                type="title"
+                type="text"
                 id="title"
                 placeholder="title"
                 className="px-3 py-1 text-black bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
@@ -124,6 +187,22 @@ function AddJob() {
                 required
               />
             </div>
+
+            <Select
+              label="Choose employee of the month"
+              placeholder="Pick one"
+              itemComponent={SelectItem}
+              data={data}
+              searchable
+              maxDropdownHeight={400}
+              nothingFound="Nobody here"
+              filter={(value, item) =>
+                item.label.toLowerCase().includes(value.toLowerCase().trim()) ||
+                item.description
+                  .toLowerCase()
+                  .includes(value.toLowerCase().trim())
+              }
+            />
 
             <label htmlFor="workplaceType" className="required">
               Workplace Type

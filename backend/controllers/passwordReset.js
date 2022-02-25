@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs/dist/bcrypt");
 require("dotenv").config();
 
-const Employer = require("../models/employerModel");
+const User = require("../models/userModel");
 const PasswordReset = require("../models/passwordReset");
 
 const nodemailer = require("nodemailer");
@@ -31,9 +31,9 @@ transporter.verify((error, success) => {
 
 const passwordReset = asyncHandler(async (req, res) => {
   const { email, redirectUrl } = req.body;
-  const employer = await Employer.findOne({ email });
+  const user = await User.findOne({ email });
 
-  if (!employer) {
+  if (!user) {
     //user doesn't exist
     res.status(400);
     throw new Error("No account exists with the supplied email address");
@@ -41,12 +41,12 @@ const passwordReset = asyncHandler(async (req, res) => {
     //user exists
 
     //check if user is verified
-    if (!employer.verified) {
+    if (!user.verified) {
       res.status(400);
       throw new Error("Email hasn't been verified yet. Check your inbox");
     } else {
       //user verified
-      sendResetEmail(employer, redirectUrl, res);
+      sendResetEmail(user, redirectUrl, res);
     }
   }
 });
@@ -132,10 +132,7 @@ const executeResetPassword = asyncHandler(async (req, res) => {
 
       const salt = await bcrypt.genSalt(10);
       const hashedNewPassword = await bcrypt.hash(newPassword, salt);
-      await Employer.updateOne(
-        { _id: userId },
-        { password: hashedNewPassword }
-      );
+      await User.updateOne({ _id: userId }, { password: hashedNewPassword });
 
       //update complete
       //now delete reset record

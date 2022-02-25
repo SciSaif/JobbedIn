@@ -1,14 +1,15 @@
 const express = require("express");
 const { protect } = require("../middlewares/authMiddleware");
 const {
-  registerEmployer,
-  loginEmployer,
+  registerUser,
+  updateUser,
+  deleteUser,
+  getUserById,
+  loginUser,
   getMe,
-  getEmployerById,
-  updateEmployer,
-  deleteEmployer,
+
   changePassword,
-} = require("../controllers/employerController");
+} = require("../controllers/userController");
 const { route } = require("express/lib/application");
 const router = express.Router();
 
@@ -16,13 +17,13 @@ router.put("/changePassword", protect, changePassword);
 
 router
   .route("/")
-  .post(registerEmployer)
-  .put(protect, updateEmployer)
-  .delete(protect, deleteEmployer);
+  .post(registerUser)
+  .put(protect, updateUser)
+  .delete(protect, deleteUser);
 
-router.get("/:id", getEmployerById);
+router.get("/:id", getUserById);
 
-router.post("/login", loginEmployer);
+router.post("/login", loginUser);
 router.post("/me", protect, getMe);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logoutEmployer, reset } from "../features/auth/authSlice";
+import { logoutUser, reset } from "../features/auth/authSlice";
 import { toggleDrawer } from "../features/other/otherSlice";
 
 import { FaAngleRight } from "react-icons/fa";
@@ -13,12 +13,12 @@ function Drawer() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { employer } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const { drawerState } = useSelector((state) => state.other);
 
   const onLogout = () => {
     drawerToggle();
-    dispatch(logoutEmployer());
+    dispatch(logoutUser());
     dispatch(reset());
     navigate("/");
   };
@@ -54,10 +54,10 @@ function Drawer() {
           <AiOutlineHome color="white" size="40px" />
         </Link>
 
-        {employer ? (
+        {user ? (
           <>
             <div className=" w-full bg-black/25 text-white py-4 px-4 rounded-t-xl">
-              <h1 className="font-bold">Welcome {employer.name}</h1>
+              <h1 className="font-bold">Welcome {user.name}</h1>
 
               <div className="flex flex-row">
                 <button
@@ -69,7 +69,7 @@ function Drawer() {
               </div>
               <div className="flex flex-row mt-2">
                 <Link
-                  to={`/employer/${employer._id}`}
+                  to={`/user/${user._id}`}
                   className="flex-1 text-xl text-center shadow bg-accent rounded-lg py-2 hover:bg-accentD focus:ring-4 focus:ring-secondary"
                   onClick={drawerToggle}
                 >
@@ -90,14 +90,14 @@ function Drawer() {
 
               <div className="flex flex-row">
                 <Link
-                  to="/login-employer"
+                  to="/login-user"
                   className="flex-1 text-xl text-center shadow bg-secondary rounded-l-lg py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
                   onClick={drawerToggle}
                 >
                   Login
                 </Link>
                 <Link
-                  to="/register-employer"
+                  to="/register-user"
                   className="flex-1 text-xl text-center shadow bg-accent rounded-r-lg py-2 hover:bg-accentD focus:ring-4 focus:ring-secondary"
                   onClick={drawerToggle}
                 >

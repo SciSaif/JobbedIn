@@ -2,21 +2,22 @@ import React from "react";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import EmployerDashboard from "./pages/Employer";
 import Home from "./pages/Home";
-import LoginEmployer from "./pages/LoginEmployer";
-import RegisterEmployer from "./pages/RegisterEmployer";
+import LoginUser from "./pages/LoginUser";
+import RegisterUser from "./pages/RegisterUser";
 import PrivateRoute from "./components/PrivateRoute,";
 import AddJob from "./pages/AddJob";
 import Job from "./pages/Job";
 import EditJob from "./pages/EditJob";
 import Jobs from "./pages/Jobs";
 import Employer from "./pages/Employer";
-import EditEmployer from "./pages/EditEmployer";
+import EditUser from "./pages/EditUser";
 import EmailSent from "./pages/EmailSent";
 import { SnackbarProvider } from "notistack";
 import ForgotPassword from "./pages/ForgotPassword";
 import SetNewPassword from "./pages/SetNewPassword";
+import AddCompany from "./pages/AddCompany";
+import Company from "./pages/Company";
 
 function App() {
   return (
@@ -33,17 +34,14 @@ function App() {
 
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/register-employer" element={<RegisterEmployer />} />
+            <Route path="/register-user" element={<RegisterUser />} />
             <Route path="/emailsent/:userEmail" element={<EmailSent />} />
-            <Route
-              path="/login-employer/:userEmail"
-              element={<LoginEmployer />}
-            />
-            <Route path="/login-employer" element={<LoginEmployer />} />
+            <Route path="/login-user/:userEmail" element={<LoginUser />} />
+            <Route path="/login-user" element={<LoginUser />} />
             <Route path="/add-job" element={<AddJob />} />
-            <Route path="/employer/:id" element={<Employer />} />
-            <Route path="/employer/edit" element={<PrivateRoute />}>
-              <Route path="/employer/edit" element={<EditEmployer />} />
+            <Route path="/user/:id" element={<Employer />} />
+            <Route path="/user/edit" element={<PrivateRoute />}>
+              <Route path="/user/edit" element={<EditUser />} />
             </Route>
             <Route path="/edit-job/:id" element={<PrivateRoute />}>
               <Route path="/edit-job/:id" element={<EditJob />} />
@@ -51,6 +49,8 @@ function App() {
             <Route path="/job/:id" element={<Job />} />
             <Route path="/jobs/all" element={<Jobs />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/add-company" element={<AddCompany />} />
+            <Route path="/company/:id" element={<Company />} />
             <Route
               path="/set-new-password/:id/:resetString"
               element={<SetNewPassword />}

@@ -2,12 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { registerEmployer, reset } from "../features/auth/authSlice";
+import { registerUser, reset } from "../features/auth/authSlice";
 import InputError from "../components/InputError";
 import { BsFillPersonLinesFill } from "react-icons/bs";
 import Spinner from "../components/Spinner";
 
-function RegisterEmployer() {
+function RegisterUser() {
   const [inputMessage, setInputMessage] = useState(null);
 
   const navigate = useNavigate();
@@ -18,25 +18,13 @@ function RegisterEmployer() {
     password: "",
     confirmPassword: "",
     mobileNumber: "",
-    companyName: "",
-    address: "",
-    description: "",
   });
 
-  const {
-    name,
-    email,
-    password,
-    confirmPassword,
-    mobileNumber,
-    companyName,
-    address,
-    description,
-  } = formData;
+  const { name, email, password, confirmPassword, mobileNumber } = formData;
 
   const dispatch = useDispatch();
 
-  const { employer, isLoading, isSuccess, isError, message } = useSelector(
+  const { user, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.auth
   );
 
@@ -46,13 +34,13 @@ function RegisterEmployer() {
     }
 
     // Redirect when logged in
-    if (isSuccess || employer) {
-      // navigate(`/employer/${employer._id}`);
+    if (isSuccess || user) {
+      // navigate(`/user/${user._id}`);
       navigate(`/emailsent/${email}`);
     }
 
     dispatch(reset());
-  }, [isError, isSuccess, employer, message, navigate, dispatch]);
+  }, [isError, isSuccess, user, message, navigate, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -75,12 +63,13 @@ function RegisterEmployer() {
         setInputMessage(null);
       }, 3000);
     } else {
-      const employerData = {
+      const userData = {
         ...formData,
       };
-      delete employerData.confirmPassword;
+      delete userData.confirmPassword;
+      userData.designation = "employer";
 
-      dispatch(registerEmployer(employerData));
+      dispatch(registerUser(userData));
     }
   };
 
@@ -178,51 +167,6 @@ function RegisterEmployer() {
               />
             </div>
 
-            <label htmlFor="companyName" className="required">
-              Company name
-            </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
-              <textarea
-                type="text"
-                id="companyName"
-                placeholder="Company name"
-                className="px-3 py-1 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
-                value={companyName}
-                onChange={onChange}
-                required
-              />
-            </div>
-            <label htmlFor="address" className="required">
-              Company address
-            </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
-              <textarea
-                type="text"
-                id="address"
-                placeholder="Company address"
-                className="px-3 py-1 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
-                value={address}
-                onChange={onChange}
-                required
-              />
-            </div>
-
-            <label htmlFor="description" className="required">
-              Company description
-            </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
-              <textarea
-                type="text"
-                id="description"
-                placeholder="Company description"
-                className="px-3 py-1 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
-                value={description}
-                onChange={onChange}
-                rows="3"
-                required
-              />
-            </div>
-
             <button
               type="submit"
               className=" w-full text-xl shadow bg-secondary rounded py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
@@ -233,7 +177,7 @@ function RegisterEmployer() {
 
           <p className="mt-3">
             Already have an account?{" "}
-            <Link to="/login-employer" className="underline text-accent">
+            <Link to="/login-user" className="underline text-accent">
               Login
             </Link>
           </p>
@@ -243,4 +187,4 @@ function RegisterEmployer() {
   );
 }
 
-export default RegisterEmployer;
+export default RegisterUser;

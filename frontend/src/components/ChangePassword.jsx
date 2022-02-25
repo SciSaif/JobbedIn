@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { changePassword, reset } from "../features/employer/employerSlice";
+import { changePassword, reset } from "../features/user/userSlice";
 import { useSnackbar } from "notistack";
 
 function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {

@@ -2,12 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  deleteEmployer,
-  reset,
-  emptyEmployer,
-} from "../features/employer/employerSlice";
-import { logoutEmployer } from "../features/auth/authSlice";
+import { deleteUser, reset, emptyUser } from "../features/user/userSlice";
+import { logoutUser } from "../features/auth/authSlice";
 import { useSnackbar } from "notistack";
 
 function DeleteAccount({ closeDrawer, setSelectedSetting, setOpen }) {
@@ -17,9 +13,7 @@ function DeleteAccount({ closeDrawer, setSelectedSetting, setOpen }) {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isSuccess, isError, message } = useSelector(
-    (state) => state.employer
-  );
+  const { isSuccess, isError, message } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (isError) {
@@ -27,10 +21,10 @@ function DeleteAccount({ closeDrawer, setSelectedSetting, setOpen }) {
       dispatch(reset());
     }
 
-    if (isSuccess && message.type === "deleteEmployer") {
+    if (isSuccess && message.type === "deleteUser") {
       dispatch(reset());
-      dispatch(emptyEmployer());
-      dispatch(logoutEmployer());
+      dispatch(emptyUser());
+      dispatch(logoutUser());
       closeDrawer();
       setOpen();
       setSelectedSetting(null);
@@ -52,7 +46,7 @@ function DeleteAccount({ closeDrawer, setSelectedSetting, setOpen }) {
       setPassword("");
       setSelectedSetting(null);
     } else {
-      dispatch(deleteEmployer(password));
+      dispatch(deleteUser(password));
     }
   };
 

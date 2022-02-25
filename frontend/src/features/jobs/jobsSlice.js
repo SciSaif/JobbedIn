@@ -11,9 +11,9 @@ const initialState = {
   message: "",
 };
 
-// Get jobs by employer
+// Get jobs by user
 export const getJobs = createAsyncThunk(
-  "jobs/getjobsByemployer",
+  "jobs/getjobsByuser",
   async (id, thunkAPI) => {
     try {
       return await jobsService.getJobs(id);
@@ -35,7 +35,7 @@ export const createJob = createAsyncThunk(
   "jobs/create",
   async (jobData, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.employer.token;
+      const token = thunkAPI.getState().auth.user.token;
       return await jobsService.createJob(jobData, token);
     } catch (error) {
       const message =
@@ -74,7 +74,7 @@ export const deleteJob = createAsyncThunk(
   "jobs/deleteJob",
   async (jobId, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.employer.token;
+      const token = thunkAPI.getState().auth.user.token;
       return await jobsService.deleteJob(jobId, token);
     } catch (error) {
       const message =
@@ -96,7 +96,7 @@ export const editJob = createAsyncThunk(
     try {
       const jobId = jobDataWithId.id;
       const jobData = jobDataWithId.jobData;
-      const token = thunkAPI.getState().auth.employer.token;
+      const token = thunkAPI.getState().auth.user.token;
       return await jobsService.editJob(jobId, jobData, token);
     } catch (error) {
       const message =

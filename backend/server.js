@@ -14,7 +14,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/api/employers", require("./routes/employerRoute"));
+app.use("/api/company", require("./routes/companyRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api", require("./routes/otherRoutes"));
 

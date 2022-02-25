@@ -1,33 +1,33 @@
 import axios from "axios";
 
-const API_URL = "/api/employers/";
+const API_URL = "/api/users/";
 
-// Register employer
-const registerEmployer = async (employerData) => {
-  const response = await axios.post(API_URL, employerData);
+// Register user
+const registerUser = async (userData) => {
+  const response = await axios.post(API_URL, userData);
 
   if (response.data) {
-    localStorage.setItem("employer", JSON.stringify(response.data));
+    localStorage.setItem("user", JSON.stringify(response.data));
   }
 
   return response.data;
 };
 
-// Login employer
-const loginEmployer = async (employerData) => {
-  const response = await axios.post(API_URL + "login", employerData);
+// Login user
+const loginUser = async (userData) => {
+  const response = await axios.post(API_URL + "login", userData);
   if (response.data) {
-    localStorage.setItem("employer", JSON.stringify(response.data));
+    localStorage.setItem("user", JSON.stringify(response.data));
   }
 
   return response.data;
 };
 
-// Logout employer
-const logoutEmployer = () => {
-  localStorage.removeItem("employer");
+// Logout user
+const logoutUser = () => {
+  localStorage.removeItem("user");
 };
 
-const authService = { registerEmployer, loginEmployer, logoutEmployer };
+const authService = { registerUser, loginUser, logoutUser };
 
 export default authService;

@@ -2,12 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { loginEmployer, reset } from "../features/auth/authSlice";
+import { loginUser, reset } from "../features/auth/authSlice";
 import InputError from "../components/InputError";
 import { GrLogin } from "react-icons/gr";
 import Spinner from "../components/Spinner";
 
-function LoginEmployer() {
+function LoginUser() {
   const navigate = useNavigate();
   const { userEmail } = useParams();
   const [inputMessage, setInputMessage] = useState(null);
@@ -21,7 +21,7 @@ function LoginEmployer() {
 
   const dispatch = useDispatch();
 
-  const { employer, isLoading, isSuccess, message, isError } = useSelector(
+  const { user, isLoading, isSuccess, message, isError } = useSelector(
     (state) => state.auth
   );
 
@@ -31,12 +31,12 @@ function LoginEmployer() {
     }
 
     // Redirect when logged in
-    if (isSuccess || employer) {
-      navigate(`/employer/${employer._id}`);
+    if (isSuccess || user) {
+      navigate(`/user/${user._id}`);
     }
 
     dispatch(reset());
-  }, [isError, isSuccess, employer, message, navigate, dispatch]);
+  }, [isError, isSuccess, user, message, navigate, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -47,11 +47,11 @@ function LoginEmployer() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const employerData = {
+    const userData = {
       ...formData,
     };
 
-    dispatch(loginEmployer(employerData));
+    dispatch(loginUser(userData));
   };
 
   return (
@@ -119,7 +119,7 @@ function LoginEmployer() {
 
           <p className="mt-1">
             Don't have an account?{" "}
-            <Link to="/register-employer" className="underline text-accent">
+            <Link to="/register-user" className="underline text-accent">
               Register
             </Link>
           </p>
@@ -129,4 +129,4 @@ function LoginEmployer() {
   );
 }
 
-export default LoginEmployer;
+export default LoginUser;

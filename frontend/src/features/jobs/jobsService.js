@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = "/api/jobs/";
 
-// Get jobs by employer
+// Get jobs by user id
 const getJobs = async (id) => {
   const config = {
     headers: {

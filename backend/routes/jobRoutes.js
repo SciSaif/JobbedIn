@@ -1,8 +1,8 @@
 const express = require("express");
 const {
-  getJobsByEmployer,
+  getJobsByUser,
   createJob,
-  getJobByEmployer,
+  getJobById,
   updateJob,
   deleteJob,
   getAllJobs,
@@ -11,14 +11,14 @@ const router = express.Router();
 
 const { protect } = require("../middlewares/authMiddleware");
 
-router.route("/").get(getJobsByEmployer).post(protect, createJob);
+router.route("/").get(getJobsByUser).post(protect, createJob);
 console.log("l");
 
 router.route("/all").get(getAllJobs);
 
 router
   .route("/:id")
-  .get(getJobByEmployer)
+  .get(getJobById)
   .delete(protect, deleteJob)
   .put(protect, updateJob);
 

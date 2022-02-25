@@ -1,14 +1,14 @@
 import axios from "axios";
 
-const API_URL = "/api/employers/";
+const API_URL = "/api/users/";
 
-const getEmployerById = async (id) => {
+const getUserById = async (id) => {
   const response = await axios.get(API_URL + id);
   return response.data;
 };
 
-// Update Employer details
-const updateEmployer = async (newData, token) => {
+// Update User details
+const updateUser = async (newData, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -20,8 +20,8 @@ const updateEmployer = async (newData, token) => {
   return response.data;
 };
 
-//Delete Employer
-const deleteEmployer = async (token, password) => {
+//Delete User
+const deleteUser = async (token, password) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -51,11 +51,11 @@ const changePassword = async (token, oldPassword, newPassword) => {
   return response.data;
 };
 
-const employerService = {
-  getEmployerById,
-  updateEmployer,
-  deleteEmployer,
+const userService = {
+  getUserById,
+  updateUser,
+  deleteUser,
   changePassword,
 };
 
-export default employerService;
+export default userService;

@@ -1,19 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import employerService from "./employerService";
+import userService from "./userService";
 
 const initialState = {
-  employer: {},
+  user: {},
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
-export const getEmployerById = createAsyncThunk(
-  "employer/getEmployerById",
+export const getUserById = createAsyncThunk(
+  "user/getUserById",
   async (id, thunkAPI) => {
     try {
-      return await employerService.getEmployerById(id);
+      return await userService.getUserById(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -27,13 +27,13 @@ export const getEmployerById = createAsyncThunk(
   }
 );
 
-// update employer details
-export const updateEmployer = createAsyncThunk(
-  "employer/update",
+// update user details
+export const updateUser = createAsyncThunk(
+  "user/update",
   async (newData, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.employer.token;
-      return await employerService.updateEmployer(newData, token);
+      const token = thunkAPI.getState().auth.user.token;
+      return await userService.updateUser(newData, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -47,13 +47,13 @@ export const updateEmployer = createAsyncThunk(
   }
 );
 
-// delete employer account
-export const deleteEmployer = createAsyncThunk(
-  "employer/delete",
+// delete user account
+export const deleteUser = createAsyncThunk(
+  "user/delete",
   async (password, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.employer.token;
-      return await employerService.deleteEmployer(token, password);
+      const token = thunkAPI.getState().auth.user.token;
+      return await userService.deleteUser(token, password);
     } catch (error) {
       const message =
         (error.response &&
@@ -69,15 +69,11 @@ export const deleteEmployer = createAsyncThunk(
 
 // change password
 export const changePassword = createAsyncThunk(
-  "employer/changePassword",
+  "user/changePassword",
   async ({ oldPassword, newPassword }, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.employer.token;
-      return await employerService.changePassword(
-        token,
-        oldPassword,
-        newPassword
-      );
+      const token = thunkAPI.getState().auth.user.token;
+      return await userService.changePassword(token, oldPassword, newPassword);
     } catch (error) {
       const message =
         (error.response &&
@@ -91,8 +87,8 @@ export const changePassword = createAsyncThunk(
   }
 );
 
-export const employerSlice = createSlice({
-  name: "employer",
+export const userSlice = createSlice({
+  name: "user",
   initialState,
   reducers: {
     reset: (state) => {
@@ -101,48 +97,48 @@ export const employerSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
-    emptyEmployer: (state) => {
-      state.employer = {};
+    emptyUser: (state) => {
+      state.user = {};
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getEmployerById.pending, (state) => {
+      .addCase(getUserById.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getEmployerById.fulfilled, (state, action) => {
+      .addCase(getUserById.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.employer = action.payload;
+        state.user = action.payload;
       })
-      .addCase(getEmployerById.rejected, (state, action) => {
+      .addCase(getUserById.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(updateEmployer.pending, (state) => {
+      .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(updateEmployer.fulfilled, (state, action) => {
+      .addCase(updateUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.employer = action.payload;
+        state.user = action.payload;
       })
-      .addCase(updateEmployer.rejected, (state, action) => {
+      .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(deleteEmployer.pending, (state) => {
+      .addCase(deleteUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteEmployer.fulfilled, (state, action) => {
+      .addCase(deleteUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.employer = {};
+        state.user = {};
         state.message = action.payload;
       })
-      .addCase(deleteEmployer.rejected, (state, action) => {
+      .addCase(deleteUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
@@ -163,5 +159,5 @@ export const employerSlice = createSlice({
   },
 });
 
-export const { reset, emptyEmployer } = employerSlice.actions;
-export default employerSlice.reducer;
+export const { reset, emptyUser } = userSlice.actions;
+export default userSlice.reducer;

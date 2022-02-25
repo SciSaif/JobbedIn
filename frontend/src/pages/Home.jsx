@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function Home() {
-  const { employer } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   return (
     <div className=" flex items-center justify-center min-w-screen h-screen  ">
@@ -19,7 +19,7 @@ function Home() {
 
           <div className="flex flex-col ">
             <Link
-              to={employer ? `/employer/${employer._id}` : `/register-employer`}
+              to={user ? `/user/${user._id}` : `/register-user`}
               className="bg-secondary hover:bg-[#4ffbe7] text-black rounded px-4 py-2 mt-4 w-fit hover:bg-tertiary-100 "
             >
               <div className="flex flex-row items-center">

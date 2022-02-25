@@ -98,7 +98,7 @@ function ForgotPassword() {
               <b>{email}</b>
             </div>
             <Link
-              to="/login-employer"
+              to="/login-user"
               className="mx-auto mt-5 mb-5 px-12 py-2 text-lg bg-white font-semibold md:hover:px-10 rounded-full"
             >
               Proceed

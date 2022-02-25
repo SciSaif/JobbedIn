@@ -2,22 +2,22 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // import { response } from "express";
 import authService from "./authService";
 
-const employer = JSON.parse(localStorage.getItem("employer"));
+const user = JSON.parse(localStorage.getItem("user"));
 
 const initiaState = {
-  employer: employer ? employer : null,
+  user: user ? user : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
-// Register new employer
-export const registerEmployer = createAsyncThunk(
-  "auth/registerEmployer",
-  async (employer, thunkAPI) => {
+// Register new user
+export const registerUser = createAsyncThunk(
+  "auth/registerUser",
+  async (user, thunkAPI) => {
     try {
-      return await authService.registerEmployer(employer);
+      return await authService.registerUser(user);
     } catch (error) {
       const message =
         (error.response &&
@@ -32,12 +32,12 @@ export const registerEmployer = createAsyncThunk(
   }
 );
 
-// Login Employer
-export const loginEmployer = createAsyncThunk(
-  "auth/loginEmployer",
-  async (employer, thunkAPI) => {
+// Login User
+export const loginUser = createAsyncThunk(
+  "auth/loginUser",
+  async (user, thunkAPI) => {
     try {
-      return await authService.loginEmployer(employer);
+      return await authService.loginUser(user);
     } catch (error) {
       const message =
         (error.response &&
@@ -52,13 +52,10 @@ export const loginEmployer = createAsyncThunk(
   }
 );
 
-// Logout employer
-export const logoutEmployer = createAsyncThunk(
-  "auth/logoutEmployer",
-  async () => {
-    await authService.logoutEmployer();
-  }
-);
+// Logout user
+export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
+  await authService.logoutUser();
+});
 
 export const authSlice = createSlice({
   name: "auth",
@@ -72,42 +69,42 @@ export const authSlice = createSlice({
       state.message = "";
     },
     refresh: (state, data) => {
-      state.employer = { ...state.employer, ...data.payload };
-      localStorage.setItem("employer", JSON.stringify(state.employer));
+      state.user = { ...state.user, ...data.payload };
+      localStorage.setItem("user", JSON.stringify(state.user));
     },
   },
   //since we are dealing with async stuff we need to handle them here
   extraReducers: (builder) => {
     builder
-      .addCase(registerEmployer.pending, (state) => {
+      .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(registerEmployer.fulfilled, (state) => {
+      .addCase(registerUser.fulfilled, (state) => {
         state.isLoading = false;
         state.isSuccess = true;
       })
-      .addCase(registerEmployer.rejected, (state, action) => {
+      .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.employer = null;
+        state.user = null;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(loginEmployer.pending, (state) => {
+      .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(loginEmployer.fulfilled, (state, action) => {
+      .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.employer = action.payload;
+        state.user = action.payload;
       })
-      .addCase(loginEmployer.rejected, (state, action) => {
+      .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.employer = null;
+        state.user = null;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(logoutEmployer.fulfilled, (state) => {
-        state.employer = null;
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
       });
   },
 });
