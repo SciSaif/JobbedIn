@@ -20,6 +20,8 @@ const addCompany = asyncHandler(async (req, res) => {
     tagline,
   } = req.body;
 
+  console.log("tag", tagline);
+
   if (!name || !industry || !companySize || !companyType || !address) {
     res.status(400);
     throw new Error("Please include all fields");
@@ -41,6 +43,8 @@ const addCompany = asyncHandler(async (req, res) => {
     tagline,
     postedBy: req.user._id,
   });
+
+  console.log(company);
 
   if (company) {
     res.status(201).json({

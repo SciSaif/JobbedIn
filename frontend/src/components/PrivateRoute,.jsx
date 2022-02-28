@@ -9,11 +9,7 @@ const PrivateRoute = () => {
     return <Spinner />;
   }
 
-  return loggedIn ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/employer-dashboard" isEmployer={false} />
-  );
+  return loggedIn ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default PrivateRoute;

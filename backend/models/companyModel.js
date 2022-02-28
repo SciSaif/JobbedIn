@@ -29,7 +29,7 @@ const companySchema = mongoose.Schema(
       type: String,
     },
     tagline: {
-      Type: String,
+      type: String,
     },
     postedBy: {
       type: mongoose.Schema.Types.ObjectId,

@@ -142,18 +142,20 @@ function Employer() {
         </div>
 
         <div className={`bg-secondaryL ${companiesShow ? "" : "hidden"}`}>
-          <Link
-            to="/add-company"
-            className="text-black pl-4 p-2 w-full flex justify-end md:hover:text-accentD "
-          >
-            <div className="w-full border-b-2 border-secondaryD pr-4 pb-1 pt-2 flex flex-row  items-center cursor-pointer ">
-              {" "}
-              Add a company
-              <div className="text-secondaryD">
-                <MdKeyboardArrowRight size="25px" />
+          {isEmployer && (
+            <Link
+              to="/add-company"
+              className="text-black pl-4 p-2 w-full flex justify-end md:hover:text-accentD "
+            >
+              <div className="w-full border-b-2 border-secondaryD pr-4 pb-1 pt-2 flex flex-row  items-center cursor-pointer ">
+                {" "}
+                Add a company
+                <div className="text-secondaryD">
+                  <MdKeyboardArrowRight size="25px" />
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          )}
 
           {isErrorCompany ? (
             <div className="text-white bg-accent w-full  p-2">

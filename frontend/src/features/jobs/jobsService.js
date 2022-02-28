@@ -23,6 +23,8 @@ const createJob = async (jobData, token) => {
     },
   };
 
+  console.log(jobData);
+
   const response = await axios.post(API_URL, jobData, config);
   return response.data;
 };

@@ -38,6 +38,7 @@ function AddJob() {
   const navigate = useNavigate();
   const [inputMessage, setInputMessage] = useState(null);
   const [providePayRange, setProvidePayRange] = useState(false);
+  const [selectedCompanyID, setSelectedCompanyID] = useState("");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -61,9 +62,10 @@ function AddJob() {
 
   const dispatch = useDispatch();
 
-  const { jobs, isLoading, isSuccess, message, isError } = useSelector(
+  const { jobs, job, isLoading, isSuccess, message, isError } = useSelector(
     (state) => state.jobs
   );
+
   const {
     companies,
     isSuccess: isSuccessCompany,
@@ -75,11 +77,13 @@ function AddJob() {
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
+      dispatch(reset());
     }
 
     // Redirect when logged in
     if (isSuccess) {
-      navigate(`/employer/${user._id}`);
+      navigate(`/job/${job._id}`);
+      dispatch(reset());
     }
 
     if (isSuccessCompany) {
@@ -88,7 +92,7 @@ function AddJob() {
         dataTemp.push({
           image: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
           label: company.name,
-          value: company.name,
+          value: company._id,
           description: company.industry,
         });
       });
@@ -110,6 +114,7 @@ function AddJob() {
     dispatch,
     isSuccessCompany,
     isErrorCompany,
+    job,
   ]);
 
   useEffect(() => {
@@ -125,6 +130,7 @@ function AddJob() {
       }
       e.target.value = parseInt(e.target.value);
     }
+
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
@@ -133,7 +139,7 @@ function AddJob() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (providePayRange && low > high) {
+    if (providePayRange && parseInt(low) > parseInt(high)) {
       setInputMessage("Pay range should be from low to high");
       return;
     }
@@ -145,6 +151,7 @@ function AddJob() {
       employmentType,
       description,
       payRange: providePayRange ? { low, high } : null,
+      companyID: selectedCompanyID,
     };
 
     dispatch(createJob(jobData));
@@ -157,8 +164,8 @@ function AddJob() {
   return (
     <div className="flex justify-center items-center align-bottom text-white min-w-screen min-h-screen shadow-lg ">
       {isLoading ? <Spinner /> : ""}
-      <main className="flex flex-col shapesd w-full md:w-1/2 lg:w-1/3 h-screen overflow-hidden">
-        <div className="w-full pl-4 py-2 mb-2  bg-primary">
+      <main className="flex flex-col shapesd w-full md:w-1/2 lg:w-1/3  mx-4 mb-3 mt-3 rounded-2xl bg-secondaryL text-[#141416]">
+        <div className="w-full pl-4 py-2 mb-2 bg-secondary rounded-t-2xl ">
           <h4>Find a great hire, fast </h4>
         </div>
         <div className="w-full pl-4 ">
@@ -188,20 +195,29 @@ function AddJob() {
               />
             </div>
 
+            <label htmlFor="company" className="required">
+              Company
+            </label>
+
             <Select
-              label="Choose employee of the month"
-              placeholder="Pick one"
+              // label=""
+              id="company"
+              value={selectedCompanyID}
+              onChange={setSelectedCompanyID}
+              required
+              placeholder="Company"
               itemComponent={SelectItem}
               data={data}
               searchable
               maxDropdownHeight={400}
-              nothingFound="Nobody here"
+              nothingFound="You have not added any companies"
               filter={(value, item) =>
                 item.label.toLowerCase().includes(value.toLowerCase().trim()) ||
                 item.description
                   .toLowerCase()
                   .includes(value.toLowerCase().trim())
               }
+              className="mb-2"
             />
 
             <label htmlFor="workplaceType" className="required">
@@ -323,7 +339,7 @@ function AddJob() {
 
             <button
               type="submit"
-              className=" w-full text-xl shadow bg-secondary rounded py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
+              className="mt-2 w-full text-xl shadow bg-secondary rounded py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
             >
               Submit
             </button>

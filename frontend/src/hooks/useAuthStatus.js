@@ -4,17 +4,17 @@ export const useAuthStatus = () => {
   const [loggedIn, setloggedIn] = useState(false);
   const [checkingStatus, setcheckingStatus] = useState(true);
 
-  const { employer } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (employer) {
+    if (user) {
       setloggedIn(true);
     } else {
       setloggedIn(false);
     }
 
     setcheckingStatus(false);
-  }, [employer]);
+  }, [user]);
 
   return { loggedIn, checkingStatus };
 };

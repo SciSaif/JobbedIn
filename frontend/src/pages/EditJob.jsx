@@ -1,23 +1,55 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { editJob, getJob, reset, resetJob } from "../features/jobs/jobsSlice";
 import InputError from "../components/InputError";
+import {
+  getCompanies,
+  reset as resetCompany,
+} from "../features/companies/companiesSlice";
 import { AiFillEdit } from "react-icons/ai";
 import Spinner from "../components/Spinner";
+import { Group, Avatar, Text, Select } from "@mantine/core";
+
+const SelectItem = forwardRef(
+  ({ image, label, description, ...others }, ref) => (
+    <div ref={ref} {...others}>
+      <Group noWrap>
+        <Avatar src={image} />
+
+        <div>
+          <Text>{label}</Text>
+          <Text size="xs" color="dimmed">
+            {description}
+          </Text>
+        </div>
+      </Group>
+    </div>
+  )
+);
 
 function EditJob() {
+  const [data, setData] = useState([]);
+
   const navigate = useNavigate();
   const { id } = useParams();
   const [inputMessage, setInputMessage] = useState(null);
   const [providePayRange, setProvidePayRange] = useState(false);
+  const [selectedCompanyID, setSelectedCompanyID] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const { job, isLoading, isSuccess, message, isError, onAction } = useSelector(
     (state) => state.jobs
   );
 
-  const { employer } = useSelector((state) => state.auth);
+  const {
+    companies,
+    isSuccess: isSuccessCompany,
+    isError: isErrorCompany,
+  } = useSelector((state) => state.companies);
+
+  const { user } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -31,17 +63,33 @@ function EditJob() {
 
   useEffect(() => {
     if (job.length !== 0) {
-      setFormData({
-        title: job.title,
-        employmentType: job.employmentType,
-        workplaceType: job.workPlaceType,
-        location: job.location,
-        description: job.description,
-        low: 0,
-        high: 0,
-      });
+      if (job.payRange) {
+        setFormData({
+          title: job.title,
+          employmentType: job.employmentType,
+          workplaceType: job.workPlaceType,
+          location: job.location,
+          description: job.description,
+          low: job.payRange.low,
+          high: job.payRange.high,
+        });
+        setProvidePayRange(true);
+      } else {
+        setFormData({
+          title: job.title,
+          employmentType: job.employmentType,
+          workplaceType: job.workPlaceType,
+          location: job.location,
+          description: job.description,
+          low: 0,
+          high: 0,
+        });
+      }
+      if (isSuccessCompany) {
+        setSelectedCompanyID(job.companyID);
+      }
     }
-  }, [job]);
+  }, [job, isSuccessCompany]);
 
   const {
     title,
@@ -54,23 +102,55 @@ function EditJob() {
   } = formData;
 
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
       dispatch(reset());
     }
-    // Redirect when logged in
-    if (isSuccess && onAction === "editJob") {
-      navigate(`/employer/${employer._id}`);
-      dispatch(reset());
-    } else if (isSuccess && onAction === "getJob") {
+
+    if (isSuccess && submitted) {
+      navigate(`/job/${job._id}`);
+    }
+    if (isSuccess) {
       dispatch(reset());
     }
-  }, [isError, isSuccess, message, navigate, dispatch]);
+
+    if (isSuccessCompany) {
+      let dataTemp = [];
+      companies.forEach((company) => {
+        dataTemp.push({
+          image: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
+          label: company.name,
+          value: company._id,
+          description: company.industry,
+        });
+      });
+
+      setData(dataTemp);
+      dispatch(resetCompany());
+    }
+
+    if (isErrorCompany) {
+      dispatch(resetCompany());
+    }
+
+    dispatch(reset());
+  }, [
+    isError,
+    isSuccess,
+    message,
+    navigate,
+    dispatch,
+    isSuccessCompany,
+    isErrorCompany,
+    job,
+  ]);
 
   useEffect(() => {
     dispatch(getJob(id));
+    if (user) {
+      dispatch(getCompanies(user._id));
+    }
 
     return () => {
       dispatch(resetJob());
@@ -103,9 +183,11 @@ function EditJob() {
       employmentType,
       description,
       payRange: providePayRange ? { low, high } : null,
+      companyID: selectedCompanyID,
     };
 
     dispatch(editJob({ jobData, id }));
+    setSubmitted(true);
   };
 
   const handleCheckbox = (e) => {
@@ -117,9 +199,9 @@ function EditJob() {
   }
 
   return (
-    <div className="flex justify-center items-center align-bottom text-white min-w-screen min-h-screen shadow-lg ">
+    <div className="flex justify-center  items-center align-bottom text-white min-w-screen min-h-screen shadow-lg ">
       {isLoading ? <Spinner /> : ""}
-      <main className="flex flex-col shapesd w-full md:w-1/2 lg:w-1/3 h-screen overflow-hidden pt-8">
+      <main className="flex flex-col  w-full md:w-1/2 lg:w-1/3   pt-6 mx-4 mb-3 mt-3  rounded-2xl bg-secondaryL text-[#141416] ">
         <div className="w-full pl-4 ">
           <h1 className="text-2xl font-bold mb-5">
             <div className="flex flex-row items-center ">
@@ -147,6 +229,31 @@ function EditJob() {
               />
             </div>
 
+            <label htmlFor="company" className="required">
+              Company
+            </label>
+
+            <Select
+              // label=""
+              id="company"
+              value={selectedCompanyID}
+              onChange={setSelectedCompanyID}
+              required
+              placeholder="Company"
+              itemComponent={SelectItem}
+              data={data}
+              searchable
+              maxDropdownHeight={400}
+              nothingFound="You have not added any companies"
+              filter={(value, item) =>
+                item.label.toLowerCase().includes(value.toLowerCase().trim()) ||
+                item.description
+                  .toLowerCase()
+                  .includes(value.toLowerCase().trim())
+              }
+              className="mb-2"
+            />
+
             <label htmlFor="workplaceType" className="required">
               Workplace Type
             </label>
@@ -155,7 +262,7 @@ function EditJob() {
               name="workplaceType"
               id="workplaceType"
               required
-              className="text-black px-3 py-1 mb-3 text-sm rounded border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
+              className="text-black px-3 py-1 mb-3 mt-2 text-sm rounded border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
               value={workplaceType}
               onChange={onChange}
             >
@@ -264,7 +371,7 @@ function EditJob() {
 
             <button
               type="submit"
-              className=" w-full text-xl shadow bg-secondary rounded py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
+              className=" w-full text-xl shadow bg-secondary rounded py-2 mt-3 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
             >
               Submit
             </button>

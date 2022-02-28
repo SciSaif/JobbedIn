@@ -12,6 +12,31 @@ import InputError from "../components/InputError";
 
 import Data from "../data/data.json";
 
+function isValidHttpUrl(string) {
+  let url;
+
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
+function validateURL(url) {
+  if (
+    !(url.substring(0, 8) === "https://" || url.substring(0, 7) === "http://")
+  ) {
+    url = "https://" + url;
+    if (isValidHttpUrl(url)) return url;
+    else return null;
+  } else {
+    if (isValidHttpUrl(url)) return url;
+    else return null;
+  }
+}
+
 function AddCompany() {
   const data = Data;
   const navigate = useNavigate();
@@ -19,6 +44,7 @@ function AddCompany() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [inputMessage, setInputMessage] = useState(null);
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [ready, setReady] = useState(false);
 
   const { company, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.companies
@@ -49,16 +75,16 @@ function AddCompany() {
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
-      dispatch(reset);
+      dispatch(reset());
     }
 
     if (isSuccess) {
       enqueueSnackbar("Company added successfully", {
         variant: "success",
       });
+      dispatch(reset());
+      dispatch(emptyCompany());
       navigate(`/company/${company._id}`);
-      dispatch(reset);
-      dispatch(emptyCompany);
     }
   }, [isError, isSuccess, message, dispatch]);
 
@@ -72,6 +98,14 @@ function AddCompany() {
     }
   };
 
+  useEffect(() => {
+    if (ready) {
+      console.log(formData);
+      dispatch(addCompany(formData));
+      setReady(false);
+    }
+  }, [formData]);
+
   const onSubmit = (e) => {
     e.preventDefault();
     if (!agreeTerms) {
@@ -79,7 +113,20 @@ function AddCompany() {
       return;
     }
 
-    dispatch(addCompany(formData));
+    let newLink = validateURL(website);
+    if (!newLink) {
+      setInputMessage("Please enter a valid website link");
+      return;
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        website: newLink,
+      }));
+    }
+
+    setReady(true);
+
+    return;
   };
 
   const onChange = (e) => {

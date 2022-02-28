@@ -17,12 +17,10 @@ function EditUser() {
   const [formData, setFormData] = useState({
     name: "",
     mobileNumber: "",
-    companyName: "",
-    address: "",
-    description: "",
+    email: "",
   });
 
-  const { name, mobileNumber, companyName, address, description } = formData;
+  const { name, mobileNumber, email } = formData;
 
   useEffect(() => {
     if (isError) {
@@ -43,9 +41,7 @@ function EditUser() {
       setFormData({
         name: user.name,
         mobileNumber: user.mobileNumber,
-        companyName: user.companyName,
-        address: user.address,
-        description: user.description,
+        email: user.email,
       });
     }
 
@@ -54,7 +50,11 @@ function EditUser() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateUser(formData));
+    const userData = {
+      ...formData,
+    };
+    userData.designation = "employer";
+    dispatch(updateUser(userData));
   };
 
   const onChange = (e) => {
@@ -67,7 +67,7 @@ function EditUser() {
   return (
     <div className="flex justify-center items-center align-bottom text-white min-w-screen min-h-screen shadow-lg ">
       {/* {isLoading ? <Spinner /> : ""} */}
-      <main className="flex flex-col shapesd w-full md:w-1/2 lg:w-1/3 h-screen overflow-hidden pt-8">
+      <main className="flex flex-col shapesd w-full md:w-1/2 lg:w-1/3 pt-6 mx-4 mb-3 mt-3 rounded-2xl bg-secondaryL text-[#141416]">
         <div className="w-full pl-4 ">
           <h1 className="text-2xl font-bold mb-5">
             <div className="flex flex-row items-center ">
@@ -110,49 +110,19 @@ function EditUser() {
               />
             </div>
 
-            <label htmlFor="companyName" className="required">
-              Company Name
+            <label htmlFor="email" className="required">
+              Email (cannot be changed)
             </label>
             <div className="flex w-full flex-wrap items-stretch mb-3">
               <input
                 type="text"
-                id="companyName"
-                placeholder="Company Name"
-                className="px-3 py-1 text-black bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
-                value={companyName}
+                id="email"
+                placeholder="Mobile Number"
+                className="px-3 py-1 text-black/75 bg-[#d5d5d5] rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
+                value={email}
                 onChange={onChange}
                 required
-              />
-            </div>
-
-            <label htmlFor="address" className="required">
-              Company Address
-            </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
-              <input
-                type="text"
-                id="address"
-                placeholder="Company Address"
-                className="px-3 py-1 text-black bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
-                value={address}
-                onChange={onChange}
-                required
-              />
-            </div>
-
-            <label htmlFor="description" className="required">
-              Description
-            </label>
-            <div className="flex w-full flex-wrap items-stretch mb-3">
-              <textarea
-                type="text"
-                id="description"
-                placeholder="Description"
-                className="px-3 py-1 text-black bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
-                value={description}
-                onChange={onChange}
-                rows="3"
-                required
+                disabled
               />
             </div>
 

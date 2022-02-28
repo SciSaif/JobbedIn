@@ -8,7 +8,7 @@ const jobSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
-    company: {
+    companyID: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "Company",

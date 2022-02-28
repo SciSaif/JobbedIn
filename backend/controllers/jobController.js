@@ -67,7 +67,7 @@ const createJob = asyncHandler(async (req, res) => {
   }
 
   //get company using the id in the JWT
-  const company = await Company.findById(req.user.id);
+  const company = await Company.findById(companyID);
 
   if (!company) {
     res.status(401);

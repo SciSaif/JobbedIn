@@ -36,7 +36,7 @@ function Company() {
 
   useEffect(() => {
     if (isError) {
-      dispatch(reset);
+      dispatch(reset());
       enqueueSnackbar("Company not found", {
         variant: "error",
       });
@@ -44,13 +44,16 @@ function Company() {
     }
 
     if (isSuccess) {
-      dispatch(reset);
-      navigate(`/company/${company._id}`);
+      dispatch(reset());
     }
   }, [isError, isSuccess, message, dispatch]);
 
   useEffect(() => {
     dispatch(getCompany(id));
+
+    return () => {
+      dispatch(emptyCompany());
+    };
   }, []);
 
   if (company.length === 0 || isLoading) {
@@ -72,7 +75,7 @@ function Company() {
           <div className="mt-5 text-lg font-bold">Overview</div>
           <p>{tagline}</p>
           <div className="mt-2 text-lg font-bold">Website</div>
-          <a href={website} className="text-fourth">
+          <a href={website}  target="_blank" className="text-fourth">
             {website}
           </a>
           <div className="mt-2 text-lg font-bold">Company Size</div>

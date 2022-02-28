@@ -33,7 +33,7 @@ function Settings({ closeDrawer }) {
             <>
               <div className="p-4">
                 <Link
-                  to="employer/edit"
+                  to="user/edit"
                   className="mb-3 border-b-2 pb-3 cursor-pointer hover:text-secondary block"
                   onClick={() => {
                     setOpen(!open);

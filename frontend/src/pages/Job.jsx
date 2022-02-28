@@ -7,6 +7,10 @@ import { FcOk } from "react-icons/fc";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { HiExternalLink } from "react-icons/hi";
 import { reset, getJob, resetJob } from "../features/jobs/jobsSlice";
+import {
+  reset as resetCompany,
+  getCompany,
+} from "../features/companies/companiesSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
@@ -21,9 +25,14 @@ function Job() {
   const { job, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.jobs
   );
+  const {
+    company,
+    isError: isErrorCompany,
+    isSuccess: isSuccessCompany,
+  } = useSelector((state) => state.companies);
 
   const {
-    employer,
+    user,
     title,
     employmentType,
     workplaceType,
@@ -33,16 +42,8 @@ function Job() {
     applicants,
     description,
     createdAt,
+    companyID,
   } = job;
-  let companyName, address, name, email, mobileNumber;
-
-  if (employer) {
-    companyName = employer.companyName;
-    address = employer.address;
-    name = employer.name;
-    email = employer.email;
-    mobileNumber = employer.mobileNumber;
-  }
 
   useEffect(() => {
     if (createdAt) {
@@ -60,8 +61,25 @@ function Job() {
 
     if (isSuccess) {
       dispatch(reset());
+      dispatch(getCompany(job.companyID));
     }
-  }, [dispatch, isError, isSuccess, message, isLoading]);
+
+    if (isErrorCompany) {
+      dispatch(reset());
+    }
+
+    if (isSuccessCompany) {
+      dispatch(resetCompany());
+    }
+  }, [
+    dispatch,
+    isError,
+    isSuccess,
+    message,
+    isLoading,
+    isErrorCompany,
+    isSuccessCompany,
+  ]);
 
   useEffect(() => {
     dispatch(getJob(id));
@@ -81,17 +99,17 @@ function Job() {
         <section className="block mx-3 bg-secondaryL rounded-3xl my-3 mt-8 p-4">
           <div className="font-bold text-2xl">{title}</div>
           <div className="text-black/75 mt-2">
-            {companyName ? (
+            {company ? (
               <Link
-                to={`/employer/${employer._id}`}
+                to={`/company/${companyID}`}
                 className="hover:text-bermuda hover:underline"
               >
-                {companyName}
+                {company.name}
               </Link>
             ) : (
               ""
             )}{" "}
-            | {(address ? address : "") + " "} ({workplaceType}){"   "}
+            | {(company ? company.address : "") + " "} ({workplaceType}){"   "}
             <span className="text-black/25">
               {" "}
               {timestamp ? timestamp : ""} | {applicants} applicants
@@ -149,20 +167,30 @@ function Job() {
         </section>
         <section className="block mx-3 bg-white rounded-3xl my-3 p-4">
           <div className="font-bold text-lg">About Employer</div>
-          <div className="font-bold text-textBlack/75 my-2">{name}</div>
+          <div className="font-bold text-textBlack/75 my-2">{user.name}</div>
           <p>
-            <b>Email:</b> {email}
+            <b>Email:</b> {user.email}
           </p>
-          <p className="mb-4">
-            <b>Mobile number:</b> {mobileNumber}
-          </p>
+          {user.mobileNumber && (
+            <p className="mb-4">
+              <b>Mobile number:</b> {user.mobileNumber}
+            </p>
+          )}
 
-          <Link
-            to={`/employer/${employer._id}`}
-            className="p-2 px-4 bg-tertiary hover:bg-[#ecc27a]  rounded-full "
-          >
-            Go to Employer's Profile
-          </Link>
+          <div className="flex flex-col">
+            <Link
+              to={`/user/${user._id}`}
+              className="p-2 px-4 w-fit bg-tertiary hover:bg-[#ecc27a]  rounded-full mb-2"
+            >
+              Go to Employer's Profile
+            </Link>
+            <Link
+              to={`/company/${companyID}`}
+              className="p-2 px-4 w-fit bg-accent hover:bg-accentD  rounded-full "
+            >
+              Go to Company Page
+            </Link>
+          </div>
         </section>
       </main>
     </div>

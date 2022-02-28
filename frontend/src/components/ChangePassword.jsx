@@ -19,9 +19,7 @@ function ChangePassword({ closeDrawer, setSelectedSetting, setOpen }) {
   const { oldPassword, newPassword, confirmPassword } = formData;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isSuccess, isError, message } = useSelector(
-    (state) => state.employer
-  );
+  const { isSuccess, isError, message } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (isError) {

@@ -170,6 +170,7 @@ export const jobsSlice = createSlice({
       .addCase(createJob.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.job = action.payload;
       })
       .addCase(createJob.rejected, (state, action) => {
         state.isLoading = false;
