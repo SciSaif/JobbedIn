@@ -31,7 +31,7 @@ function CompanyCard({ name, industry, address, id, isEmployer }) {
 
   return (
     <div
-      className="border-l-2 border-secondaryD hover:border-accent border-b-2 border-b-black/75 pl-4 p-2   flex flex-row items-center"
+      className="border-l-2 border-secondaryD hover:border-accent border-b-2 border-b-black/75 pl-4 p-2   flex flex-row items-center cursor-pointer"
       onClick={onClick}
     >
       <div className="min-w-[50px] ">

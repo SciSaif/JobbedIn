@@ -6,6 +6,7 @@ import {
   addCompany,
   emptyCompany,
 } from "../features/companies/companiesSlice";
+import { Group, Avatar, Text, Select } from "@mantine/core";
 import { useSnackbar } from "notistack";
 
 import InputError from "../components/InputError";
@@ -46,6 +47,8 @@ function AddCompany() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [ready, setReady] = useState(false);
 
+  const [industryValue, setIndustryValue] = useState("");
+
   const { company, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.companies
   );
@@ -53,7 +56,7 @@ function AddCompany() {
   const [formData, setFormData] = useState({
     name: "",
     website: "",
-    industry: "",
+    industry: industryValue,
     companySize: "",
     companyType: "",
     address: "",
@@ -100,11 +103,17 @@ function AddCompany() {
 
   useEffect(() => {
     if (ready) {
-      console.log(formData);
       dispatch(addCompany(formData));
       setReady(false);
     }
   }, [formData]);
+
+  useEffect(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      industry: industryValue,
+    }));
+  }, [industryValue]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -155,7 +164,7 @@ function AddCompany() {
                 type="text"
                 id="name"
                 placeholder="Name"
-                className="px-3 py-1 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
+                className="px-3 py-2 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
                 value={name}
                 onChange={onChange}
                 required
@@ -168,7 +177,7 @@ function AddCompany() {
                 type="text"
                 id="website"
                 placeholder="Website"
-                className="px-3 py-1 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
+                className="px-3 py-2 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
                 value={website}
                 onChange={onChange}
               />
@@ -182,25 +191,18 @@ function AddCompany() {
               Industry
             </label>
 
-            <select
+            <Select
               name="industry"
               id="industry"
-              required
-              className="text-black px-3 py-1 mb-3 text-sm rounded border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
-              value={industry}
-              onChange={onChange}
-            >
-              <option value="" disabled>
-                Select industry
-              </option>
-              {data.industry.map((op) => (
-                <option key={op} value={op}>
-                  {op}
-                </option>
-              ))}
-            </select>
+              value={industryValue}
+              onChange={setIndustryValue}
+              placeholder="Select Industry"
+              searchable
+              nothingFound="No options"
+              data={data.industry}
+            />
 
-            <label htmlFor="companySize" className="required">
+            <label htmlFor="companySize" className="required mt-2">
               Company Size
             </label>
 
@@ -208,7 +210,7 @@ function AddCompany() {
               name="companySize"
               id="companySize"
               required
-              className="text-black px-3 py-1 mb-3 text-sm rounded border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
+              className="text-black px-3 py-2 mb-3 text-sm rounded border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
               value={companySize}
               onChange={onChange}
             >
@@ -229,7 +231,7 @@ function AddCompany() {
               name="companyType"
               id="companyType"
               required
-              className="text-black px-3 py-1 mb-3 text-sm rounded border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
+              className="text-black px-3 py-2 mb-3 text-sm rounded border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
               value={companyType}
               onChange={onChange}
             >
@@ -252,7 +254,7 @@ function AddCompany() {
                 type="text"
                 id="address"
                 placeholder="Address"
-                className="px-3 py-1 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
+                className="px-3 py-2 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
                 value={address}
                 onChange={onChange}
                 required
