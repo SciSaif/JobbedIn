@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { BsBuilding } from "react-icons/bs";
 import { BsFillBriefcaseFill } from "react-icons/bs";
-import { reset, getJobs } from "../features/jobs/jobsSlice";
+import { reset, getJobs, emptyJobs } from "../features/jobs/jobsSlice";
 import {
   reset as resetUser,
   emptyUser,
@@ -11,6 +11,7 @@ import {
 import {
   reset as resetCompany,
   getCompanies,
+  emptyCompanies,
 } from "../features/companies/companiesSlice";
 import { useSelector, useDispatch } from "react-redux";
 import JobCard from "../components/JobCard";
@@ -105,6 +106,8 @@ function Employer() {
       setisEmployer(false);
       dispatch(resetUser());
       dispatch(emptyUser());
+      dispatch(emptyJobs());
+      dispatch(emptyCompanies());
     };
   }, [setisEmployer, dispatch, resetUser]);
 

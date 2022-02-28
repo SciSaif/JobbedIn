@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect, forwardRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { editJob, getJob, reset, resetJob } from "../features/jobs/jobsSlice";
+import { editJob, getJob, reset, emptyJob } from "../features/jobs/jobsSlice";
 import InputError from "../components/InputError";
 import {
   getCompanies,
@@ -153,7 +153,7 @@ function EditJob() {
     }
 
     return () => {
-      dispatch(resetJob());
+      dispatch(emptyJob());
     };
   }, [dispatch]);
 

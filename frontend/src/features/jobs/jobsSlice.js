@@ -141,10 +141,10 @@ export const jobsSlice = createSlice({
       state.message = "";
       state.onAction = "";
     },
-    resetJob: (state) => {
+    emptyJob: (state) => {
       state.job = [];
     },
-    resetJobs: (state) => {
+    emptyJobs: (state) => {
       state.jobs = [];
     },
     // reset: (state) => initialState,
@@ -236,5 +236,5 @@ export const jobsSlice = createSlice({
   },
 });
 
-export const { reset, resetJob, resetJobs } = jobsSlice.actions;
+export const { reset, emptyJob, emptyJobs } = jobsSlice.actions;
 export default jobsSlice.reducer;

@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { reset, getAllJobs, resetJobs } from "../features/jobs/jobsSlice";
+import { reset, getAllJobs, emptyJobs } from "../features/jobs/jobsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
@@ -25,7 +25,7 @@ function Jobs() {
     dispatch(getAllJobs());
 
     return () => {
-      dispatch(resetJobs());
+      dispatch(emptyJobs());
     };
   }, [dispatch]);
 

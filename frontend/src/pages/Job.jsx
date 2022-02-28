@@ -6,7 +6,7 @@ import { MdLocationOn } from "react-icons/md";
 import { FcOk } from "react-icons/fc";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { HiExternalLink } from "react-icons/hi";
-import { reset, getJob, resetJob } from "../features/jobs/jobsSlice";
+import { reset, getJob, emptyJob } from "../features/jobs/jobsSlice";
 import {
   reset as resetCompany,
   getCompany,
@@ -85,7 +85,7 @@ function Job() {
     dispatch(getJob(id));
 
     return () => {
-      dispatch(resetJob());
+      dispatch(emptyJob());
     };
   }, []);
 
