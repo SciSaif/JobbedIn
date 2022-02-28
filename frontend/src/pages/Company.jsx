@@ -73,11 +73,17 @@ function Company() {
             {industry} | {address}
           </h5>
           <div className="mt-5 text-lg font-bold">Overview</div>
-          <p>{tagline}</p>
+          {tagline ? <p>{tagline}</p> : <>:\</>}
+
           <div className="mt-2 text-lg font-bold">Website</div>
-          <a href={website}  target="_blank" className="text-fourth">
-            {website}
-          </a>
+          {website ? (
+            <a href={website} target="_blank" className="text-fourth">
+              {website}
+            </a>
+          ) : (
+            <>:\</>
+          )}
+
           <div className="mt-2 text-lg font-bold">Company Size</div>
           <p>{companySize}</p>
           <div className="mt-2 text-lg font-bold">Headquarters</div>

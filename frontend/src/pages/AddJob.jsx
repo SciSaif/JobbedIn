@@ -150,7 +150,7 @@ function AddJob() {
       location,
       employmentType,
       description,
-      payRange: providePayRange ? { low, high } : null,
+      payRange: providePayRange ? { low, high } : {},
       companyID: selectedCompanyID,
     };
 

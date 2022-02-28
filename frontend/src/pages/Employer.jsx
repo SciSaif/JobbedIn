@@ -39,6 +39,7 @@ function Employer() {
     user,
     isSuccess: isSuccessUser,
     isError: isErrorUser,
+    onAction,
   } = useSelector((state) => state.user);
   const { name, email, mobileNumber } = user;
 
@@ -63,7 +64,7 @@ function Employer() {
       dispatch(reset());
     }
 
-    if (isErrorUser) {
+    if (isErrorUser && onAction !== "drawer") {
       dispatch(resetUser());
       enqueueSnackbar("User not found", {
         variant: "error",
@@ -170,7 +171,7 @@ function Employer() {
           ) : (
             <>
               {companies.length === 0 && (
-                <div className="m-2 p-4 flex flex-row justify-center text-white font-bold rounded">
+                <div className="m-2 p-4 flex flex-row justify-center text-black font-bold rounded">
                   its Empty :(
                 </div>
               )}

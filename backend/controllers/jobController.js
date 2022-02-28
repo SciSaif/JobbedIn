@@ -43,7 +43,7 @@ const createJob = asyncHandler(async (req, res) => {
     location = null,
     employmentType,
     description,
-    payRange = null,
+    payRange,
     companyID,
   } = req.body;
 
@@ -85,6 +85,7 @@ const createJob = asyncHandler(async (req, res) => {
     companyID,
     applicants: 0,
   });
+  console.log("jobc", job);
 
   if (job) {
     res.status(201).json({

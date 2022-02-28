@@ -145,8 +145,8 @@ function Job() {
               {payRange ? (
                 <>
                   <p className="text-blue font-bold ml-6 ">
-                    {payRange.low.toLocaleString()} -{" "}
-                    {payRange.high.toLocaleString()}
+                    {payRange.low && payRange.low.toLocaleString()} -{" "}
+                    {payRange.high && payRange.high.toLocaleString()}
                   </p>
                 </>
               ) : (

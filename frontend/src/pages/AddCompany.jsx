@@ -113,18 +113,21 @@ function AddCompany() {
       return;
     }
 
-    let newLink = validateURL(website);
-    if (!newLink) {
-      setInputMessage("Please enter a valid website link");
-      return;
+    if (website) {
+      let newLink = validateURL(website);
+      if (!newLink) {
+        setInputMessage("Please enter a valid website link");
+        return;
+      } else {
+        setFormData((prevState) => ({
+          ...prevState,
+          website: newLink,
+        }));
+      }
+      setReady(true);
     } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        website: newLink,
-      }));
+      dispatch(addCompany(formData));
     }
-
-    setReady(true);
 
     return;
   };

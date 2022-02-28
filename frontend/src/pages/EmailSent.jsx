@@ -25,7 +25,7 @@ function EmailSent() {
             Sometimes it may take upto 5 mins to deliver the mail :|
           </div>
           <Link
-            to={`/login-employer/${userEmail}`}
+            to={`/login-user/${userEmail}`}
             className="px-8 py-2 mt-6  rounded-full bg-accent text-white text-lg md:hover:bg-accentD"
           >
             Proceed

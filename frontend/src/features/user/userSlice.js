@@ -7,6 +7,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  onAction: "",
 };
 
 export const getUserById = createAsyncThunk(
@@ -96,6 +97,7 @@ export const userSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.message = "";
+      state.onAction = "";
     },
     emptyUser: (state) => {
       state.user = {};
@@ -142,6 +144,7 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+        state.onAction = "drawer";
       })
       .addCase(changePassword.pending, (state) => {
         state.isLoading = true;
@@ -155,6 +158,7 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+        state.onAction = "drawer";
       });
   },
 });

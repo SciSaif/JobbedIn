@@ -31,7 +31,7 @@ function SetNewPassword() {
       enqueueSnackbar("Password changed successfully!", {
         variant: "success",
       });
-      navigate("/login-employer");
+      navigate("/login-user");
     }
   }, [isSuccess, isError, message]);
 
