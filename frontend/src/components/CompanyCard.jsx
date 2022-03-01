@@ -1,8 +1,6 @@
 import React from "react";
 import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { GiOfficeChair } from "react-icons/gi";
-import { FaBusinessTime } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import { reset, deleteCompany } from "../features/companies/companiesSlice";

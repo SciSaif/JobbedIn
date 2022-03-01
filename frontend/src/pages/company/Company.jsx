@@ -12,6 +12,9 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import Spinner from "../../components/Spinner";
+import JobCard from "../../components/JobCard";
+import { getJobsByCompany } from "../../features/jobs/jobsSlice";
+import { BsFillBriefcaseFill } from "react-icons/bs";
 
 function Company() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -22,6 +25,13 @@ function Company() {
   const { company, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.companies
   );
+  const {
+    jobs,
+    isLoading: isLoadingJob,
+    isSuccess: isSuccessJob,
+    isError: isErrorJob,
+    message: messageJob,
+  } = useSelector((state) => state.jobs);
 
   const {
     name,
@@ -50,6 +60,7 @@ function Company() {
 
   useEffect(() => {
     dispatch(getCompany(id));
+    dispatch(getJobsByCompany(id));
 
     return () => {
       dispatch(emptyCompany());
@@ -92,6 +103,39 @@ function Company() {
           <p>{industry}</p>
           <div className="mt-2 text-lg font-bold">Company Type</div>
           <p>{companyType}</p>
+        </div>
+      </section>
+      <section className="mt-5 text-white px-2">
+        <div className="flex flex-row items-center px-3 py-2 mb-2 border-b-2 border-b-accent ">
+          <BsFillBriefcaseFill size="30px" color="white" />
+          <p className="font-bold ml-5 text-xl ">Jobs </p>
+        </div>
+        <div className=" text-white">
+          {isLoadingJob ? (
+            <div className="text-white bg-primary w-full  p-2">
+              ...Loading jobs{" "}
+            </div>
+          ) : (
+            <>
+              {jobs.length === 0 && (
+                <div className="m-2 p-4 flex flex-row justify-center text-white font-bold rounded">
+                  Its Empty :(
+                </div>
+              )}
+            </>
+          )}
+
+          {jobs &&
+            jobs.map((job) => (
+              <JobCard
+                key={job._id}
+                title={job.title}
+                employmentType={job.employmentType}
+                workplaceType={job.workplaceType}
+                id={job._id}
+                isEmployer={false}
+              />
+            ))}
         </div>
       </section>
     </div>

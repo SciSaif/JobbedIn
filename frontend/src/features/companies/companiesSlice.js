@@ -69,6 +69,25 @@ export const getCompanies = createAsyncThunk(
   }
 );
 
+// Get all companies
+export const getAllCompanies = createAsyncThunk(
+  "companies/getAllCompanies",
+  async (thunkAPI) => {
+    try {
+      return await companiesService.getAllCompanies();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // Delete a particular company
 export const deleteCompany = createAsyncThunk(
   "companys/deleteCompany",
@@ -213,6 +232,22 @@ export const companiesSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.onAction = "edit";
+      })
+      .addCase(getAllCompanies.pending, (state) => {
+        state.isLoading = true;
+        state.onAction = "getAll";
+      })
+      .addCase(getAllCompanies.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.companies = action.payload;
+        state.onAction = "getAll";
+      })
+      .addCase(getAllCompanies.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.onAction = "getAll";
       });
   },
 });

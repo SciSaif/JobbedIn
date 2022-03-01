@@ -30,6 +30,25 @@ export const getJobs = createAsyncThunk(
   }
 );
 
+// Get all jobs by company
+export const getJobsByCompany = createAsyncThunk(
+  "jobs/getAllJobsByCompany",
+  async (id, thunkAPI) => {
+    try {
+      return await jobsService.getJobsByCompany(id);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // Create job
 export const createJob = createAsyncThunk(
   "jobs/create",
@@ -229,6 +248,19 @@ export const jobsSlice = createSlice({
         state.jobs = action.payload;
       })
       .addCase(getAllJobs.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getJobsByCompany.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getJobsByCompany.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.jobs = action.payload;
+      })
+      .addCase(getJobsByCompany.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

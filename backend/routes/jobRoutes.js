@@ -12,7 +12,6 @@ const router = express.Router();
 const { protect } = require("../middlewares/authMiddleware");
 
 router.route("/").get(getJobsByUser).post(protect, createJob);
-console.log("l");
 
 router.route("/all").get(getAllJobs);
 

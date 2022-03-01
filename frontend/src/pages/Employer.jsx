@@ -53,6 +53,7 @@ function Employer() {
     isSuccess: isSuccessCompany,
     isError: isErrorCompany,
     message: messageCompany,
+    onAction: onActionCompany,
   } = useSelector((state) => state.companies);
 
   useEffect(() => {
@@ -84,6 +85,10 @@ function Employer() {
     if (isSuccessCompany) {
       dispatch(resetCompany());
     }
+    if (isSuccessCompany && onActionCompany === "delete") {
+      dispatch(resetCompany());
+      dispatch(getJobs(user._id));
+    }
   }, [
     isSuccess,
     isError,
@@ -91,6 +96,7 @@ function Employer() {
     isErrorUser,
     isSuccessCompany,
     isErrorCompany,
+    onActionCompany,
     messageCompany,
   ]);
 
@@ -196,8 +202,8 @@ function Employer() {
       </div>
 
       <div className="mx-2 pb-5 md:w-1/2 md:mt-12 md:ml-3">
-        <div className="mt-12 pb-2  flex flex-row items-center justify-between  box-1 border-b-2 border-accent">
-          <div className="flex flex-row items-center">
+        <div className="mt-12 mb-2 pb-2 flex flex-row items-center justify-between  box-1 border-b-2 border-accent">
+          <div className="flex flex-row items-center ">
             <BsFillBriefcaseFill size="30px" color="white" />
             <p className="font-bold text-lg ml-5">
               {isEmployer ? <>Your Jobs</> : <>Jobs</>}{" "}

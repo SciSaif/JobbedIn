@@ -48,7 +48,7 @@ function JobCard({ title, employmentType, workplaceType, id, isEmployer }) {
   };
 
   return (
-    <div className="border-l-2 border-secondary hover:border-accent pl-4 mt-2 mb-2 flex flex-row justify-between relative">
+    <div className="border-l-2 border-secondary hover:border-accent pl-4  mb-2 flex flex-row justify-between relative">
       <div className=" cursor-pointer " onClick={onClick}>
         <h1 className="font-bold text-xl mb-1">{title}</h1>
         <div className="flex flex-row  items-center">

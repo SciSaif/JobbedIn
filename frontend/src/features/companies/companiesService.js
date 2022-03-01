@@ -33,6 +33,13 @@ const getCompanies = async (id) => {
   return response.data;
 };
 
+// Get all companies
+const getAllCompanies = async (id) => {
+  const response = await axios.get(API_URL + "all");
+
+  return response.data;
+};
+
 // Delete a company
 const deleteCompany = async (companyId, token) => {
   const config = {
@@ -80,5 +87,6 @@ const companiesService = {
   getCompanies,
   deleteCompany,
   editCompany,
+  getAllCompanies,
 };
 export default companiesService;

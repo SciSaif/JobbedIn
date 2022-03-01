@@ -169,7 +169,7 @@ const updateJob = asyncHandler(async (req, res) => {
   res.status(200).json(updatedJob);
 });
 
-// @desc Get a All Jobs
+// @desc Get  All Jobs
 // @route GET /api/jobs/all
 // @access Public
 const getAllJobs = asyncHandler(async (req, res) => {

@@ -89,6 +89,39 @@ const getCompaniesByUser = asyncHandler(async (req, res) => {
   res.status(200).json(companies);
 });
 
+// @desc Get all companies
+// @route GET /api/company/all
+// @access Public
+const getAllCompanies = asyncHandler(async (req, res) => {
+  const companies = await Company.find({});
+  if (!companies) {
+    res.status(404);
+    throw new Error("No companies not found");
+  }
+  res.status(200).json(companies);
+});
+
+// @desc Get all jobs by company
+// @route GET /api/company/:id/jobs
+// @access Public
+const getAllJobsByCompany = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const company = await Company.findById(id);
+  if (!company) {
+    res.status(404);
+    throw new Error("Company not found!");
+  }
+
+  const jobs = await Job.find({ companyID: id });
+
+  if (!jobs) {
+    res.status(404);
+    throw new Error("No jobs found!");
+  }
+
+  res.status(200).json(jobs);
+});
+
 // @desc delete company
 // @route DELETE /api/company/:id
 // @access Private
@@ -162,4 +195,6 @@ module.exports = {
   getCompaniesByUser,
   deleteCompany,
   updateCompany,
+  getAllCompanies,
+  getAllJobsByCompany,
 };

@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { createJob, reset } from "../../features/jobs/jobsSlice";
 import {
-  getCompanies,
+  getAllCompanies,
   reset as resetCompany,
 } from "../../features/companies/companiesSlice";
 import InputError from "../../components/InputError";
@@ -62,7 +62,7 @@ function AddJob() {
 
   const dispatch = useDispatch();
 
-  const { jobs, job, isLoading, isSuccess, message, isError } = useSelector(
+  const { job, isLoading, isSuccess, message, isError } = useSelector(
     (state) => state.jobs
   );
 
@@ -119,7 +119,7 @@ function AddJob() {
 
   useEffect(() => {
     if (user) {
-      dispatch(getCompanies(user._id));
+      dispatch(getAllCompanies());
     }
   }, []);
 

@@ -85,6 +85,12 @@ const getAllJobs = async () => {
 
   return response.data;
 };
+//Get all jobs by company
+const getJobsByCompany = async (id) => {
+  const response = await axios.get("/api/company/" + id + "/jobs");
+
+  return response.data;
+};
 
 const jobsService = {
   getJobs,
@@ -93,6 +99,7 @@ const jobsService = {
   deleteJob,
   editJob,
   getAllJobs,
+  getJobsByCompany,
 };
 
 export default jobsService;
