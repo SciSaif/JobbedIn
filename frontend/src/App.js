@@ -2,22 +2,23 @@ import React from "react";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import Home from "./pages/Home";
+import Home from "./pages/job/Home";
 import LoginUser from "./pages/LoginUser";
 import RegisterUser from "./pages/RegisterUser";
 import PrivateRoute from "./components/PrivateRoute,";
-import AddJob from "./pages/AddJob";
-import Job from "./pages/Job";
-import EditJob from "./pages/EditJob";
-import Jobs from "./pages/Jobs";
+import AddJob from "./pages/job/AddJob";
+import Job from "./pages/job/Job";
+import EditJob from "./pages/job/EditJob";
+import Jobs from "./pages/job/Jobs";
 import Employer from "./pages/Employer";
 import EditUser from "./pages/EditUser";
 import EmailSent from "./pages/EmailSent";
 import { SnackbarProvider } from "notistack";
 import ForgotPassword from "./pages/ForgotPassword";
 import SetNewPassword from "./pages/SetNewPassword";
-import AddCompany from "./pages/AddCompany";
-import Company from "./pages/Company";
+import AddCompany from "./pages/company/AddCompany";
+import Company from "./pages/company/Company";
+import EditCompany from "./pages/company/EditCompany";
 
 function App() {
   return (
@@ -51,6 +52,9 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/add-company" element={<AddCompany />} />
             <Route path="/company/:id" element={<Company />} />
+            <Route path="/edit-company/:id" element={<PrivateRoute />}>
+              <Route path="/edit-company/:id" element={<EditCompany />} />
+            </Route>
             <Route
               path="/set-new-password/:id/:resetString"
               element={<SetNewPassword />}

@@ -33,5 +33,52 @@ const getCompanies = async (id) => {
   return response.data;
 };
 
-const companiesService = { getCompany, addCompany, getCompanies };
+// Delete a company
+const deleteCompany = async (companyId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.delete(API_URL + companyId, config);
+  if (
+    response &&
+    response.data &&
+    response.data.success &&
+    response.data.success === true
+  ) {
+    return { companyId };
+  }
+  return response.data;
+};
+
+// Edit a company
+const editCompany = async (companyId, companyData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(API_URL + companyId, companyData, config);
+
+  if (
+    response &&
+    response.data &&
+    response.data.success &&
+    response.data.success === true
+  ) {
+    return { companyId };
+  }
+  return response.data;
+};
+
+const companiesService = {
+  getCompany,
+  addCompany,
+  getCompanies,
+  deleteCompany,
+  editCompany,
+};
 export default companiesService;

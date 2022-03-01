@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   reset,
   addCompany,
   emptyCompany,
-} from "../features/companies/companiesSlice";
+  getCompany,
+  editCompany,
+} from "../../features/companies/companiesSlice";
 import { Group, Avatar, Text, Select } from "@mantine/core";
 import { useSnackbar } from "notistack";
 
-import InputError from "../components/InputError";
+import InputError from "../../components/InputError";
 
-import Data from "../data/data.json";
+import Data from "../../data/data.json";
 
 function isValidHttpUrl(string) {
   let url;
@@ -38,10 +40,11 @@ function validateURL(url) {
   }
 }
 
-function AddCompany() {
+function EditCompany() {
   const data = Data;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { id } = useParams();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [inputMessage, setInputMessage] = useState(null);
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -49,9 +52,8 @@ function AddCompany() {
 
   const [industryValue, setIndustryValue] = useState("");
 
-  const { company, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.companies
-  );
+  const { company, isLoading, onAction, isError, isSuccess, message } =
+    useSelector((state) => state.companies);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -81,29 +83,31 @@ function AddCompany() {
       dispatch(reset());
     }
 
-    if (isSuccess) {
-      enqueueSnackbar("Company added successfully", {
+    if (isSuccess && onAction === "edit") {
+      enqueueSnackbar("Company edited successfully", {
         variant: "success",
       });
       dispatch(reset());
       dispatch(emptyCompany());
-      navigate(`/company/${company._id}`);
+      navigate(`/company/${id}`);
     }
-  }, [isError, isSuccess, message, dispatch]);
 
-  const handleAgreeTerms = (e) => {
-    setAgreeTerms(!agreeTerms);
-    if (
-      !agreeTerms &&
-      inputMessage === "You need to agree to the terms above to proceeed"
-    ) {
-      setInputMessage(null);
+    if (isSuccess && onAction === "getCompany") {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...company,
+      }));
+      setIndustryValue(company.industry);
     }
-  };
+  }, [isError, isSuccess, message, dispatch, onAction]);
+
+  useEffect(() => {
+    dispatch(getCompany(id));
+  }, []);
 
   useEffect(() => {
     if (ready) {
-      dispatch(addCompany(formData));
+      dispatch(editCompany({ id, formData }));
       setReady(false);
     }
   }, [formData]);
@@ -114,6 +118,16 @@ function AddCompany() {
       industry: industryValue,
     }));
   }, [industryValue]);
+
+  const handleAgreeTerms = (e) => {
+    setAgreeTerms(!agreeTerms);
+    if (
+      !agreeTerms &&
+      inputMessage === "You need to agree to the terms above to proceeed"
+    ) {
+      setInputMessage(null);
+    }
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -135,7 +149,7 @@ function AddCompany() {
       }
       setReady(true);
     } else {
-      dispatch(addCompany(formData));
+      dispatch(editCompany({ id, formData }));
     }
 
     return;
@@ -340,4 +354,4 @@ function AddCompany() {
   );
 }
 
-export default AddCompany;
+export default EditCompany;

@@ -1,15 +1,18 @@
 import React from "react";
 import { useState, useEffect, forwardRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { CgArrowLongRight } from "react-icons/cg";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { editJob, getJob, reset, emptyJob } from "../features/jobs/jobsSlice";
-import InputError from "../components/InputError";
+import { createJob, reset } from "../../features/jobs/jobsSlice";
 import {
   getCompanies,
   reset as resetCompany,
-} from "../features/companies/companiesSlice";
-import { AiFillEdit } from "react-icons/ai";
-import Spinner from "../components/Spinner";
+} from "../../features/companies/companiesSlice";
+import InputError from "../../components/InputError";
+import { GrLogin } from "react-icons/gr";
+import Spinner from "../../components/Spinner";
+import { MdPostAdd } from "react-icons/md";
+
 import { Group, Avatar, Text, Select } from "@mantine/core";
 
 const SelectItem = forwardRef(
@@ -29,67 +32,23 @@ const SelectItem = forwardRef(
   )
 );
 
-function EditJob() {
+function AddJob() {
   const [data, setData] = useState([]);
 
   const navigate = useNavigate();
-  const { id } = useParams();
   const [inputMessage, setInputMessage] = useState(null);
   const [providePayRange, setProvidePayRange] = useState(false);
   const [selectedCompanyID, setSelectedCompanyID] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  const { job, isLoading, isSuccess, message, isError, onAction } = useSelector(
-    (state) => state.jobs
-  );
-
-  const {
-    companies,
-    isSuccess: isSuccessCompany,
-    isError: isErrorCompany,
-  } = useSelector((state) => state.companies);
-
-  const { user } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     title: "",
-    workplaceType: "",
+    workplaceType: "On-Site",
     location: "",
-    employmentType: "",
+    employmentType: "Full Time",
     description: "",
     low: 0,
     high: 0,
   });
-
-  useEffect(() => {
-    if (job.length !== 0) {
-      if (job.payRange) {
-        setFormData({
-          title: job.title,
-          employmentType: job.employmentType,
-          workplaceType: job.workPlaceType,
-          location: job.location,
-          description: job.description,
-          low: job.payRange.low,
-          high: job.payRange.high,
-        });
-        setProvidePayRange(true);
-      } else {
-        setFormData({
-          title: job.title,
-          employmentType: job.employmentType,
-          workplaceType: job.workPlaceType,
-          location: job.location,
-          description: job.description,
-          low: 0,
-          high: 0,
-        });
-      }
-      if (isSuccessCompany) {
-        setSelectedCompanyID(job.companyID);
-      }
-    }
-  }, [job, isSuccessCompany]);
 
   const {
     title,
@@ -102,16 +61,28 @@ function EditJob() {
   } = formData;
 
   const dispatch = useDispatch();
+
+  const { jobs, job, isLoading, isSuccess, message, isError } = useSelector(
+    (state) => state.jobs
+  );
+
+  const {
+    companies,
+    isSuccess: isSuccessCompany,
+    isError: isErrorCompany,
+  } = useSelector((state) => state.companies);
+
+  const { user } = useSelector((state) => state.auth);
+
   useEffect(() => {
     if (isError) {
       setInputMessage(message);
       dispatch(reset());
     }
 
-    if (isSuccess && submitted) {
-      navigate(`/job/${job._id}`);
-    }
+    // Redirect when logged in
     if (isSuccess) {
+      navigate(`/job/${job._id}`);
       dispatch(reset());
     }
 
@@ -147,15 +118,10 @@ function EditJob() {
   ]);
 
   useEffect(() => {
-    dispatch(getJob(id));
     if (user) {
       dispatch(getCompanies(user._id));
     }
-
-    return () => {
-      dispatch(emptyJob());
-    };
-  }, [dispatch]);
+  }, []);
 
   const onChange = (e) => {
     if (e.target.type === "number") {
@@ -164,6 +130,7 @@ function EditJob() {
       }
       e.target.value = parseInt(e.target.value);
     }
+
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
@@ -172,41 +139,40 @@ function EditJob() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (providePayRange && low > high) {
+    if (providePayRange && parseInt(low) > parseInt(high)) {
       setInputMessage("Pay range should be from low to high");
       return;
     }
+
     const jobData = {
       title,
       workplaceType,
       location,
       employmentType,
       description,
-      payRange: providePayRange ? { low, high } : null,
+      payRange: providePayRange ? { low, high } : {},
       companyID: selectedCompanyID,
     };
 
-    dispatch(editJob({ jobData, id }));
-    setSubmitted(true);
+    dispatch(createJob(jobData));
   };
 
   const handleCheckbox = (e) => {
     setProvidePayRange(!providePayRange);
   };
 
-  if (isLoading) {
-    return <Spinner />;
-  }
-
   return (
-    <div className="flex justify-center  items-center align-bottom text-white min-w-screen min-h-screen shadow-lg ">
+    <div className="flex justify-center items-center align-bottom text-white min-w-screen min-h-screen shadow-lg ">
       {isLoading ? <Spinner /> : ""}
-      <main className="flex flex-col  w-full md:w-1/2 lg:w-1/3   pt-6 mx-4 mb-3 mt-3  rounded-2xl bg-secondaryL text-[#141416] ">
+      <main className="flex flex-col shapesd w-full md:w-1/2 lg:w-1/3  mx-4 mb-3 mt-3 rounded-2xl bg-secondaryL text-[#141416]">
+        <div className="w-full pl-4 py-2 mb-2 bg-secondary rounded-t-2xl ">
+          <h4>Find a great hire, fast </h4>
+        </div>
         <div className="w-full pl-4 ">
           <h1 className="text-2xl font-bold mb-5">
             <div className="flex flex-row items-center ">
-              <AiFillEdit size="35px" />
-              <p className="ml-3">Edit Job</p>
+              <MdPostAdd size="35px" />
+              <p className="ml-3">Post a new Job</p>
             </div>
           </h1>
         </div>
@@ -219,7 +185,7 @@ function EditJob() {
             </label>
             <div className="flex w-full flex-wrap items-stretch mb-3">
               <input
-                type="title"
+                type="text"
                 id="title"
                 placeholder="title"
                 className="px-3 py-1 text-black bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
@@ -262,7 +228,7 @@ function EditJob() {
               name="workplaceType"
               id="workplaceType"
               required
-              className="text-black px-3 py-1 mb-3 mt-2 text-sm rounded border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
+              className="text-black px-3 py-1 mb-3 text-sm rounded border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
               value={workplaceType}
               onChange={onChange}
             >
@@ -344,6 +310,7 @@ function EditJob() {
             {providePayRange ? (
               <>
                 <p>Pay Range: </p>
+
                 <div className="my-2 w-[220px] flex flex-row justify-between">
                   <input
                     type="number"
@@ -353,6 +320,7 @@ function EditJob() {
                     className="w-[100px] rounded text-black"
                     onChange={onChange}
                     min="0"
+                    max="99999999999999"
                   />
                   -
                   <input
@@ -361,9 +329,9 @@ function EditJob() {
                     id="high"
                     value={high}
                     className="w-[100px] rounded text-black"
-                    placeholder="to"
                     onChange={onChange}
                     min="0"
+                    max="99999999999999"
                   />
                 </div>
               </>
@@ -371,7 +339,7 @@ function EditJob() {
 
             <button
               type="submit"
-              className=" w-full text-xl shadow bg-secondary rounded py-2 mt-3 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
+              className="mt-2 w-full text-xl shadow bg-secondary rounded py-2 hover:bg-secondaryD focus:ring-4 focus:ring-secondary"
             >
               Submit
             </button>
@@ -382,4 +350,4 @@ function EditJob() {
   );
 }
 
-export default EditJob;
+export default AddJob;

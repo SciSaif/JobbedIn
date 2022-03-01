@@ -1,10 +1,10 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { reset, getAllJobs, emptyJobs } from "../features/jobs/jobsSlice";
+import { reset, getAllJobs, emptyJobs } from "../../features/jobs/jobsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import Spinner from "../components/Spinner";
-import JobCard from "../components/JobCard";
+import Spinner from "../../components/Spinner";
+import JobCard from "../../components/JobCard";
 
 function Jobs() {
   const [inputMessage, setInputMessage] = useState("");

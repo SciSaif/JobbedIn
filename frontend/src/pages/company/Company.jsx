@@ -1,17 +1,17 @@
 import React from "react";
-import coverImg from "../components/assets/cover.jpg";
-import amazonLogo from "../components/assets/amazonLogo.jfif";
+import coverImg from "../../components/assets/cover.jpg";
+import amazonLogo from "../../components/assets/amazonLogo.jfif";
 import { useEffect, useState } from "react";
 import {
   reset,
   getCompany,
   emptyCompany,
-} from "../features/companies/companiesSlice";
+} from "../../features/companies/companiesSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
-import Spinner from "../components/Spinner";
+import Spinner from "../../components/Spinner";
 
 function Company() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();

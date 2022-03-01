@@ -20,8 +20,6 @@ const addCompany = asyncHandler(async (req, res) => {
     tagline,
   } = req.body;
 
-  console.log("tag", tagline);
-
   if (!name || !industry || !companySize || !companyType || !address) {
     res.status(400);
     throw new Error("Please include all fields");
@@ -43,8 +41,6 @@ const addCompany = asyncHandler(async (req, res) => {
     tagline,
     postedBy: req.user._id,
   });
-
-  console.log(company);
 
   if (company) {
     res.status(201).json({
@@ -93,4 +89,77 @@ const getCompaniesByUser = asyncHandler(async (req, res) => {
   res.status(200).json(companies);
 });
 
-module.exports = { addCompany, getCompanyById, getCompaniesByUser };
+// @desc delete company
+// @route DELETE /api/company/:id
+// @access Private
+const deleteCompany = asyncHandler(async (req, res) => {
+  //get user using the id in the JWT
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  const company = await Company.findById(req.params.id);
+
+  if (!company) {
+    res.status(404);
+    throw new Error("Company not found");
+  }
+
+  if (company.postedBy.toString() != req.user.id) {
+    res.status(401);
+    throw new Error("Not Authorized");
+  }
+
+  //delete all jobs associated with this company
+  await Job.deleteMany({ companyID: company._id });
+
+  await company.remove();
+
+  res.status(200).json({ success: true });
+});
+
+// @desc update company
+// @route PUT /api/company/:id
+// @access Private
+const updateCompany = asyncHandler(async (req, res) => {
+  //get user using the id in the JWT
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  const company = await Company.findById(req.params.id);
+
+  if (!company) {
+    res.status(404);
+    throw new Error("Company not found");
+  }
+
+  if (company.postedBy.toString() != req.user.id) {
+    res.status(401);
+    throw new Error("Not Authorized");
+  }
+
+  const updatedCompany = await Company.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true, //if not already there then create it
+    }
+  );
+
+  res.status(200).json(updatedCompany);
+});
+
+module.exports = {
+  addCompany,
+  getCompanyById,
+  getCompaniesByUser,
+  deleteCompany,
+  updateCompany,
+};

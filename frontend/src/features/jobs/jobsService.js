@@ -64,7 +64,6 @@ const editJob = async (jobId, jobData, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  console.log(config);
 
   const response = await axios.put(API_URL + jobId, jobData, config);
 

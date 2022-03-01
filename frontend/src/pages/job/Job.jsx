@@ -6,14 +6,14 @@ import { MdLocationOn } from "react-icons/md";
 import { FcOk } from "react-icons/fc";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { HiExternalLink } from "react-icons/hi";
-import { reset, getJob, emptyJob } from "../features/jobs/jobsSlice";
+import { reset, getJob, emptyJob } from "../../features/jobs/jobsSlice";
 import {
   reset as resetCompany,
   getCompany,
-} from "../features/companies/companiesSlice";
+} from "../../features/companies/companiesSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import Spinner from "../components/Spinner";
+import Spinner from "../../components/Spinner";
 import formatDistance from "date-fns/formatDistance";
 
 function Job() {

@@ -6,6 +6,7 @@ require("dotenv").config();
 
 const User = require("../models/userModel");
 const Job = require("../models/jobModel");
+const Company = require("../models/companyModel");
 
 const { sendVerificationEmail } = require("./verifyEmailController");
 
@@ -174,6 +175,7 @@ const deleteUser = asyncHandler(async (req, res) => {
   // check if user exists and match password
   if (await bcrypt.compare(req.headers.password, user.password)) {
     await Job.deleteMany({ user: user._id });
+    await Company.deleteMany({ postedBy: user._id });
     await user.remove();
     res.status(200).json({ success: true, type: "deleteUser" });
   } else {
