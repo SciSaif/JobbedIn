@@ -1,15 +1,16 @@
 import React from "react";
 import coverImg from "../../components/assets/cover.jpg";
 import amazonLogo from "../../components/assets/amazonLogo.jfif";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   reset,
   getCompany,
   emptyCompany,
 } from "../../features/companies/companiesSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import { Image } from "cloudinary-react";
 
 import Spinner from "../../components/Spinner";
 import JobCard from "../../components/JobCard";
@@ -76,7 +77,16 @@ function Company() {
       <section className="rounded w-full min-h-[250px]  bg-secondaryL mt-4 pb-0 ">
         <img src={coverImg} alt="" className="mt-0 rounded-t " />
         <div className="w-[100px] h-[100px]   absolute   translate-x-[20px] translate-y-[-50px] z-7 ">
-          <img src={amazonLogo} alt="" />
+          {logo && (
+            <Image
+              cloudName="duqfwygaf"
+              publicId={logo}
+              width="100"
+              height="100"
+              crop="fill"
+            />
+          )}
+          {/* <img src={amazonLogo} alt="" /> */}
         </div>
         <div className="mx-5 pb-5">
           <h2 className="font-bold text-2xl mt-[58px] ">{name}</h2>

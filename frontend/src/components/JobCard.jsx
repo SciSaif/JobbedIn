@@ -1,11 +1,10 @@
-import React from "react";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { GiOfficeChair } from "react-icons/gi";
 import { FaBusinessTime } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { useSelector, useDispatch } from "react-redux";
-import { reset, deleteJob, getJobs } from "../features/jobs/jobsSlice";
+import { useDispatch } from "react-redux";
+import { deleteJob } from "../features/jobs/jobsSlice";
 
 // const useClickOutside = (ref, callback) => {
 //   const handleClick = (e) => {

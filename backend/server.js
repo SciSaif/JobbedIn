@@ -5,12 +5,14 @@ const { errorHandler } = require("./middlewares/errorMiddleware");
 const PORT = process.env.PORT || 5000;
 const connectDB = require("./config/db");
 const path = require("path");
+const bodyParser = require("body-parser");
 
 // connect to database
 connectDB();
 
 const app = express();
 
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
 import companiesService from "./companiesService";
 
 const initialState = {
@@ -11,11 +12,27 @@ const initialState = {
   onAction: "",
 };
 
+function validateURL(url) {
+  if (
+    !(url.substring(0, 8) === "https://" || url.substring(0, 7) === "http://")
+  ) {
+    url = "https://" + url;
+    return url;
+  } else {
+    return url;
+  }
+}
+
 // Add a company
 export const addCompany = createAsyncThunk(
   "companies/addCompany",
   async (companyData, thunkAPI) => {
     try {
+      const { website } = companyData;
+      if (website) {
+        let newLink = validateURL(website);
+        companyData = { ...companyData, website: newLink };
+      }
       const token = thunkAPI.getState().auth.user.token;
       return await companiesService.addCompany(companyData, token);
     } catch (error) {
@@ -147,6 +164,7 @@ export const companiesSlice = createSlice({
     emptyCompanies: (state) => {
       state.companies = [];
     },
+
     // reset: (state) => initialState,
   },
   extraReducers: (builder) => {

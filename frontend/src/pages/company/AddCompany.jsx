@@ -6,12 +6,13 @@ import {
   addCompany,
   emptyCompany,
 } from "../../features/companies/companiesSlice";
-import { Group, Avatar, Text, Select } from "@mantine/core";
+import { Select } from "@mantine/core";
 import { useSnackbar } from "notistack";
 
 import InputError from "../../components/InputError";
 
 import Data from "../../data/data.json";
+import Spinner from "../../components/Spinner";
 
 function isValidHttpUrl(string) {
   let url;
@@ -45,7 +46,9 @@ function AddCompany() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [inputMessage, setInputMessage] = useState(null);
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const [ready, setReady] = useState(false);
+
+  const [fileInputState, setFileInputState] = useState("");
+  const [previewSource, setPreviewSource] = useState("");
 
   const [industryValue, setIndustryValue] = useState("");
 
@@ -102,13 +105,6 @@ function AddCompany() {
   };
 
   useEffect(() => {
-    if (ready) {
-      dispatch(addCompany(formData));
-      setReady(false);
-    }
-  }, [formData]);
-
-  useEffect(() => {
     setFormData((prevData) => ({
       ...prevData,
       industry: industryValue,
@@ -122,23 +118,8 @@ function AddCompany() {
       return;
     }
 
-    if (website) {
-      let newLink = validateURL(website);
-      if (!newLink) {
-        setInputMessage("Please enter a valid website link");
-        return;
-      } else {
-        setFormData((prevState) => ({
-          ...prevState,
-          website: newLink,
-        }));
-      }
-      setReady(true);
-    } else {
-      dispatch(addCompany(formData));
-    }
-
-    return;
+    // return;
+    dispatch(addCompany(formData));
   };
 
   const onChange = (e) => {
@@ -148,8 +129,24 @@ function AddCompany() {
     }));
   };
 
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+
+    previewFile(file);
+  };
+
+  const previewFile = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      // setPreviewSource(reader.result);
+      setFormData((prevData) => ({ ...prevData, logo: reader.result }));
+    };
+  };
+
   return (
     <div className=" flex justify-center items-center align-bottom min-w-screen min-h-screen shadow-lg mt-5 ">
+      {isLoading && <Spinner />}
       <form className=" w-full  lg:w-3/5 md:flex " onSubmit={onSubmit}>
         <div>
           <section className="mx-4 mb-3 p-4 rounded-2xl bg-secondaryL text-[#141416] flex flex-col">
@@ -281,9 +278,19 @@ function AddCompany() {
                 <span className="mt-2 text-base leading-normal">
                   Choose File
                 </span>
-                <input type="file" id="logo" className="hidden" />
+                <input
+                  type="file"
+                  id="logo"
+                  name="logo"
+                  className="hidden"
+                  onChange={handleFileInputChange}
+                  value={fileInputState}
+                />
               </label>
             </div>
+            {logo && (
+              <img src={logo} alt="chosen" style={{ height: "200px" }} />
+            )}
             <label htmlFor="tagline">Tagline</label>
             <div className="flex w-full flex-wrap items-stretch mb-1 mt-1">
               <textarea

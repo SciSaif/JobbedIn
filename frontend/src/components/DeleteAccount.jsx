@@ -1,7 +1,6 @@
-import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { deleteUser, reset, emptyUser } from "../features/user/userSlice";
 import { logoutUser } from "../features/auth/authSlice";
 import { useSnackbar } from "notistack";

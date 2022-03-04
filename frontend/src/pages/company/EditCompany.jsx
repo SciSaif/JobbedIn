@@ -3,12 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   reset,
-  addCompany,
   emptyCompany,
   getCompany,
   editCompany,
 } from "../../features/companies/companiesSlice";
-import { Group, Avatar, Text, Select } from "@mantine/core";
+import { Select } from "@mantine/core";
 import { useSnackbar } from "notistack";
 
 import InputError from "../../components/InputError";

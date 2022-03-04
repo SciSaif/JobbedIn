@@ -1,9 +1,8 @@
-import React from "react";
 import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { useSelector, useDispatch } from "react-redux";
-import { reset, deleteCompany } from "../features/companies/companiesSlice";
+import { useDispatch } from "react-redux";
+import { deleteCompany } from "../features/companies/companiesSlice";
 import logo from "../components/assets/amazonLogo.jfif";
 
 function CompanyCard({ name, industry, address, id, isEmployer }) {

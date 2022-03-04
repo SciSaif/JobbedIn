@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect, forwardRef } from "react";
-import { CgArrowLongRight } from "react-icons/cg";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { createJob, reset } from "../../features/jobs/jobsSlice";
 import {
@@ -9,7 +8,6 @@ import {
   reset as resetCompany,
 } from "../../features/companies/companiesSlice";
 import InputError from "../../components/InputError";
-import { GrLogin } from "react-icons/gr";
 import Spinner from "../../components/Spinner";
 import { MdPostAdd } from "react-icons/md";
 

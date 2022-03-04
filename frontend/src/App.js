@@ -1,8 +1,7 @@
 import React from "react";
-import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import Home from "./pages/job/Home";
+import Home from "./pages/Home";
 import LoginUser from "./pages/LoginUser";
 import RegisterUser from "./pages/RegisterUser";
 import PrivateRoute from "./components/PrivateRoute,";

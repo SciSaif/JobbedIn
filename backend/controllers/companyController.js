@@ -4,12 +4,14 @@ const User = require("../models/userModel");
 const Job = require("../models/jobModel");
 const Company = require("../models/companyModel");
 
+const { cloudinary } = require("../utils/cloudinary");
+
 // @desc Add a company by user
 // @route POST /api/company
 // @access Private
 const addCompany = asyncHandler(async (req, res) => {
   // console.log("p");
-  const {
+  let {
     name,
     website,
     industry,
@@ -20,6 +22,8 @@ const addCompany = asyncHandler(async (req, res) => {
     tagline,
   } = req.body;
 
+  // console.log(req.body);
+
   if (!name || !industry || !companySize || !companyType || !address) {
     res.status(400);
     throw new Error("Please include all fields");
@@ -29,6 +33,20 @@ const addCompany = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("User is not an employer");
   }
+
+  const fileStr = logo;
+  const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+    upload_preset: "JobbedIn_company",
+  });
+
+  if (uploadedResponse && uploadedResponse.public_id) {
+    logo = uploadedResponse.public_id;
+  } else {
+    req.statusCode(400);
+    throw new Error("Failed to upload LOGO");
+  }
+
+  console.log(uploadedResponse);
 
   const company = await Company.create({
     name,
