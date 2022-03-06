@@ -7,6 +7,7 @@ const {
   updateCompany,
   getAllCompanies,
   getAllJobsByCompany,
+  updateCompanyLogo,
 } = require("../controllers/companyController");
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router
   .put(protect, updateCompany);
 
 router.route("/:id/jobs").get(getAllJobsByCompany);
+router.route("/:id/updateLogo").put(protect, updateCompanyLogo);
 
 module.exports = router;

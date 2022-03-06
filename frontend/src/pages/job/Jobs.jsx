@@ -40,22 +40,23 @@ function Jobs() {
           <div className="w-full p-3 font-bold text-4xl shadow-lg mb-5 bg-primary text-white">
             All Jobs
           </div>
-          {jobs && (
-            <div className="border-b-2 border-primary hover:shadow-lg ">
-              {jobs.map((job) => {
-                return (
+          {jobs &&
+            jobs.map((job) => {
+              return (
+                <div
+                  key={job._id}
+                  className="border-b-2 border-primary hover:shadow-lg "
+                >
                   <JobCard
-                    key={job._id}
                     title={job.title}
                     employmentType={job.employmentType}
                     workplaceType={job.workplaceType}
                     id={job._id}
                     isEmployer={false}
                   />
-                );
-              })}
-            </div>
-          )}
+                </div>
+              );
+            })}
         </section>
       </main>
     </div>

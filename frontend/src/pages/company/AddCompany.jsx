@@ -5,6 +5,7 @@ import {
   reset,
   addCompany,
   emptyCompany,
+  updateCompanyLogo,
 } from "../../features/companies/companiesSlice";
 import { Select } from "@mantine/core";
 import { useSnackbar } from "notistack";
@@ -90,11 +91,15 @@ function AddCompany() {
       });
       dispatch(reset());
       dispatch(emptyCompany());
+      if (previewSource) {
+        const id = company._id;
+        dispatch(updateCompanyLogo({ id, previewSource }));
+      }
       navigate(`/company/${company._id}`);
     }
   }, [isError, isSuccess, message, dispatch]);
 
-  const handleAgreeTerms = (e) => {
+  const handleAgreeTerms = () => {
     setAgreeTerms(!agreeTerms);
     if (
       !agreeTerms &&
@@ -131,7 +136,6 @@ function AddCompany() {
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
-
     previewFile(file);
   };
 
@@ -139,8 +143,8 @@ function AddCompany() {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      // setPreviewSource(reader.result);
-      setFormData((prevData) => ({ ...prevData, logo: reader.result }));
+      setPreviewSource(reader.result);
+      // setFormData((prevData) => ({ ...prevData, logo: reader.result }));
     };
   };
 
@@ -288,8 +292,12 @@ function AddCompany() {
                 />
               </label>
             </div>
-            {logo && (
-              <img src={logo} alt="chosen" style={{ height: "200px" }} />
+            {previewSource && (
+              <img
+                src={previewSource}
+                alt="chosen"
+                style={{ height: "200px" }}
+              />
             )}
             <label htmlFor="tagline">Tagline</label>
             <div className="flex w-full flex-wrap items-stretch mb-1 mt-1">

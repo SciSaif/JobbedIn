@@ -34,19 +34,17 @@ const addCompany = asyncHandler(async (req, res) => {
     throw new Error("User is not an employer");
   }
 
-  const fileStr = logo;
-  const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
-    upload_preset: "JobbedIn_company",
-  });
+  // const fileStr = logo;
+  // const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+  //   upload_preset: "JobbedIn_company",
+  // });
 
-  if (uploadedResponse && uploadedResponse.public_id) {
-    logo = uploadedResponse.public_id;
-  } else {
-    req.statusCode(400);
-    throw new Error("Failed to upload LOGO");
-  }
-
-  console.log(uploadedResponse);
+  // if (uploadedResponse && uploadedResponse.public_id) {
+  //   logo = uploadedResponse.public_id;
+  // } else {
+  //   req.statusCode(400);
+  //   throw new Error("Failed to upload LOGO");
+  // }
 
   const company = await Company.create({
     name,
@@ -61,6 +59,7 @@ const addCompany = asyncHandler(async (req, res) => {
   });
 
   if (company) {
+    // console.log(company);
     res.status(201).json({
       _id: company._id,
       name: company.name,
@@ -177,7 +176,7 @@ const deleteCompany = asyncHandler(async (req, res) => {
 // @access Private
 const updateCompany = asyncHandler(async (req, res) => {
   //get user using the id in the JWT
-  const user = await User.findById(req.user.id);
+  const user = await User.findById(req.user._id);
 
   if (!user) {
     res.status(401);
@@ -191,7 +190,7 @@ const updateCompany = asyncHandler(async (req, res) => {
     throw new Error("Company not found");
   }
 
-  if (company.postedBy.toString() != req.user.id) {
+  if (company.postedBy.toString() != req.user._id) {
     res.status(401);
     throw new Error("Not Authorized");
   }
@@ -207,6 +206,78 @@ const updateCompany = asyncHandler(async (req, res) => {
   res.status(200).json(updatedCompany);
 });
 
+// @desc update LOGO
+// @route PUT /api/company/:id/updateLogo
+// @access Private
+const updateCompanyLogo = asyncHandler(async (req, res) => {
+  //get user using the id in the JWT
+  const user = await User.findById(req.user._id);
+  let logo = req.body.logo;
+
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  const company = await Company.findById(req.params.id);
+
+  if (!company) {
+    res.status(404);
+    throw new Error("Company not found");
+  }
+
+  if (company.postedBy.toString() != req.user._id) {
+    res.status(401);
+    throw new Error("Not Authorized");
+  }
+
+  if (logo === "") {
+    //delete previous logo
+    if (company.logo) {
+      await cloudinary.uploader.destroy(company.logo);
+    }
+
+    const updatedCompany = await Company.findByIdAndUpdate(
+      req.params.id,
+      { logo: "" },
+      {
+        new: true, //if not already there then create it
+      }
+    );
+    res.status(200).json(updatedCompany);
+  }
+
+  // add logo to cloudinary
+  const fileStr = logo;
+  const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+    upload_preset: "JobbedIn_company",
+  });
+
+  if (uploadedResponse && uploadedResponse.public_id) {
+    logo = uploadedResponse.public_id;
+    // console.log(logo);
+  } else {
+    req.statusCode(400);
+    throw new Error("Failed to upload LOGO");
+  }
+
+  // delete previous logo
+  if (company.logo) {
+    await cloudinary.uploader.destroy(company.logo);
+  }
+  const updatedCompany = await Company.findByIdAndUpdate(
+    req.params.id,
+    { logo: logo },
+    {
+      new: true, //if not already there then create it
+    }
+  );
+
+  // console.log(updatedCompany);
+
+  res.status(200).json(updatedCompany);
+});
+
 module.exports = {
   addCompany,
   getCompanyById,
@@ -215,4 +286,5 @@ module.exports = {
   updateCompany,
   getAllCompanies,
   getAllJobsByCompany,
+  updateCompanyLogo,
 };

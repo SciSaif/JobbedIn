@@ -10,6 +10,8 @@ const addCompany = async (companyData, token) => {
     },
   };
 
+  console.log({ companyData });
+
   const response = await axios.post(API_URL, companyData, config);
   return response.data;
 };
@@ -81,6 +83,31 @@ const editCompany = async (companyId, companyData, token) => {
   return response.data;
 };
 
+// change company logo
+const updateCompanyLogo = async (companyId, logo, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(
+    API_URL + companyId + "/updateLogo",
+    { logo },
+    config
+  );
+
+  if (
+    response &&
+    response.data &&
+    response.data.success &&
+    response.data.success === true
+  ) {
+    return { companyId };
+  }
+  return response.data;
+};
+
 const companiesService = {
   getCompany,
   addCompany,
@@ -88,5 +115,6 @@ const companiesService = {
   deleteCompany,
   editCompany,
   getAllCompanies,
+  updateCompanyLogo,
 };
 export default companiesService;

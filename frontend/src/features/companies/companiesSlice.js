@@ -107,7 +107,7 @@ export const getAllCompanies = createAsyncThunk(
 
 // Delete a particular company
 export const deleteCompany = createAsyncThunk(
-  "companys/deleteCompany",
+  "companies/deleteCompany",
   async (companyId, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
@@ -127,13 +127,35 @@ export const deleteCompany = createAsyncThunk(
 
 // Edit a particular company
 export const editCompany = createAsyncThunk(
-  "companys/editCompany",
+  "companies/editCompany",
   async (companyDataWithId, thunkAPI) => {
     try {
       const companyId = companyDataWithId.id;
       const companyData = companyDataWithId.formData;
       const token = thunkAPI.getState().auth.user.token;
       return await companiesService.editCompany(companyId, companyData, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// update company logo
+export const updateCompanyLogo = createAsyncThunk(
+  "companies/updateCompanyLogo",
+  async (companyDataWithId, thunkAPI) => {
+    try {
+      const companyId = companyDataWithId.id;
+      const logo = companyDataWithId.previewSource;
+      const token = thunkAPI.getState().auth.user.token;
+      return await companiesService.updateCompanyLogo(companyId, logo, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -266,6 +288,22 @@ export const companiesSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.onAction = "getAll";
+      })
+      .addCase(updateCompanyLogo.pending, (state) => {
+        state.isLoading = true;
+        state.onAction = "editLogo";
+      })
+      .addCase(updateCompanyLogo.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.company = action.payload;
+        state.onAction = "editLogo";
+      })
+      .addCase(updateCompanyLogo.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.onAction = "editLogo";
       });
   },
 });

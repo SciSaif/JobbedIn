@@ -17,6 +17,7 @@ import JobCard from "../../components/JobCard";
 import { getJobsByCompany } from "../../features/jobs/jobsSlice";
 import { BsFillBriefcaseFill } from "react-icons/bs";
 import ProfilePicEdit from "../../components/ProfilePicEdit";
+import SpinnerC from "../../components/SpinnerC";
 
 function Company() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -26,9 +27,8 @@ function Company() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { company, isLoading, isSuccess, isError, message } = useSelector(
-    (state) => state.companies
-  );
+  const { company, isLoading, isSuccess, isError, message, onAction } =
+    useSelector((state) => state.companies);
 
   const { user, isSuccessUser } = useSelector((state) => state.auth);
 
@@ -52,7 +52,7 @@ function Company() {
   } = company;
 
   useEffect(() => {
-    if (isError) {
+    if (isError && onAction === "getCompany") {
       dispatch(reset());
       enqueueSnackbar("Company not found", {
         variant: "error",
@@ -60,13 +60,18 @@ function Company() {
       navigate("/");
     }
 
-    if (isSuccess) {
+    if (isSuccess && onAction === "getCompany") {
       dispatch(reset());
       if (user._id === company.postedBy) {
         setIsUser(true);
       }
     }
-  }, [isError, isSuccess, message, dispatch, isSuccessUser]);
+
+    if (isSuccess && onAction === "editLogo") {
+      dispatch(reset());
+      enqueueSnackbar("Logo updated successfully!", { variant: "success" });
+    }
+  }, [isError, isSuccess, message, dispatch, isSuccessUser, onAction]);
 
   useEffect(() => {
     dispatch(getCompany(id));
@@ -77,16 +82,14 @@ function Company() {
     };
   }, []);
 
-  if (company.length === 0 || isLoading) {
-    return <Spinner />;
-  }
-
   const togglePhoto = () => {
     setPhotoState(!photoState);
   };
 
   return (
-    <div className="w-full h-screen sprinkle md:w-1/2 lg:w-3/4 max-w-[800px]  mx-auto">
+    <div className="w-full min-h-screen sprinkle md:w-1/2 lg:w-3/4 max-w-[800px]  mx-auto">
+      {isLoading && onAction === "getCompany" && <Spinner />}
+
       {photoState && (
         <ProfilePicEdit
           logo={logo}
@@ -99,9 +102,11 @@ function Company() {
         <img src={coverImg} alt="" className="mt-0 rounded-t  " />
 
         <div
-          className="w-[100px] h-[100px] absolute translate-x-[20px] translate-y-[-50px] z-7 border-2 border-black cursor-pointer"
+          className="w-[100px] h-[100px] absolute translate-x-[20px] translate-y-[-50px] z-7 border border-black/50 cursor-pointer"
           onClick={togglePhoto}
         >
+          {isLoading && onAction === "editLogo" && <SpinnerC />}
+
           {logo ? (
             <Image
               cloudName="duqfwygaf"
@@ -140,8 +145,6 @@ function Company() {
           <p>{industry}</p>
           <div className="mt-2 text-lg font-bold">Company Type</div>
           <p>{companyType}</p>
-          <div className="mt-2 text-lg font-bold">Posted By</div>
-          <p>{company.postedBy}</p>
         </div>
       </section>
       <section className="mt-5 text-white px-2">
