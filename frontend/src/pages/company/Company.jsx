@@ -86,7 +86,7 @@ function Company() {
   };
 
   return (
-    <div className="w-full h-screen md:w-1/2 lg:w-3/4 max-w-[800px]  mx-auto">
+    <div className="w-full h-screen sprinkle md:w-1/2 lg:w-3/4 max-w-[800px]  mx-auto">
       {photoState && (
         <ProfilePicEdit
           logo={logo}
