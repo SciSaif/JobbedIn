@@ -29,12 +29,9 @@ function Jobs() {
     };
   }, [dispatch]);
 
-  if (isLoading) {
-    return <Spinner />;
-  }
-
   return (
     <div className="flex justify-center items-center align-bottom text-white min-w-screen min-h-screen shadow-lg">
+      {isLoading && <Spinner />}
       <main className=" sprinkles flex flex-col sprinkle w-full min-h-screen overflow-hidden text-black flex flex-row items-center">
         <section className="w-full md:w-1/2 lg:w-1/3 bg-secondaryL overflow-y-auto">
           <div className="w-full p-3 font-bold text-4xl shadow-lg mb-5 bg-primary text-white">

@@ -10,10 +10,12 @@ import {
 } from "../../features/jobs/jobsSlice";
 import InputError from "../../components/InputError";
 import {
+  getAllCompanies,
   getCompanies,
   reset as resetCompany,
 } from "../../features/companies/companiesSlice";
 import { AiFillEdit } from "react-icons/ai";
+import companyLogo from "../../components/assets/companyLogo.png";
 import Spinner from "../../components/Spinner";
 import { Group, Avatar, Text, Select } from "@mantine/core";
 
@@ -123,8 +125,14 @@ function EditJob() {
     if (isSuccessCompany) {
       let dataTemp = [];
       companies.forEach((company) => {
+        let pic;
+        if (company.logo) {
+          pic = `https://res.cloudinary.com/duqfwygaf/image/upload/c_thumb,w_55/v1/${company.logo}`;
+        } else {
+          pic = companyLogo;
+        }
         dataTemp.push({
-          image: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
+          image: pic,
           label: company.name,
           value: company._id,
           description: company.industry,
@@ -154,7 +162,7 @@ function EditJob() {
   useEffect(() => {
     dispatch(getJob(id));
     if (user) {
-      dispatch(getCompanies(user._id));
+      dispatch(getAllCompanies());
     }
 
     return () => {

@@ -130,8 +130,14 @@ export const editCompany = createAsyncThunk(
   "companies/editCompany",
   async (companyDataWithId, thunkAPI) => {
     try {
+      let companyData = companyDataWithId.formData;
       const companyId = companyDataWithId.id;
-      const companyData = companyDataWithId.formData;
+
+      const { website } = companyData;
+      if (website) {
+        let newLink = validateURL(website);
+        companyData = { ...companyData, website: newLink };
+      }
       const token = thunkAPI.getState().auth.user.token;
       return await companiesService.editCompany(companyId, companyData, token);
     } catch (error) {

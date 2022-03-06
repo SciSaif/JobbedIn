@@ -47,7 +47,6 @@ function EditCompany() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [inputMessage, setInputMessage] = useState(null);
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const [ready, setReady] = useState(false);
 
   const [industryValue, setIndustryValue] = useState("");
 
@@ -105,13 +104,6 @@ function EditCompany() {
   }, []);
 
   useEffect(() => {
-    if (ready) {
-      dispatch(editCompany({ id, formData }));
-      setReady(false);
-    }
-  }, [formData]);
-
-  useEffect(() => {
     setFormData((prevData) => ({
       ...prevData,
       industry: industryValue,
@@ -135,23 +127,7 @@ function EditCompany() {
       return;
     }
 
-    if (website) {
-      let newLink = validateURL(website);
-      if (!newLink) {
-        setInputMessage("Please enter a valid website link");
-        return;
-      } else {
-        setFormData((prevState) => ({
-          ...prevState,
-          website: newLink,
-        }));
-      }
-      setReady(true);
-    } else {
-      dispatch(editCompany({ id, formData }));
-    }
-
-    return;
+    dispatch(editCompany({ id, formData }));
   };
 
   const onChange = (e) => {
@@ -280,23 +256,7 @@ function EditCompany() {
             <h2 className="text-lg text-fourth font-bold mb-3">
               Profile details
             </h2>
-            <label htmlFor="logo">Logo</label>
-            <div className="flex w-full  mt-2 bg-grey-lighter mb-2">
-              <label className="w-full flex flex-col items-center px-4 py-6 bg-[#c1f1fd] text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue md:hover:text-white">
-                <svg
-                  className="w-8 h-8"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
-                </svg>
-                <span className="mt-2 text-base leading-normal">
-                  Choose File
-                </span>
-                <input type="file" id="logo" className="hidden" />
-              </label>
-            </div>
+
             <label htmlFor="tagline">Tagline</label>
             <div className="flex w-full flex-wrap items-stretch mb-1 mt-1">
               <textarea

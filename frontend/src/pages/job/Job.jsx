@@ -25,33 +25,20 @@ function Job() {
   const { job, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.jobs
   );
+
   const {
     company,
     isError: isErrorCompany,
     isSuccess: isSuccessCompany,
   } = useSelector((state) => state.companies);
 
-  const {
-    user,
-    title,
-    employmentType,
-    workplaceType,
-    location,
-    status,
-    payRange,
-    applicants,
-    description,
-    createdAt,
-    companyID,
-  } = job;
-
   useEffect(() => {
-    if (createdAt) {
-      const dateStr = createdAt;
+    if (job.createdAt) {
+      const dateStr = job.createdAt;
       const str = formatDistance(new Date(dateStr), new Date());
       setTimestamp(str + " ago");
     }
-  }, [createdAt]);
+  }, [job.createdAt]);
 
   useEffect(() => {
     if (isError) {
@@ -97,11 +84,11 @@ function Job() {
     <div className="flex justify-center  items-center  text-white min-w-screen min-h-screen md:w-1/2 lg:w-1/3 mx-auto shadow-lg">
       <main className=" flex flex-col  w-full min-h-screen  text-textBlack">
         <section className="block mx-3 bg-secondaryL rounded-3xl my-3 mt-8 p-4">
-          <div className="font-bold text-2xl">{title}</div>
+          <div className="font-bold text-2xl">{job.title}</div>
           <div className="text-black/75 mt-2">
             {company ? (
               <Link
-                to={`/company/${companyID}`}
+                to={`/company/${job.companyID}`}
                 className="hover:text-bermuda hover:underline"
               >
                 {company.name}
@@ -109,24 +96,25 @@ function Job() {
             ) : (
               ""
             )}{" "}
-            | {(company ? company.address : "") + " "} ({workplaceType}){"   "}
+            | {(company ? company.address : "") + " "} ({job.workplaceType})
+            {"   "}
             <span className="text-black/50">
               {" "}
-              {timestamp ? timestamp : ""} | {applicants} applicants
+              {timestamp ? timestamp : ""} | {job.applicants} applicants
             </span>
           </div>
 
           <div className="text-black/75 mt-2">
             <div className="flex flex-row  items-center ">
-              <FaBusinessTime /> <p className="ml-2">{employmentType}</p>
+              <FaBusinessTime /> <p className="ml-2">{job.employmentType}</p>
             </div>
             <div className="flex flex-row  items-center mt-1 ">
-              <GiOfficeChair /> <p className="ml-2">{workplaceType}</p>
+              <GiOfficeChair /> <p className="ml-2">{job.workplaceType}</p>
             </div>
-            {location ? (
+            {job.location ? (
               <>
                 <div className="flex flex-row  items-center mt-1 ">
-                  <MdLocationOn /> <p className="ml-2">{location}</p>
+                  <MdLocationOn /> <p className="ml-2">{job.location}</p>
                 </div>
               </>
             ) : null}
@@ -134,7 +122,7 @@ function Job() {
             <div className="flex flex-row  items-center mt-1 ">
               <FcOk />{" "}
               <p className="ml-2">
-                {status === "open" ? "Actively recruiting" : "closed"}
+                {job.status === "open" ? "Actively recruiting" : "closed"}
               </p>
             </div>
             <div className="flex flex-col  mt-1  ">
@@ -142,11 +130,11 @@ function Job() {
                 <HiCurrencyRupee size="17px" />{" "}
                 <p className="ml-2">Pay Range</p>
               </div>
-              {payRange ? (
+              {job.payRange ? (
                 <>
                   <p className="text-blue font-bold ml-6 ">
-                    {payRange.low && payRange.low.toLocaleString()} -{" "}
-                    {payRange.high && payRange.high.toLocaleString()}
+                    {job.payRange.low && job.payRange.low.toLocaleString()} -{" "}
+                    {job.payRange.high && job.payRange.high.toLocaleString()}
                   </p>
                 </>
               ) : (
@@ -163,29 +151,31 @@ function Job() {
           <div className="font-bold text-textBlack/75 my-2">
             Job description
           </div>
-          <p>{description}</p>
+          <p>{job.description}</p>
         </section>
         <section className="block mx-3 bg-white rounded-3xl my-3 p-4">
           <div className="font-bold text-lg">About Employer</div>
-          <div className="font-bold text-textBlack/75 my-2">{user.name}</div>
+          <div className="font-bold text-textBlack/75 my-2">
+            {job.user.name}
+          </div>
           <p>
-            <b>Email:</b> {user.email}
+            <b>Email:</b> {job.user.email}
           </p>
-          {user.mobileNumber && (
+          {job.user.mobileNumber && (
             <p className="mb-4">
-              <b>Mobile number:</b> {user.mobileNumber}
+              <b>Mobile number:</b> {job.user.mobileNumber}
             </p>
           )}
 
           <div className="flex flex-col">
             <Link
-              to={`/user/${user._id}`}
+              to={`/user/${job.user._id}`}
               className="p-2 px-4 w-fit bg-tertiary hover:bg-[#ecc27a]  rounded-full mb-2"
             >
               Go to Employer's Profile
             </Link>
             <Link
-              to={`/company/${companyID}`}
+              to={`/company/${job.companyID}`}
               className="p-2 px-4 w-fit bg-accent hover:bg-accentD  rounded-full "
             >
               Go to Company Page

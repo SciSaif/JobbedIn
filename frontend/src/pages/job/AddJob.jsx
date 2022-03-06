@@ -10,6 +10,7 @@ import {
 import InputError from "../../components/InputError";
 import Spinner from "../../components/Spinner";
 import { MdPostAdd } from "react-icons/md";
+import companyLogo from "../../components/assets/companyLogo.png";
 
 import { Group, Avatar, Text, Select } from "@mantine/core";
 
@@ -87,8 +88,14 @@ function AddJob() {
     if (isSuccessCompany) {
       let dataTemp = [];
       companies.forEach((company) => {
+        let pic;
+        if (company.logo) {
+          pic = `https://res.cloudinary.com/duqfwygaf/image/upload/c_thumb,w_55/v1/${company.logo}`;
+        } else {
+          pic = companyLogo;
+        }
         dataTemp.push({
-          image: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
+          image: pic,
           label: company.name,
           value: company._id,
           description: company.industry,
