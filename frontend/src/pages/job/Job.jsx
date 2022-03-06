@@ -94,8 +94,8 @@ function Job() {
   }
 
   return (
-    <div className="flex justify-center items-center align-bottom text-white min-w-screen min-h-screen shadow-lg">
-      <main className=" sprinkles flex flex-col sprinkle w-full h-screen  text-textBlack">
+    <div className="flex justify-center  items-center  text-white min-w-screen min-h-screen md:w-1/2 lg:w-1/3 mx-auto shadow-lg">
+      <main className=" flex flex-col  w-full min-h-screen  text-textBlack">
         <section className="block mx-3 bg-secondaryL rounded-3xl my-3 mt-8 p-4">
           <div className="font-bold text-2xl">{title}</div>
           <div className="text-black/75 mt-2">
@@ -110,7 +110,7 @@ function Job() {
               ""
             )}{" "}
             | {(company ? company.address : "") + " "} ({workplaceType}){"   "}
-            <span className="text-black/25">
+            <span className="text-black/50">
               {" "}
               {timestamp ? timestamp : ""} | {applicants} applicants
             </span>

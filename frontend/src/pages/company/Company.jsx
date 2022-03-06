@@ -1,7 +1,7 @@
 import React from "react";
 import coverImg from "../../components/assets/cover.jpg";
-import amazonLogo from "../../components/assets/amazonLogo.jfif";
-import { useEffect } from "react";
+import companyLogo from "../../components/assets/companyLogo.png";
+import { useEffect, useState } from "react";
 import {
   reset,
   getCompany,
@@ -16,9 +16,12 @@ import Spinner from "../../components/Spinner";
 import JobCard from "../../components/JobCard";
 import { getJobsByCompany } from "../../features/jobs/jobsSlice";
 import { BsFillBriefcaseFill } from "react-icons/bs";
+import ProfilePicEdit from "../../components/ProfilePicEdit";
 
 function Company() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const [photoState, setPhotoState] = useState(false);
+  const [isUser, setIsUser] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,6 +29,9 @@ function Company() {
   const { company, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.companies
   );
+
+  const { user, isSuccessUser } = useSelector((state) => state.auth);
+
   const {
     jobs,
     isLoading: isLoadingJob,
@@ -56,8 +62,11 @@ function Company() {
 
     if (isSuccess) {
       dispatch(reset());
+      if (user._id === company.postedBy) {
+        setIsUser(true);
+      }
     }
-  }, [isError, isSuccess, message, dispatch]);
+  }, [isError, isSuccess, message, dispatch, isSuccessUser]);
 
   useEffect(() => {
     dispatch(getCompany(id));
@@ -72,12 +81,28 @@ function Company() {
     return <Spinner />;
   }
 
+  const togglePhoto = () => {
+    setPhotoState(!photoState);
+  };
+
   return (
     <div className="w-full h-screen md:w-1/2 lg:w-3/4 max-w-[800px]  mx-auto">
+      {photoState && (
+        <ProfilePicEdit
+          logo={logo}
+          togglePhoto={() => togglePhoto()}
+          isUser={isUser}
+        />
+      )}
+
       <section className="rounded w-full min-h-[250px]  bg-secondaryL mt-4 pb-0 ">
-        <img src={coverImg} alt="" className="mt-0 rounded-t " />
-        <div className="w-[100px] h-[100px]   absolute   translate-x-[20px] translate-y-[-50px] z-7 ">
-          {logo && (
+        <img src={coverImg} alt="" className="mt-0 rounded-t  " />
+
+        <div
+          className="w-[100px] h-[100px] absolute translate-x-[20px] translate-y-[-50px] z-7 border-2 border-black cursor-pointer"
+          onClick={togglePhoto}
+        >
+          {logo ? (
             <Image
               cloudName="duqfwygaf"
               publicId={logo}
@@ -85,9 +110,11 @@ function Company() {
               height="100"
               crop="fill"
             />
+          ) : (
+            <img src={companyLogo} alt="" />
           )}
-          {/* <img src={amazonLogo} alt="" /> */}
         </div>
+
         <div className="mx-5 pb-5">
           <h2 className="font-bold text-2xl mt-[58px] ">{name}</h2>
           <h5 className="text-black/75 ">
@@ -113,6 +140,8 @@ function Company() {
           <p>{industry}</p>
           <div className="mt-2 text-lg font-bold">Company Type</div>
           <p>{companyType}</p>
+          <div className="mt-2 text-lg font-bold">Posted By</div>
+          <p>{company.postedBy}</p>
         </div>
       </section>
       <section className="mt-5 text-white px-2">
