@@ -7,6 +7,7 @@ import {
   reset as resetUser,
   emptyUser,
   getUserById,
+  updateProfilePic,
 } from "../features/user/userSlice";
 import {
   reset as resetCompany,
@@ -18,7 +19,7 @@ import JobCard from "../components/JobCard";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { MdOutlineNavigateNext } from "react-icons/md";
 import { useSnackbar } from "notistack";
-import profileImg from "../components/assets/profileImg.png";
+import profileImg from "../components/assets/userPic.jpg";
 
 import {
   MdKeyboardArrowDown,
@@ -26,6 +27,9 @@ import {
   MdKeyboardArrowRight,
 } from "react-icons/md";
 import CompanyCard from "../components/CompanyCard";
+import ProfilePicEdit from "../components/ProfilePicEdit";
+import SpinnerC from "../components/SpinnerC";
+import { Image, Transformation } from "cloudinary-react";
 
 function Employer() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -35,11 +39,15 @@ function Employer() {
   const [isEmployer, setisEmployer] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const [companiesShow, setCompaniesShow] = useState(false);
+
+  const [photoState, setPhotoState] = useState(false);
+
   const { user: loggedInUser } = useSelector((state) => state.auth);
   const {
     user,
     isSuccess: isSuccessUser,
     isError: isErrorUser,
+    isLoading: isLoadingUser,
     onAction,
   } = useSelector((state) => state.user);
   const { name, email, mobileNumber } = user;
@@ -89,6 +97,17 @@ function Employer() {
       dispatch(resetCompany());
       dispatch(getJobs(user._id));
     }
+
+    if (isSuccessUser && onAction === "editPic") {
+      enqueueSnackbar("Updated profile picture successfully!", {
+        variant: "success",
+      });
+    }
+    if (isErrorUser && onAction === "editPic") {
+      enqueueSnackbar("Failed to update profile picture!", {
+        variant: "error",
+      });
+    }
   }, [
     isSuccess,
     isError,
@@ -98,6 +117,7 @@ function Employer() {
     isErrorCompany,
     onActionCompany,
     messageCompany,
+    onAction,
   ]);
 
   useEffect(() => {
@@ -121,12 +141,50 @@ function Employer() {
     setCompaniesShow(!companiesShow);
   };
 
+  const togglePhoto = () => {
+    setPhotoState(!photoState);
+  };
+
+  const deletePhoto = () => {
+    dispatch(updateProfilePic({ id, previewSource: "" }));
+  };
+
+  const changePhoto = (previewSource) => {
+    dispatch(updateProfilePic({ id, previewSource }));
+  };
   return (
     <div className="stripes max-w-screen  min-h-screen shadow-lg text-white flex flex-col md:flex-row lg:w-1/2 lg:m-auto ">
+      {photoState && (
+        <ProfilePicEdit
+          pic={user.profilePic}
+          togglePhoto={() => togglePhoto()}
+          isUser={isEmployer}
+          defaultPic={profileImg}
+          deletePhoto={() => deletePhoto()}
+          changePhoto={(previewSource) => changePhoto(previewSource)}
+        />
+      )}
+
       <div className="w-full md:w-1/2 min-h-[200px] ">
         <div className="w-full  min-h-[200px] rounded-t-3xl border-t-2 border-white mt-[100px] relative bg-black/25 pt-[60px] px-3">
-          <div className="w-[100px] h-[100px] border-white border-2 rounded-full absolute top-[-50px] left-1/2 translate-x-[-50px] z-7 ">
-            <img src={profileImg} alt="profile"></img>
+          <div
+            className="w-[100px] h-[100px] border-white border-2 rounded-full absolute top-[-50px] left-1/2 translate-x-[-50px] z-7  overflow-hidden md:cursor-pointer"
+            onClick={togglePhoto}
+          >
+            {isLoadingUser && onAction === "editPic" && <SpinnerC />}
+
+            {user.profilePic ? (
+              <Image cloudName="duqfwygaf" publicId={user.profilePic}>
+                <Transformation
+                  gravity="face"
+                  height="150"
+                  width="150"
+                  crop="fill"
+                />
+              </Image>
+            ) : (
+              <img src={profileImg} alt="profilepic" />
+            )}
           </div>
           <div className="mx-auto text-center font-bold mb-4 text-xl">
             {name}
@@ -195,6 +253,7 @@ function Employer() {
                 name={company.name}
                 address={company.address}
                 industry={company.industry}
+                logo={company.logo}
                 isEmployer={isEmployer}
               />
             ))}

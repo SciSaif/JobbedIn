@@ -88,6 +88,27 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+// update user profile picture
+export const updateProfilePic = createAsyncThunk(
+  "user/updateProfilePic",
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      const { id, previewSource } = data;
+      return await userService.updateProfilePic(id, previewSource, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -159,6 +180,22 @@ export const userSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.onAction = "drawer";
+      })
+      .addCase(updateProfilePic.pending, (state) => {
+        state.isLoading = true;
+        state.onAction = "editPic";
+      })
+      .addCase(updateProfilePic.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+        state.onAction = "editPic";
+      })
+      .addCase(updateProfilePic.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.onAction = "editPic";
       });
   },
 });

@@ -6,11 +6,12 @@ import {
   reset,
   getCompany,
   emptyCompany,
+  updateCompanyLogo,
 } from "../../features/companies/companiesSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
-import { Image } from "cloudinary-react";
+import { Image, Transformation } from "cloudinary-react";
 
 import Spinner from "../../components/Spinner";
 import JobCard from "../../components/JobCard";
@@ -86,15 +87,25 @@ function Company() {
     setPhotoState(!photoState);
   };
 
+  const deletePhoto = () => {
+    dispatch(updateCompanyLogo({ id, previewSource: "" }));
+  };
+
+  const changePhoto = (previewSource) => {
+    dispatch(updateCompanyLogo({ id, previewSource }));
+  };
   return (
     <div className="w-full min-h-screen sprinkle md:w-1/2 lg:w-3/4 max-w-[800px]  mx-auto">
       {isLoading && onAction === "getCompany" && <Spinner />}
 
       {photoState && (
         <ProfilePicEdit
-          logo={logo}
+          pic={logo}
           togglePhoto={() => togglePhoto()}
           isUser={isUser}
+          defaultPic={companyLogo}
+          deletePhoto={() => deletePhoto()}
+          changePhoto={(previewSource) => changePhoto(previewSource)}
         />
       )}
 
@@ -108,13 +119,14 @@ function Company() {
           {isLoading && onAction === "editLogo" && <SpinnerC />}
 
           {logo ? (
-            <Image
-              cloudName="duqfwygaf"
-              publicId={logo}
-              width="100"
-              height="100"
-              crop="fill"
-            />
+            <Image cloudName="duqfwygaf" publicId={logo}>
+              <Transformation
+                gravity="face"
+                height="150"
+                width="150"
+                crop="fill"
+              />
+            </Image>
           ) : (
             <img src={companyLogo} alt="" />
           )}

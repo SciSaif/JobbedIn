@@ -22,6 +22,9 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add a mobile number"],
     },
+    profilePic: {
+      type: String,
+    },
     verified: Boolean,
     isAdmin: {
       type: Boolean,

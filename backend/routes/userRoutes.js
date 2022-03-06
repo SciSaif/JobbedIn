@@ -9,6 +9,7 @@ const {
   getMe,
 
   changePassword,
+  updateProfilePic,
 } = require("../controllers/userController");
 const { route } = require("express/lib/application");
 const router = express.Router();
@@ -22,6 +23,7 @@ router
   .delete(protect, deleteUser);
 
 router.get("/:id", getUserById);
+router.put("/:id/updateProfilePic", protect, updateProfilePic);
 
 router.post("/login", loginUser);
 router.post("/me", protect, getMe);

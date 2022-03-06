@@ -51,11 +51,29 @@ const changePassword = async (token, oldPassword, newPassword) => {
   return response.data;
 };
 
+//update user profile pic
+const updateProfilePic = async (id, profilePic, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(
+    API_URL + id + "/updateProfilePic",
+    { profilePic },
+    config
+  );
+
+  return response.data;
+};
+
 const userService = {
   getUserById,
   updateUser,
   deleteUser,
   changePassword,
+  updateProfilePic,
 };
 
 export default userService;

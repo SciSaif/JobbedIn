@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { deleteCompany } from "../features/companies/companiesSlice";
-import logo from "../components/assets/amazonLogo.jfif";
+import companyLogo from "../components/assets/companyLogo.png";
+import { Image, Transformation } from "cloudinary-react";
 
-function CompanyCard({ name, industry, address, id, isEmployer }) {
+function CompanyCard({ name, industry, address, id, isEmployer, logo }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -30,8 +31,19 @@ function CompanyCard({ name, industry, address, id, isEmployer }) {
   return (
     <div className="border-l-2 border-secondaryD hover:border-accent border-b-2 border-b-black/75 pl-4 p-2   flex flex-row justify-between items-center cursor-pointer relative">
       <div className="flex flex-row" onClick={onClick}>
-        <div className="min-w-[50px] ">
-          <img src={logo} alt="logo" className="w-[50px]" />
+        <div className="max-w-[50px] ">
+          {logo ? (
+            <Image cloudName="duqfwygaf" publicId={logo}>
+              <Transformation
+                gravity="face"
+                height="50"
+                width="50"
+                crop="thumb"
+              />
+            </Image>
+          ) : (
+            <img src={companyLogo} alt="" />
+          )}
         </div>
         <div className="text-black text-lg font-bold ml-3 ">
           {name}

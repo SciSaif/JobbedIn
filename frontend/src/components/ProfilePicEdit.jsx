@@ -1,28 +1,22 @@
 import React from "react";
 import { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { updateCompanyLogo } from "../features/companies/companiesSlice";
 
 import { Image } from "cloudinary-react";
-import companyLogo from "../components/assets/companyLogo.png";
-import SpinnerC from "./SpinnerC";
 
-function ProfilePicEdit({ logo, togglePhoto, isUser }) {
+function ProfilePicEdit({
+  pic,
+  togglePhoto,
+  isUser,
+  defaultPic,
+  deletePhoto,
+  changePhoto,
+}) {
   const fileInputRef = useRef(null);
-  const { id } = useParams();
   const [fileInputState, setFileInputState] = useState("");
   const [previewSource, setPreviewSource] = useState("");
 
-  const dispatch = useDispatch();
-
   const onChangeClick = () => {
     fileInputRef.current.click();
-  };
-
-  const onChange = () => {
-    dispatch(updateCompanyLogo({ id, previewSource }));
-    togglePhoto();
   };
 
   const handleFileInputChange = (e) => {
@@ -36,11 +30,6 @@ function ProfilePicEdit({ logo, togglePhoto, isUser }) {
     reader.onloadend = () => {
       setPreviewSource(reader.result);
     };
-  };
-
-  const onDelete = () => {
-    dispatch(updateCompanyLogo({ id, previewSource: "" }));
-    togglePhoto();
   };
 
   return (
@@ -60,21 +49,21 @@ function ProfilePicEdit({ logo, togglePhoto, isUser }) {
                 <img src={previewSource} alt="img preview" />
               </>
             )}
-            {!previewSource && logo ? (
+            {!previewSource && pic ? (
               <Image
                 cloudName="duqfwygaf"
-                publicId={logo}
+                publicId={pic}
                 crop="fill"
                 width="500"
               />
             ) : (
-              <> {!previewSource && <img src={companyLogo} alt="" />}</>
+              <> {!previewSource && <img src={defaultPic} alt="" />}</>
             )}
           </div>
         </div>
 
         {isUser && (
-          <div className=" mt-5 border-t-white/50 border flex justify-around">
+          <div className=" mt-5 border-t-white/50 border-t flex justify-around">
             <input
               type="file"
               accept="image/*"
@@ -92,7 +81,10 @@ function ProfilePicEdit({ logo, togglePhoto, isUser }) {
             {!previewSource ? (
               <button
                 className="text-white/75 px-4 py-5 text-lg font-semibold md:hover:bg-[#061222] md:hover:rounded-lg"
-                onClick={onDelete}
+                onClick={() => {
+                  deletePhoto();
+                  togglePhoto();
+                }}
               >
                 Delete
               </button>
@@ -100,7 +92,10 @@ function ProfilePicEdit({ logo, togglePhoto, isUser }) {
               <>
                 <button
                   className="text-white/75 px-4 py-5 text-lg font-semibold md:hover:bg-[#061222] md:hover:rounded-lg"
-                  onClick={onChange}
+                  onClick={() => {
+                    changePhoto(previewSource);
+                    togglePhoto();
+                  }}
                 >
                   Change
                 </button>

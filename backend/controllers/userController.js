@@ -8,6 +8,8 @@ const User = require("../models/userModel");
 const Job = require("../models/jobModel");
 const Company = require("../models/companyModel");
 
+const { cloudinary } = require("../utils/cloudinary");
+
 const { sendVerificationEmail } = require("./verifyEmailController");
 
 // @desc Register a user
@@ -42,22 +44,12 @@ const registerUser = asyncHandler(async (req, res) => {
     password: hashedPassword,
     mobileNumber,
     designation,
+    profilePic: "",
     verified: false,
   });
 
   if (user) {
     sendVerificationEmail(user, res);
-    // res.status(201).json({
-    //   // handle account verification
-    //   _id: user._id,
-    //   name: user.name,
-    //   email: user.email,
-    //   mobileNumber: user.mobileNumber,
-    //   companyName: user.companyName,
-    //   address: user.address,
-    //   description: user.description,
-    //   token: generateToken(user._id),
-    // });
   } else {
     res.status(400);
     throw new Error("Invalid User Data");
@@ -92,6 +84,7 @@ const loginUser = asyncHandler(async (req, res) => {
       email: user.email,
       mobileNumber: user.mobileNumber,
       designation: user.designation,
+      profilePic: user.profilePic,
       token: generateToken(user._id),
     });
   } else {
@@ -216,6 +209,63 @@ const changePassword = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc update profile pic
+// @route PUT /api/users/:id/updateProfilePic
+// @access Private
+const updateProfilePic = asyncHandler(async (req, res) => {
+  //get user using the id in the JWT
+  const user = await User.findById(req.user._id);
+  let profilePic = req.body.profilePic;
+
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  if (profilePic === "") {
+    //delete previous profilePic
+    if (user.profilePic) {
+      await cloudinary.uploader.destroy(user.profilePic);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { profilePic: "" },
+      {
+        new: true, //if not already there then create it
+      }
+    );
+    res.status(200).json(updatedUser);
+  }
+
+  // add profilePic to cloudinary
+  const fileStr = profilePic;
+  const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+    upload_preset: "JobbedIn_user",
+  });
+
+  if (uploadedResponse && uploadedResponse.public_id) {
+    profilePic = uploadedResponse.public_id;
+  } else {
+    req.statusCode(400);
+    throw new Error("Failed to upload profile pic");
+  }
+
+  // delete previous profile pic
+  if (user.profilePic) {
+    await cloudinary.uploader.destroy(user.profilePic);
+  }
+  const updatedProfilePic = await User.findByIdAndUpdate(
+    req.params.id,
+    { profilePic: profilePic },
+    {
+      new: true, //if not already there then create it
+    }
+  );
+
+  res.status(200).json(updatedProfilePic);
+});
+
 //Generate token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -231,4 +281,5 @@ module.exports = {
   updateUser,
   deleteUser,
   changePassword,
+  updateProfilePic,
 };
