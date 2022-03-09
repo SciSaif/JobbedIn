@@ -16,6 +16,7 @@ const { sendVerificationEmail } = require("./verifyEmailController");
 // @route POST /api/users
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
+  console.log("Reached register user controller");
   let { name, email, password, mobileNumber, designation } = req.body;
 
   if (!name || !email || !password || !mobileNumber || !designation) {
@@ -127,9 +128,9 @@ const getUserById = asyncHandler(async (req, res) => {
 // @route PUT /api/users
 // @access Private
 const updateUser = asyncHandler(async (req, res) => {
-  const { name, mobileNumber, designation } = req.body;
+  const { name, mobileNumber } = req.body;
 
-  if (!name || !mobileNumber || !designation) {
+  if (!name || !mobileNumber) {
     res.status(400);
     throw new Error("Please include all fields");
   }
@@ -143,7 +144,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
   const updatedData = await User.findByIdAndUpdate(
     req.user.id,
-    { name, mobileNumber, designation },
+    { name, mobileNumber },
     {
       new: true, //if not already there then create it
     }

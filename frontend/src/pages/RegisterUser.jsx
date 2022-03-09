@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { registerUser, reset } from "../features/auth/authSlice";
 import InputError from "../components/InputError";
@@ -8,9 +8,16 @@ import { BsFillPersonLinesFill } from "react-icons/bs";
 import Spinner from "../components/Spinner";
 
 function RegisterUser() {
-  const [inputMessage, setInputMessage] = useState(null);
-
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const designation = searchParams.get("desig");
+  useEffect(() => {
+    if (designation !== "employer" && designation !== "candidate") {
+      navigate("/register-user?desig=employer");
+    }
+  }, []);
+
+  const [inputMessage, setInputMessage] = useState(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -35,7 +42,6 @@ function RegisterUser() {
 
     // Redirect when logged in
     if (isSuccess || user) {
-      // navigate(`/user/${user._id}`);
       navigate(`/emailsent/${email}`);
     }
 
@@ -53,22 +59,16 @@ function RegisterUser() {
     e.preventDefault();
     if (password !== confirmPassword) {
       setInputMessage("Passwords Don't match");
-      setTimeout(() => {
-        setInputMessage(null);
-      }, 3000);
+
       return;
     } else if (mobileNumber.length < 10 || mobileNumber.length > 14) {
       setInputMessage("Please input a correct mobile Number");
-      setTimeout(() => {
-        setInputMessage(null);
-      }, 3000);
     } else {
       const userData = {
         ...formData,
       };
       delete userData.confirmPassword;
-      userData.designation = "employer";
-
+      userData.designation = designation;
       dispatch(registerUser(userData));
     }
   };
@@ -78,13 +78,21 @@ function RegisterUser() {
       {isLoading ? <Spinner /> : ""}
       <main className="flex flex-col bg-[#F2FFFF] rounded-lg mb-4 overflow-hidden">
         <div className="w-full pl-4 py-2 mb-2  bg-secondary">
-          <h4>Register your company with us </h4>
+          {designation === "employer" ? (
+            <h4>Your next hire is right here. Get started</h4>
+          ) : (
+            <h4>Looking for a job? Register now!</h4>
+          )}
         </div>
         <div className="w-full pl-4 ">
-          <h1 className="text-2xl font-bold mb-5">
+          <h1 className="text-2xl font-bold mb-2 mt-2">
             <div className="flex flex-row items-center ">
               <BsFillPersonLinesFill />
-              <p className="ml-3">Register</p>
+              {designation === "employer" ? (
+                <p className="ml-3">Employer registration</p>
+              ) : (
+                <p className="ml-3">Candidate Registration</p>
+              )}
             </div>
           </h1>
         </div>
@@ -177,8 +185,29 @@ function RegisterUser() {
 
           <p className="mt-3">
             Already have an account?{" "}
-            <Link to="/login-user" className="underline text-accent">
+            <Link
+              to={`/login-user?desig=${
+                designation === "employer" ? "employer" : "candidate"
+              }`}
+              className="underline text-accent"
+            >
               Login
+            </Link>
+          </p>
+          <p className="mt-3">
+            {designation === "employer"
+              ? "Looking for a job? Create a "
+              : "Want to hire? Create an "}
+
+            <Link
+              to={`/register-user?desig=${
+                designation === "employer" ? "candidate" : "employer"
+              }`}
+              className="underline text-accent"
+            >
+              {designation === "employer"
+                ? "Candidate Account"
+                : "Employer Account"}
             </Link>
           </p>
         </div>

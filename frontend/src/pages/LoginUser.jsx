@@ -1,6 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser, reset } from "../features/auth/authSlice";
 import InputError from "../components/InputError";
@@ -10,6 +15,15 @@ import Spinner from "../components/Spinner";
 function LoginUser() {
   const navigate = useNavigate();
   const { userEmail } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const designation = searchParams.get("desig");
+
+  useEffect(() => {
+    if (designation !== "employer" && designation !== "candidate") {
+      navigate("/login-user?desig=employer");
+    }
+  }, []);
+
   const [inputMessage, setInputMessage] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -32,7 +46,11 @@ function LoginUser() {
 
     // Redirect when logged in
     if (isSuccess || user) {
-      navigate(`/user/${user._id}`);
+      if (user.designation === "employer") {
+        navigate(`/employer/${user._id}`);
+      } else if (user.designation === "candidate") {
+        navigate(`/candidate/${user._id}`);
+      }
     }
 
     dispatch(reset());
@@ -59,10 +77,10 @@ function LoginUser() {
       {isLoading ? <Spinner /> : ""}
       <main className="flex flex-col bg-[#F2FFFF] rounded-lg mb-4 overflow-hidden">
         <div className="w-full pl-4 py-2 mb-2  bg-secondary">
-          <h4>Login to start hiring :) </h4>
+          <h4>Welcome back, login here :) </h4>
         </div>
         <div className="w-full pl-4 ">
-          <h1 className="text-2xl font-bold mb-5">
+          <h1 className="text-2xl font-bold mb-2 mt-2">
             <div className="flex flex-row items-center ">
               <GrLogin />
               <p className="ml-3">Login</p>
@@ -119,7 +137,12 @@ function LoginUser() {
 
           <p className="mt-1">
             Don't have an account?{" "}
-            <Link to="/register-user" className="underline text-accent">
+            <Link
+              to={`/register-user?desig=${
+                designation === "employer" ? "employer" : "candidate"
+              }`}
+              className="underline text-accent"
+            >
               Register
             </Link>
           </p>

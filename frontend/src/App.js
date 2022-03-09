@@ -18,6 +18,7 @@ import SetNewPassword from "./pages/SetNewPassword";
 import AddCompany from "./pages/company/AddCompany";
 import Company from "./pages/company/Company";
 import EditCompany from "./pages/company/EditCompany";
+import Candidate from "./pages/Candidate";
 
 function App() {
   return (
@@ -39,7 +40,8 @@ function App() {
             <Route path="/login-user/:userEmail" element={<LoginUser />} />
             <Route path="/login-user" element={<LoginUser />} />
             <Route path="/add-job" element={<AddJob />} />
-            <Route path="/user/:id" element={<Employer />} />
+            <Route path="/employer/:id" element={<Employer />} />
+            <Route path="/candidate/:id" element={<Candidate />} />
             <Route path="/user/edit" element={<PrivateRoute />}>
               <Route path="/user/edit" element={<EditUser />} />
             </Route>

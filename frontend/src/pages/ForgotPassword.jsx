@@ -49,7 +49,7 @@ function ForgotPassword() {
           <>
             {" "}
             <div className="w-full pl-4 py-2   bg-secondary">
-              <h4>Login to start hiring :) </h4>
+              <h4>Forgot your password? we got your back :) </h4>
             </div>
             <div className="w-full px-4 mt-2">
               <h1 className="text-2xl font-bold mb-5">

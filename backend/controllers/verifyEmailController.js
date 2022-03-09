@@ -64,7 +64,14 @@ const sendVerificationEmail = asyncHandler(async ({ _id, email }, res) => {
   });
 
   if (newVerification) {
-    let info = await transporter.sendMail(mailOptions);
+    let info;
+    try {
+      info = await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.log(error);
+      res.status(505);
+      throw new Error("failed to send mail");
+    }
 
     if (info.accepted) {
       res.status(200).json({

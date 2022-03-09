@@ -1,9 +1,16 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function Home() {
   const { user } = useSelector((state) => state.auth);
+  const [designation, setDesignation] = useState(null);
+  useEffect(() => {
+    if (user && user.designation) {
+      setDesignation(user.designation);
+    }
+  }, [user]);
 
   return (
     <div className=" flex items-center justify-center min-w-screen h-screen  ">
@@ -18,7 +25,11 @@ function Home() {
 
           <div className="flex flex-col ">
             <Link
-              to={user ? `/user/${user._id}` : `/register-user`}
+              to={
+                user && designation === "employer"
+                  ? `/user/${user._id}`
+                  : `/register-user?desig=employer`
+              }
               className="bg-secondary hover:bg-[#4ffbe7] text-black rounded px-4 py-2 mt-4 w-fit hover:bg-tertiary-100 "
             >
               <div className="flex flex-row items-center">
