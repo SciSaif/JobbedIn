@@ -27,7 +27,7 @@ function Home() {
             <Link
               to={
                 user && designation === "employer"
-                  ? `/user/${user._id}`
+                  ? `/employer/${user._id}`
                   : `/register-user?desig=employer`
               }
               className="bg-secondary hover:bg-[#4ffbe7] text-black rounded px-4 py-2 mt-4 w-fit hover:bg-tertiary-100 "

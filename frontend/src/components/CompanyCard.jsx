@@ -1,6 +1,8 @@
 import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BsThreeDotsVertical } from "react-icons/bs";
+// import { BsThreeDotsVertical } from "react-icons/bs";
+import { DotsVerticalIcon } from "@heroicons/react/solid";
+
 import { useDispatch } from "react-redux";
 import { deleteCompany } from "../features/companies/companiesSlice";
 import companyLogo from "../components/assets/companyLogo.png";
@@ -64,7 +66,8 @@ function CompanyCard({ name, industry, address, id, isEmployer, logo }) {
               type="button"
               // onClick={toggleDropdown}
             >
-              <BsThreeDotsVertical />
+              {/* <BsThreeDotsVertical /> */}
+              <DotsVerticalIcon className="h-5 w-5 text-blue-500" />
             </div>
             <div
               className="hidden  w-[120px] bg-black/75 text-[#DCEBFF] rounded-xl  absolute right-10 top-0 -translate-y-3 flex flex-col  p-1  select-none"

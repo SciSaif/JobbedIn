@@ -6,30 +6,11 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { deleteJob } from "../features/jobs/jobsSlice";
 
-// const useClickOutside = (ref, callback) => {
-//   const handleClick = (e) => {
-//     console.log("a");
-//     if (ref.current && !ref.current.contains(e.target)) {
-//       callback();
-//     }
-//   };
-//   React.useEffect(() => {
-//     document.addEventListener("click", handleClick);
-//     return () => {
-//       document.removeEventListener("click", handleClick);
-//     };
-//   });
-// };
-
 function JobCard({ title, employmentType, workplaceType, id, isEmployer }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
   const dropdownContainerRef = useRef(null);
-
-  // useClickOutside(dropdownContainerRef, () => {
-  //   dropdownRef.current.classList.add("hidden");
-  // });
 
   const toggleDropdown = (e) => {
     dropdownRef.current.classList.toggle("hidden");
