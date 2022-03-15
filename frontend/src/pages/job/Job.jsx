@@ -169,7 +169,7 @@ function Job() {
 
           <div className="flex flex-col">
             <Link
-              to={`/user/${job.user._id}`}
+              to={`/employer/${job.user._id}`}
               className="p-2 px-4 w-fit bg-tertiary hover:bg-[#ecc27a]  rounded-full mb-2"
             >
               Go to Employer's Profile
