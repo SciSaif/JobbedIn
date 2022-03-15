@@ -1,5 +1,4 @@
 const asyncHandler = require("express-async-handler");
-const brcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs/dist/bcrypt");
 require("dotenv").config();
@@ -105,6 +104,7 @@ const getMe = asyncHandler(async (req, res) => {
     mobileNumber: req.user.mobileNumber,
     designation: req.user.designation,
   };
+
   res.status(200).json(user);
 });
 
