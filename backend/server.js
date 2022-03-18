@@ -22,6 +22,7 @@ app.use(express.urlencoded({ extended: false, limit: "50mb" }));
 
 app.use("/api/company", require("./routes/companyRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/candidate", require("./routes/candidateRoutes"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api", require("./routes/otherRoutes"));
 
