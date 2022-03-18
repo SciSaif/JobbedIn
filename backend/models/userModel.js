@@ -25,6 +25,11 @@ const userSchema = mongoose.Schema(
     profilePic: {
       type: String,
     },
+    candidate: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Candidate",
+    },
     verified: Boolean,
     isAdmin: {
       type: Boolean,

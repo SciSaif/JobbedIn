@@ -15,7 +15,7 @@ function Header() {
         <div className="flex justify-between items-center ">
           <Link
             to="/"
-            className="ml-2 text-3xl cursor-pointer font-bold text-secondary"
+            className="ml-2 text-3xl cursor-pointer font-bold text-secondary "
           >
             <div className="flex flex-row items-center ">
               <p className="mr-1">Jobbed</p>

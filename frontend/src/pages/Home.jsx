@@ -19,6 +19,7 @@ function Home() {
           <h1 className="text-accent text-5xl text-center font-bold leading-snug">
             +10K Startups already hiring on JobbedIn
           </h1>
+
           <h5 className="text-white/75 text-center text-lg mt-8">
             Why don't you hire someone today?
           </h5>

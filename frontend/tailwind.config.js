@@ -1,6 +1,6 @@
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/flowbite/**/*.js"],
-  plugins: [require("flowbite/plugin")],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+
   theme: {
     colors: {
       transparent: "transparent",

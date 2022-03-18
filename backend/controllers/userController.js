@@ -6,6 +6,7 @@ require("dotenv").config();
 const User = require("../models/userModel");
 const Job = require("../models/jobModel");
 const Company = require("../models/companyModel");
+const Candidate = require("../models/candidateModel");
 
 const { cloudinary } = require("../utils/cloudinary");
 
@@ -15,7 +16,6 @@ const { sendVerificationEmail } = require("./verifyEmailController");
 // @route POST /api/users
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-  console.log("Reached register user controller");
   let { name, email, password, mobileNumber, designation } = req.body;
 
   if (!name || !email || !password || !mobileNumber || !designation) {
@@ -33,6 +33,25 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exists");
   }
 
+  let candidate;
+  if (designation === "candidate") {
+    candidate = await Candidate.create({
+      name,
+      email,
+      mobileNumber,
+      bio: "",
+      about: "",
+      experience: [],
+      education: [],
+      skills: [],
+    });
+  }
+
+  if (!candidate) {
+    res.status(400);
+    throw new Error("Invalid candidate data");
+  }
+
   //Hash Password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -45,12 +64,14 @@ const registerUser = asyncHandler(async (req, res) => {
     mobileNumber,
     designation,
     profilePic: "",
+    candidate: candidate._id,
     verified: false,
   });
 
   if (user) {
     sendVerificationEmail(user, res);
   } else {
+    await candidate.remove();
     res.status(400);
     throw new Error("Invalid User Data");
   }
@@ -85,6 +106,7 @@ const loginUser = asyncHandler(async (req, res) => {
       mobileNumber: user.mobileNumber,
       designation: user.designation,
       profilePic: user.profilePic,
+      candidate: user.candidate,
       token: generateToken(user._id),
     });
   } else {
@@ -170,6 +192,9 @@ const deleteUser = asyncHandler(async (req, res) => {
   if (await bcrypt.compare(req.headers.password, user.password)) {
     await Job.deleteMany({ user: user._id });
     await Company.deleteMany({ postedBy: user._id });
+    if (user.designation === "candidate") {
+      await Candidate.findByIdAndDelete(user.candidate);
+    }
     await user.remove();
     res.status(200).json({ success: true, type: "deleteUser" });
   } else {

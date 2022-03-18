@@ -100,25 +100,6 @@ function RegisterUser() {
         {inputMessage ? <InputError message={inputMessage} /> : ""}
         <div className="p-4">
           <form onSubmit={onSubmit}>
-            <label
-              for="toggle-example-checked"
-              class="flex relative items-center mb-4 cursor-pointer"
-            >
-              <input
-                type="checkbox"
-                id="toggle-example-checked"
-                class="sr-only"
-                checked
-              />
-              <div class="w-11 h-6 bg-gray-200 rounded-full border border-gray-200 toggle-bg dark:bg-gray-700 dark:border-gray-600"></div>
-              <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Toggle me (checked)
-              </span>
-            </label>
-
-            <label htmlFor="name" className="required">
-              Name
-            </label>
             <div className="flex w-full flex-wrap items-stretch mb-3 mt-1">
               <input
                 type="text"
