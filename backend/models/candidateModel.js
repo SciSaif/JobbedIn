@@ -35,7 +35,7 @@ const candidateSchema = mongoose.Schema({
     ],
   },
   skills: {
-    type: [{ name: String }],
+    type: [],
   },
 });
 

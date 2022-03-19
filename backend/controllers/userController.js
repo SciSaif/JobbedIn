@@ -90,7 +90,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
   email = email.toLowerCase();
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).populate("candidate");
+  console.log(user);
 
   if (user && !user.verified) {
     res.status(400);
@@ -135,7 +136,7 @@ const getMe = asyncHandler(async (req, res) => {
 // @access Public
 const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const user = await User.findById(id);
+  const user = await User.findById(id).populate("candidate");
 
   if (!user) {
     res.status(401);

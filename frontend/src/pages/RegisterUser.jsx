@@ -41,7 +41,7 @@ function RegisterUser() {
     }
 
     // Redirect when logged in
-    if (isSuccess || user) {
+    if (isSuccess || (user && user.verified === false)) {
       navigate(`/emailsent/${email}`);
     }
 
