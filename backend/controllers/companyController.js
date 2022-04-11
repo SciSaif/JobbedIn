@@ -34,17 +34,17 @@ const addCompany = asyncHandler(async (req, res) => {
     throw new Error("User is not an employer");
   }
 
-  // const fileStr = logo;
-  // const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
-  //   upload_preset: "JobbedIn_company",
-  // });
+  const fileStr = logo;
+  const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+    upload_preset: "JobbedIn_company",
+  });
 
-  // if (uploadedResponse && uploadedResponse.public_id) {
-  //   logo = uploadedResponse.public_id;
-  // } else {
-  //   req.statusCode(400);
-  //   throw new Error("Failed to upload LOGO");
-  // }
+  if (uploadedResponse && uploadedResponse.public_id) {
+    logo = uploadedResponse.public_id;
+  } else {
+    req.statusCode(400);
+    throw new Error("Failed to upload LOGO");
+  }
 
   const company = await Company.create({
     name,
