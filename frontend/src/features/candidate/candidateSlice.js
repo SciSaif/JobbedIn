@@ -79,6 +79,7 @@ export const candidateSlice = createSlice({
       .addCase(getCandidate.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        state.onAction = "get candidate";
         state.message = action.payload;
       })
       .addCase(updateCandidate.pending, (state) => {
@@ -93,6 +94,7 @@ export const candidateSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+        state.onAction = "update candidate";
       });
   },
 });

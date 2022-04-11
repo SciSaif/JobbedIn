@@ -4,6 +4,7 @@ import jobsReducer from "../features/jobs/jobsSlice";
 import userReducer from "../features/user/userSlice";
 import otherReducer from "../features/other/otherSlice";
 import companiesReducer from "../features/companies/companiesSlice";
+import candidateReducer from "../features/candidate/candidateSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     user: userReducer,
     other: otherReducer,
     companies: companiesReducer,
+    candidates: candidateReducer,
   },
 });

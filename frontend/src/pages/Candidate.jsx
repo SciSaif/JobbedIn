@@ -7,10 +7,10 @@ import {
   updateProfilePic,
 } from "../features/user/userSlice";
 import {
-  reset as resetCompany,
-  getCompanies,
-  emptyCompanies,
-} from "../features/companies/companiesSlice";
+  updateCandidate,
+  reset as resetCandidate,
+  emptyCandidate,
+} from "../features/candidate/candidateSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSnackbar } from "notistack";
@@ -24,6 +24,7 @@ import schoolLogo from "../components/assets/school.png";
 import companyLogo from "../components/assets/companyLogo.png";
 import Experience from "../components/candidate/Experience";
 import Education from "../components/candidate/Education";
+import AboutEdit from "../components/candidate/modals/AboutEdit";
 
 function Candidate() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -34,8 +35,14 @@ function Candidate() {
   const [inputMessage, setInputMessage] = useState("");
 
   const [photoState, setPhotoState] = useState(false);
+  const [aboutEdit, setAboutEdit] = useState(false);
 
   const { user: loggedInUser } = useSelector((state) => state.auth);
+  const {
+    isError: isErrorCandidate,
+    isSuccess: isSuccessCandidate,
+    onAction: onActionCandidate,
+  } = useSelector((state) => state.candidates);
 
   const {
     user,
@@ -55,7 +62,6 @@ function Candidate() {
       setisCandidate(false);
       dispatch(resetUser());
       dispatch(emptyUser());
-      dispatch(emptyCompanies());
     };
   }, [setisCandidate, dispatch, resetUser]);
 
@@ -82,7 +88,37 @@ function Candidate() {
         variant: "error",
       });
     }
-  }, []);
+    if (isSuccessCandidate && onActionCandidate === "update candidate") {
+      enqueueSnackbar("Update successfull!", {
+        variant: "success",
+      });
+      closeAllModals();
+      dispatch(getUserById(id));
+      dispatch(resetCandidate());
+    }
+    if (isErrorCandidate && onActionCandidate === "updateCandidate") {
+      enqueueSnackbar("Failed to update!", {
+        variant: "error",
+      });
+      closeAllModals();
+      dispatch(resetCandidate());
+    }
+  }, [
+    isErrorCandidate,
+    isErrorUser,
+    isSuccessCandidate,
+    isSuccessUser,
+    onActionCandidate,
+  ]);
+
+  const closeAllModals = () => {
+    setAboutEdit(false);
+    setPhotoState(false);
+  };
+
+  const candidateUpdate = (data) => {
+    dispatch(updateCandidate(data));
+  };
 
   const togglePhoto = () => {
     setPhotoState(!photoState);
@@ -105,6 +141,14 @@ function Candidate() {
           defaultPic={profileImg}
           deletePhoto={() => deletePhoto()}
           changePhoto={(previewSource) => changePhoto(previewSource)}
+        />
+      )}
+
+      {aboutEdit && (
+        <AboutEdit
+          about={user?.candidate?.about}
+          toggle={() => setAboutEdit(!aboutEdit)}
+          updateCandidate={(data) => candidateUpdate(data)}
         />
       )}
 
@@ -169,7 +213,10 @@ function Candidate() {
             <h2 className="font-bold text-2xl text-textBlack">About</h2>
 
             {isCandidate && (
-              <div className="hover:cursor-pointer">
+              <div
+                className="hover:cursor-pointer"
+                onClick={() => setAboutEdit(true)}
+              >
                 {" "}
                 <BiEditAlt size="30px" />{" "}
               </div>
@@ -205,6 +252,7 @@ function Candidate() {
             )}
           </div>
           <div>
+            {user && user.candidate && user.experience}
             {user?.candidate?.experience ? (
               user.candidate.experience.map((company) => (
                 <Experience company={company} key={company._id} />
