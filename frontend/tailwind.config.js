@@ -23,7 +23,7 @@ module.exports = {
       secondaryD: "#18E2CB",
       secondaryL: "#e3feff",
 
-      textBlack: "#191919",
+      textBlack: "#2a2a2a",
     },
   },
 };

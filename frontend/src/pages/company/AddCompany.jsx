@@ -27,19 +27,6 @@ function isValidHttpUrl(string) {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
-function validateURL(url) {
-  if (
-    !(url.substring(0, 8) === "https://" || url.substring(0, 7) === "http://")
-  ) {
-    url = "https://" + url;
-    if (isValidHttpUrl(url)) return url;
-    else return null;
-  } else {
-    if (isValidHttpUrl(url)) return url;
-    else return null;
-  }
-}
-
 function AddCompany() {
   const data = Data;
   const navigate = useNavigate();

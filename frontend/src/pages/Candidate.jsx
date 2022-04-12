@@ -20,11 +20,12 @@ import { Image, Transformation } from "cloudinary-react";
 import ProfilePicEdit from "../components/ProfilePicEdit";
 import SpinnerC from "../components/SpinnerC";
 import { BiEditAlt } from "react-icons/bi";
-import schoolLogo from "../components/assets/school.png";
-import companyLogo from "../components/assets/companyLogo.png";
+import { AiOutlinePlus } from "react-icons/ai";
+import { ImCross } from "react-icons/im";
 import Experience from "../components/candidate/Experience";
 import Education from "../components/candidate/Education";
 import AboutEdit from "../components/candidate/modals/AboutEdit";
+import ExperienceEdit from "../components/candidate/modals/ExperienceEdit";
 
 function Candidate() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -36,6 +37,11 @@ function Candidate() {
 
   const [photoState, setPhotoState] = useState(false);
   const [aboutEdit, setAboutEdit] = useState(false);
+  const [experienceEdit, setExperienceEdit] = useState(false);
+
+  const [experienceEditMode, setExperienceEditMode] = useState(false);
+  const [experienceType, setExperienceType] = useState("add");
+  const [experienceCompany, setExperienceCompany] = useState("");
 
   const { user: loggedInUser } = useSelector((state) => state.auth);
   const {
@@ -114,6 +120,8 @@ function Candidate() {
   const closeAllModals = () => {
     setAboutEdit(false);
     setPhotoState(false);
+    setExperienceEdit(false);
+    setExperienceCompany("");
   };
 
   const candidateUpdate = (data) => {
@@ -133,25 +141,6 @@ function Candidate() {
   };
   return (
     <div className="stripes max-w-screen  min-h-screen shadow-lg text-white flex flex-col  lg:w-1/2 lg:m-auto ">
-      {photoState && (
-        <ProfilePicEdit
-          pic={user?.profilePic}
-          togglePhoto={() => togglePhoto()}
-          isUser={isCandidate}
-          defaultPic={profileImg}
-          deletePhoto={() => deletePhoto()}
-          changePhoto={(previewSource) => changePhoto(previewSource)}
-        />
-      )}
-
-      {aboutEdit && (
-        <AboutEdit
-          about={user?.candidate?.about}
-          toggle={() => setAboutEdit(!aboutEdit)}
-          updateCandidate={(data) => candidateUpdate(data)}
-        />
-      )}
-
       <section className="w-full min-h-[200px] ">
         <div className="w-full  min-h-[200px] rounded-t-xl md:rounded-xl border-t-2 border-white mt-[100px]  relative bg-secondaryL text-black pt-[60px] pb-5 px-5">
           <div
@@ -218,7 +207,7 @@ function Candidate() {
                 onClick={() => setAboutEdit(true)}
               >
                 {" "}
-                <BiEditAlt size="30px" />{" "}
+                <BiEditAlt size="25px" />{" "}
               </div>
             )}
           </div>
@@ -239,23 +228,56 @@ function Candidate() {
           </div>
         </div>
       </section>
-      <section className="w-full  mt-2 md:rounded-xl overflow-hidden  bg-secondaryL">
+      <section className="w-full  mt-2 md:rounded-xl overflow-hidden   z-40 bg-secondaryL">
         <div className="w-full border-t-2 border-white relative  text-black py-5 px-5 ">
-          <div className="flex justify-between mb-5">
+          <div className="flex justify-between mb-1">
             <h2 className="font-bold text-2xl text-textBlack">Experience</h2>
 
             {isCandidate && (
-              <div className="hover:cursor-pointer">
-                {" "}
-                <BiEditAlt size="30px" />{" "}
+              <div className=" flex flex-row items-center justify-between min-w-[65px]">
+                <div
+                  onClick={() => {
+                    setExperienceEdit(true);
+                    setExperienceType("add");
+                  }}
+                  className="hover:cursor-pointer"
+                >
+                  <AiOutlinePlus size="25px" />
+                </div>
+                {experienceEditMode ? (
+                  <div
+                    onClick={() => {
+                      setExperienceEditMode(false);
+                      setExperienceCompany("");
+                    }}
+                    className="hover:cursor-pointer"
+                  >
+                    <ImCross />
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => setExperienceEditMode(true)}
+                    className="hover:cursor-pointer"
+                  >
+                    <BiEditAlt size="25px" />{" "}
+                  </div>
+                )}
               </div>
             )}
           </div>
-          <div>
-            {user && user.candidate && user.experience}
+          <div className="experienceBox">
             {user?.candidate?.experience ? (
               user.candidate.experience.map((company) => (
-                <Experience company={company} key={company._id} />
+                <Experience
+                  company={company}
+                  key={company._id}
+                  editMode={experienceEditMode}
+                  editExperience={(company) => {
+                    setExperienceType("edit");
+                    setExperienceEdit(true);
+                    setExperienceCompany(company);
+                  }}
+                />
               ))
             ) : (
               <>
@@ -280,7 +302,7 @@ function Candidate() {
             {isCandidate && (
               <div className="hover:cursor-pointer">
                 {" "}
-                <BiEditAlt size="30px" />{" "}
+                <BiEditAlt size="25px" />{" "}
               </div>
             )}
           </div>
@@ -312,7 +334,7 @@ function Candidate() {
             {isCandidate && (
               <div className="hover:cursor-pointer">
                 {" "}
-                <BiEditAlt size="30px" />{" "}
+                <BiEditAlt size="25px" />{" "}
               </div>
             )}
           </div>
@@ -340,6 +362,39 @@ function Candidate() {
           </div>
         </div>
       </section>
+
+      {photoState && (
+        <ProfilePicEdit
+          pic={user?.profilePic}
+          togglePhoto={() => togglePhoto()}
+          isUser={isCandidate}
+          defaultPic={profileImg}
+          deletePhoto={() => deletePhoto()}
+          changePhoto={(previewSource) => changePhoto(previewSource)}
+        />
+      )}
+
+      {aboutEdit && (
+        <AboutEdit
+          about={user?.candidate?.about}
+          toggle={() => setAboutEdit(!aboutEdit)}
+          updateCandidate={(data) => candidateUpdate(data)}
+        />
+      )}
+
+      {experienceEdit && (
+        <ExperienceEdit
+          experience={experienceCompany}
+          toggle={() => {
+            setExperienceEdit(!experienceEdit);
+            if (experienceEdit === true) {
+              setExperienceCompany("");
+            }
+          }}
+          updateCandidate={(data) => candidateUpdate(data)}
+          type={experienceType}
+        />
+      )}
     </div>
   );
 }

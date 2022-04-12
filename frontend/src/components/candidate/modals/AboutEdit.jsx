@@ -42,7 +42,7 @@ function AboutEdit({ toggle, updateCandidate, about }) {
         <div className="px-6 py-4 border-t border-white/40 flex justify-end">
           <button
             className="bg-secondary md:hover:bg-secondaryD px-4 py-1 rounded-full text-black"
-            onClick={() => updateCandidate({ about: aboutData })}
+            onClick={() => updateCandidate({ type: "about", data: aboutData })}
           >
             Save
           </button>

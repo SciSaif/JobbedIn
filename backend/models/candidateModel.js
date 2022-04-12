@@ -20,8 +20,19 @@ const candidateSchema = mongoose.Schema({
       {
         name: { type: String },
         address: { type: String },
-        startDate: String,
-        endDate: String,
+        startDate: {
+          type: {
+            year: String,
+            month: String,
+          },
+        },
+        endDate: {
+          type: {
+            present: Boolean,
+            year: String,
+            month: String,
+          },
+        },
       },
     ],
   },
