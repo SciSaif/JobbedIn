@@ -28,7 +28,8 @@ const updateCandidate = asyncHandler(async (req, res) => {
   //update candidate data
   const type = req.body.type;
   const updatedCandidate = null;
-  console.log(type);
+  const item = await Candidate.findById(req.user.candidate);
+
   if (type === "about") {
     updatedCandidate = await Candidate.findByIdAndUpdate(
       req.user.candidate,
@@ -50,7 +51,6 @@ const updateCandidate = asyncHandler(async (req, res) => {
       $push: { experience: req.body.data },
     });
   } else if (type === "edit") {
-    const item = await Candidate.findById(req.user.candidate);
     const updatedItem = item.experience.map((exp) => {
       if (exp._id == req.body.id) return req.body.data;
       else return exp;
@@ -69,6 +69,24 @@ const updateCandidate = asyncHandler(async (req, res) => {
     updatedCandidate = await Candidate.findByIdAndUpdate(
       { _id: req.user.candidate },
       { $pull: { experience: { _id: req.body.data } } }
+    );
+  } else if (type === "skillAdd") {
+    updatedCandidate = await Candidate.findByIdAndUpdate(req.user.candidate, {
+      $push: { skills: req.body.data },
+    });
+  } else if (type == "skillsRemove") {
+    const updatedItem = item.skills.filter((skill) => {
+      return !req.body.data.includes(skill);
+    });
+
+    updatedCandidate = await Candidate.findByIdAndUpdate(
+      req.user.candidate,
+      {
+        skills: updatedItem,
+      },
+      {
+        new: true, //if not already there then create it
+      }
     );
   }
   res.status(200).json(updatedCandidate);

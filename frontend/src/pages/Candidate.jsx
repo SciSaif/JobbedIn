@@ -26,6 +26,8 @@ import Experience from "../components/candidate/Experience";
 import Education from "../components/candidate/Education";
 import AboutEdit from "../components/candidate/modals/AboutEdit";
 import ExperienceEdit from "../components/candidate/modals/ExperienceEdit";
+import EducationEdit from "../components/candidate/modals/EducationEdit";
+import SkillEdit from "../components/candidate/modals/SkillAdd";
 
 function Candidate() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -37,11 +39,20 @@ function Candidate() {
 
   const [photoState, setPhotoState] = useState(false);
   const [aboutEdit, setAboutEdit] = useState(false);
-  const [experienceEdit, setExperienceEdit] = useState(false);
 
+  const [experienceEdit, setExperienceEdit] = useState(false);
   const [experienceEditMode, setExperienceEditMode] = useState(false);
   const [experienceType, setExperienceType] = useState("add");
   const [experienceCompany, setExperienceCompany] = useState("");
+
+  const [educationEdit, setEducationEdit] = useState(false);
+  const [educationEditMode, setEducationEditMode] = useState(false);
+  const [educationType, setEducationType] = useState("add");
+  const [educationCompany, setEducationCompany] = useState("");
+
+  const [skillEdit, setSkillEdit] = useState(false);
+  const [skillEditMode, setSkillEditMode] = useState(false);
+  const [skillsToRemove, setSkillsToRemove] = useState([]);
 
   const { user: loggedInUser } = useSelector((state) => state.auth);
   const {
@@ -122,6 +133,7 @@ function Candidate() {
     setPhotoState(false);
     setExperienceEdit(false);
     setExperienceCompany("");
+    setSkillEdit(false);
   };
 
   const candidateUpdate = (data) => {
@@ -138,6 +150,19 @@ function Candidate() {
 
   const changePhoto = (previewSource) => {
     dispatch(updateProfilePic({ id, previewSource }));
+  };
+
+  const toggleSkillToRemove = (skill) => {
+    if (skillsToRemove.includes(skill)) {
+      setSkillsToRemove(
+        skillsToRemove.filter((skillC) => {
+          return skillC !== skill;
+        })
+      );
+    } else {
+      // add the skill back
+      setSkillsToRemove((prevState) => [...prevState, skill]);
+    }
   };
   return (
     <div className="stripes max-w-screen  min-h-screen shadow-lg text-white flex flex-col  lg:w-1/2 lg:m-auto ">
@@ -228,7 +253,7 @@ function Candidate() {
           </div>
         </div>
       </section>
-      <section className="w-full  mt-2 md:rounded-xl overflow-hidden   z-40 bg-secondaryL">
+      <section className="w-full  mt-2 md:rounded-xl overflow-hidden bg-secondaryL">
         <div className="w-full border-t-2 border-white relative  text-black py-5 px-5 ">
           <div className="flex justify-between mb-1">
             <h2 className="font-bold text-2xl text-textBlack">Experience</h2>
@@ -300,16 +325,50 @@ function Candidate() {
             <h2 className="font-bold text-2xl text-textBlack">Education</h2>
 
             {isCandidate && (
-              <div className="hover:cursor-pointer">
-                {" "}
-                <BiEditAlt size="25px" />{" "}
+              <div className=" flex flex-row items-center justify-between min-w-[65px]">
+                <div
+                  onClick={() => {
+                    setEducationEdit(true);
+                    setEducationType("add");
+                  }}
+                  className="hover:cursor-pointer"
+                >
+                  <AiOutlinePlus size="25px" />
+                </div>
+                {educationEditMode ? (
+                  <div
+                    onClick={() => {
+                      setEducationEditMode(false);
+                      setEducationCompany("");
+                    }}
+                    className="hover:cursor-pointer"
+                  >
+                    <ImCross />
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => setEducationEditMode(true)}
+                    className="hover:cursor-pointer"
+                  >
+                    <BiEditAlt size="25px" />{" "}
+                  </div>
+                )}
               </div>
             )}
           </div>
           <div>
             {user?.candidate?.education ? (
               user.candidate.education.map((school) => (
-                <Education school={school} key={school._id} />
+                <Education
+                  school={school}
+                  key={school._id}
+                  editMode={educationEditMode}
+                  editEducation={(school) => {
+                    setEducationType("edit");
+                    setEducationEdit(true);
+                    setEducationCompany(school);
+                  }}
+                />
               ))
             ) : (
               <>
@@ -332,19 +391,70 @@ function Candidate() {
             <h2 className="font-bold text-2xl text-textBlack">Skills</h2>
 
             {isCandidate && (
-              <div className="hover:cursor-pointer">
-                {" "}
-                <BiEditAlt size="25px" />{" "}
+              <div className=" flex flex-row items-center justify-between min-w-[65px]">
+                <div
+                  onClick={() => {
+                    setSkillEdit(true);
+                  }}
+                  className="hover:cursor-pointer"
+                >
+                  <AiOutlinePlus size="25px" />
+                </div>
+                {skillEditMode ? (
+                  <div
+                    onClick={() => {
+                      setSkillEditMode(false);
+                      setSkillsToRemove([]);
+                    }}
+                    className="hover:cursor-pointer"
+                  >
+                    <ImCross />
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => setSkillEditMode(true)}
+                    className="hover:cursor-pointer"
+                  >
+                    <BiEditAlt size="25px" />{" "}
+                  </div>
+                )}
               </div>
             )}
           </div>
           <div>
+            {skillEditMode && (
+              <div className="w-full flex flex-row justify-between  pl-2 mb-3 bg-accent rounded-full">
+                <div className="text font-bold my-3">
+                  Select the skills you want to remove
+                </div>
+                <button
+                  className="bg-[#b60000] text-white px-2 cursor-pointer rounded-r-full"
+                  onClick={() =>
+                    candidateUpdate({
+                      type: "skillsRemove",
+                      data: skillsToRemove,
+                    })
+                  }
+                >
+                  Remove
+                </button>
+              </div>
+            )}
             {user?.candidate?.skills ? (
               <div className="w-full flex flex-wrap ">
                 {user.candidate.skills.map((skill, index) => (
                   <p
-                    className="px-5 py-2 mr-2 mb-3 flex items-center bg-midnight/50 font-bold text-lg text-white rounded-full"
+                    className={`px-5 py-2 mr-2 mb-3 flex cursor-pointer items-center  font-bold text-lg text-white rounded-full  ${
+                      skillsToRemove.includes(skill)
+                        ? "bg-accentD"
+                        : "bg-midnight"
+                    }`}
                     key={index}
+                    onClick={() => {
+                      if (skillEditMode) {
+                        toggleSkillToRemove(skill);
+                      }
+                    }}
                   >
                     {skill}
                   </p>
@@ -393,6 +503,29 @@ function Candidate() {
           }}
           updateCandidate={(data) => candidateUpdate(data)}
           type={experienceType}
+        />
+      )}
+
+      {educationEdit && (
+        <EducationEdit
+          education={educationCompany}
+          toggle={() => {
+            setEducationEdit(!educationEdit);
+            if (educationEdit === true) {
+              setEducationCompany("");
+            }
+          }}
+          updateCandidate={(data) => candidateUpdate(data)}
+          type={educationType}
+        />
+      )}
+
+      {skillEdit && (
+        <SkillEdit
+          toggle={() => {
+            setSkillEdit(!skillEdit);
+          }}
+          updateCandidate={(data) => candidateUpdate(data)}
         />
       )}
     </div>

@@ -213,14 +213,22 @@ function ExperienceEdit({ toggle, updateCandidate, experience, type }) {
           </div>
         </div>
       </div>
-      <div className="px-6 py-4 md:w-1/2 lg:w-1/3 border-t rounded-b-xl bg-[#030b16] w-full border-white/40 flex justify-between">
-        <button
-          type="button"
-          className="text-white font-bold cursor-pointer"
-          onClick={onDelete}
-        >
-          Delete Experience
-        </button>
+      <div
+        className={
+          "px-6 py-4 md:w-1/2 lg:w-1/3 border-t rounded-b-xl bg-[#030b16] w-full border-white/40 flex " +
+          (type === "edit" ? "justify-between" : "justify-end")
+        }
+      >
+        {type === "edit" && (
+          <button
+            type="button"
+            className="text-white font-bold cursor-pointer"
+            onClick={onDelete}
+          >
+            Delete Experience
+          </button>
+        )}
+
         <button
           type="submit"
           className="bg-secondary md:hover:bg-secondaryD px-4 py-1 rounded-full text-black"

@@ -41,7 +41,14 @@ const candidateSchema = mongoose.Schema({
       {
         name: String,
         address: String,
-        field: [{ title: String, startDate: String, endDate: String }],
+        field: [
+          {
+            title: String,
+            startYear: String,
+            endYear: String,
+            present: Boolean,
+          },
+        ],
       },
     ],
   },

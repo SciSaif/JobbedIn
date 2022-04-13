@@ -25,7 +25,7 @@ function Experience({ company, editMode, editExperience }) {
         </div>
       </div>
       {editMode && (
-        <div onClick={() => editExperience(company)}>
+        <div onClick={() => editExperience(company)} className="cursor-pointer">
           <BiEditAlt size="25px" />
         </div>
       )}
