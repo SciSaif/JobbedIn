@@ -384,7 +384,6 @@ function Candidate() {
           </div>
         </div>
       </section>
-
       <section className="w-full  mt-2 md:rounded-xl overflow-hidden  bg-secondaryL mb-5">
         <div className="w-full border-t-2 border-white relative  text-black py-5 px-5 ">
           <div className="flex justify-between mb-5">

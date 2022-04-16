@@ -90,8 +90,16 @@ const loginUser = asyncHandler(async (req, res) => {
 
   email = email.toLowerCase();
 
-  const user = await User.findOne({ email }).populate("candidate");
-  console.log(user);
+  const user = await User.findOne({ email }).populate([
+    {
+      path: "candidate",
+      model: "Candidate",
+      populate: {
+        path: "experience.company",
+        model: "Company",
+      },
+    },
+  ]);
 
   if (user && !user.verified) {
     res.status(400);

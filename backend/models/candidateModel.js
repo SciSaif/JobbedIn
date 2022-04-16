@@ -18,21 +18,31 @@ const candidateSchema = mongoose.Schema({
   experience: {
     type: [
       {
-        name: { type: String },
-        address: { type: String },
-        startDate: {
-          type: {
-            year: String,
-            month: String,
-          },
+        companyName: { type: String },
+        company: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Company",
         },
-        endDate: {
-          type: {
-            present: Boolean,
-            year: String,
-            month: String,
+        roles: [
+          {
+            title: String,
+            location: { type: String },
+            employmentType: String,
+            startDate: {
+              type: {
+                year: String,
+                month: String,
+              },
+            },
+            endDate: {
+              type: {
+                present: Boolean,
+                year: String,
+                month: String,
+              },
+            },
           },
-        },
+        ],
       },
     ],
   },
