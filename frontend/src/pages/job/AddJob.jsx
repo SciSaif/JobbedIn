@@ -16,8 +16,8 @@ import { Group, Avatar, Text, Select } from "@mantine/core";
 
 const SelectItem = forwardRef(
   ({ image, label, description, ...others }, ref) => (
-    <div ref={ref} {...others}>
-      <Group noWrap>
+    <div ref={ref} {...others} color="black">
+      <Group noWrap color="black">
         <Avatar src={image} />
 
         <div>
@@ -205,7 +205,6 @@ function AddJob() {
             </label>
 
             <Select
-              // label=""
               id="company"
               value={selectedCompanyID}
               onChange={setSelectedCompanyID}
@@ -214,6 +213,7 @@ function AddJob() {
               itemComponent={SelectItem}
               data={data}
               searchable
+              clearable
               maxDropdownHeight={400}
               nothingFound="You have not added any companies"
               filter={(value, item) =>

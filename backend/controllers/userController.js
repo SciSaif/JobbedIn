@@ -90,16 +90,15 @@ const loginUser = asyncHandler(async (req, res) => {
 
   email = email.toLowerCase();
 
-  const user = await User.findOne({ email }).populate([
-    {
-      path: "candidate",
-      model: "Candidate",
+  const user = await User.findOne({ email }).populate({
+    path: "candidate",
+    populate: {
+      path: "experience",
       populate: {
-        path: "experience.company",
-        model: "Company",
+        path: "company",
       },
     },
-  ]);
+  });
 
   if (user && !user.verified) {
     res.status(400);
@@ -144,7 +143,15 @@ const getMe = asyncHandler(async (req, res) => {
 // @access Public
 const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const user = await User.findById(id).populate("candidate");
+  const user = await User.findById(id).populate({
+    path: "candidate",
+    populate: {
+      path: "experience",
+      populate: {
+        path: "company",
+      },
+    },
+  });
 
   if (!user) {
     res.status(401);

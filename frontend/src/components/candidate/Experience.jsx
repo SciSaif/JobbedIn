@@ -5,15 +5,14 @@ import { Image, Transformation } from "cloudinary-react";
 
 import companyLogo from "../assets/companyLogo.png";
 
-function Experience({ company, editMode, editExperience }) {
-  console.log(company?.company);
+function Experience({ experience, editMode, editExperience }) {
   return (
     <div className="flex flex-row justify-between py-3 border-b text-textBlack  border-black/20 forLastChild">
-      <div className="flex flex-col">
-        <div className="flex flex-row">
+      <div className="flex flex-col w-full">
+        <div className="flex flex-row w-full">
           <div className=" w-[50px] h-[50px]">
-            {company.company ? (
-              <Image cloudName="duqfwygaf" publicId={company.company.logo}>
+            {experience.company ? (
+              <Image cloudName="duqfwygaf" publicId={experience.company.logo}>
                 <Transformation
                   gravity="face"
                   height="50"
@@ -26,64 +25,98 @@ function Experience({ company, editMode, editExperience }) {
             )}
             {/* <img src={companyLogo} alt="company Logo" /> */}
           </div>
-          <div className="ml-3 ">
-            {company.roles.length === 1 ? (
-              <div className="">
-                <div className="font-bold ">{company.roles[0].title}</div>
-                <div className="text-sm">
-                  {company.companyName} · {company.roles[0].employmentType}
+          <div className="ml-3 w-full">
+            {experience.roles.length === 1 ? (
+              <div className="flex flex-row justify-between">
+                <div className="">
+                  <div className="font-bold ">{experience.roles[0].title}</div>
+                  <div className="text-sm">
+                    {experience.companyName} ·{" "}
+                    {experience.roles[0].employmentType}
+                  </div>
+                  <div className="text-black/75 text-sm">
+                    {experience.roles[0].startDate.month.substring(0, 3)}{" "}
+                    {experience.roles[0].startDate.year} -{" "}
+                    {experience.roles[0].endDate.present
+                      ? "Present"
+                      : experience.roles[0].endDate.month.substring(0, 3) +
+                        " " +
+                        experience.roles[0].endDate.year}
+                  </div>
+                  <div className="text-black/75 text-sm">
+                    {experience.roles[0].location}
+                  </div>
                 </div>
-                <div className="text-black/75 text-sm">
-                  {company.roles[0].startDate.month.substring(0, 3)}{" "}
-                  {company.roles[0].startDate.year} -{" "}
-                  {company.roles[0].endDate.present
-                    ? "Present"
-                    : company.roles[0].endDate.month.substring(0, 3) +
-                      " " +
-                      company.roles[0].endDate.year}
-                </div>
-                <div className="text-black/75 text-sm">
-                  {company.roles[0].location}
-                </div>
+                {editMode && (
+                  <div
+                    onClick={() =>
+                      editExperience({
+                        company: experience.company,
+                        companyName: experience.companyName,
+                        role: experience.roles[0],
+                        id: experience._id,
+                      })
+                    }
+                    className="cursor-pointer "
+                  >
+                    <BiEditAlt size="25px" />
+                  </div>
+                )}
               </div>
             ) : (
               <div className="">
-                <div className="font-bold ">{company.companyName}</div>
+                <div className="font-bold ">{experience.companyName}</div>
                 <div>1 yr 5 mos</div>
               </div>
             )}
           </div>
         </div>
 
-        {company?.roles?.length !== 1 && (
-          <div className="mt-3">
-            {company.roles?.map((r) => (
-              <div className="timeline-section" key={r.title}>
+        {experience?.roles?.length !== 1 && (
+          <div className="mt-3 w-full">
+            {experience.roles?.map((r) => (
+              <div className="timeline-section " key={r.title}>
                 <span className="timelineDot"></span>
-                <div className="font-bold">{r.title} </div>
-                <div className="text-sm">{company.roles[0].employmentType}</div>
-                <div className="text-black/75 text-sm">
-                  {company.roles[0].startDate.month.substring(0, 3)}{" "}
-                  {company.roles[0].startDate.year} -{" "}
-                  {company.roles[0].endDate.present
-                    ? "Present"
-                    : company.roles[0].endDate.month.substring(0, 3) +
-                      " " +
-                      company.roles[0].endDate.year}
-                </div>
-                <div className="text-black/75 text-sm">
-                  {company.roles[0].location}
+                <div className="flex flex-row justify-between">
+                  <div>
+                    <div className="font-bold">{r.title} </div>
+                    <div className="text-sm">
+                      {experience.roles[0].employmentType}
+                    </div>
+                    <div className="text-black/75 text-sm">
+                      {experience.roles[0].startDate.month.substring(0, 3)}{" "}
+                      {experience.roles[0].startDate.year} -{" "}
+                      {experience.roles[0].endDate.present
+                        ? "Present"
+                        : experience.roles[0].endDate.month.substring(0, 3) +
+                          " " +
+                          experience.roles[0].endDate.year}
+                    </div>
+                    <div className="text-black/75 text-sm">
+                      {experience.roles[0].location}
+                    </div>
+                  </div>
+                  {editMode && (
+                    <div
+                      onClick={() =>
+                        editExperience({
+                          company: experience.company,
+                          companyName: experience.companyName,
+                          role: r,
+                          id: experience._id,
+                        })
+                      }
+                      className="cursor-pointer "
+                    >
+                      <BiEditAlt size="25px" />
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
-      {editMode && (
-        <div onClick={() => editExperience(company)} className="cursor-pointer">
-          <BiEditAlt size="25px" />
-        </div>
-      )}
     </div>
   );
 }
