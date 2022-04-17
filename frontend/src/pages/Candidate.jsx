@@ -28,6 +28,7 @@ import AboutEdit from "../components/candidate/modals/AboutEdit";
 import ExperienceEdit from "../components/candidate/modals/ExperienceEdit";
 import EducationEdit from "../components/candidate/modals/EducationEdit";
 import SkillEdit from "../components/candidate/modals/SkillAdd";
+import BioEdit from "../components/candidate/modals/BioEdit";
 
 function Candidate() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -39,6 +40,7 @@ function Candidate() {
 
   const [photoState, setPhotoState] = useState(false);
   const [aboutEdit, setAboutEdit] = useState(false);
+  const [bioEdit, setBioEdit] = useState(false);
 
   const [experienceEdit, setExperienceEdit] = useState(false);
   const [experienceEditMode, setExperienceEditMode] = useState(false);
@@ -138,6 +140,7 @@ function Candidate() {
     setEducationEdit(false);
     setEducationEditMode(false);
     setEducationData("");
+    setBioEdit(false);
   };
 
   const candidateUpdate = (data) => {
@@ -194,20 +197,27 @@ function Candidate() {
           <div className="mx-auto text-center font-bold mb-3 text-3xl">
             {user?.name}
           </div>
-          <div className="mb-2">
+          <div className="mb-2 flex flex-row justify-between">
             {user?.candidate?.bio ? (
               <>{user?.candidate?.bio}</>
             ) : (
-              <div className="flex items-center hover:cursor-pointer">
+              <div className="flex flex-row justify-between items-center hover:cursor-pointer ">
                 {isCandidate ? (
                   <>
-                    <p className="mr-2">Add a bio</p> <BiEditAlt size="20px" />
+                    <p className="mr-2">Add a bio</p>
                   </>
                 ) : (
                   <p className="text-black/75 italic">Bio not available</p>
                 )}
               </div>
             )}
+            <div
+              className="hover:cursor-pointer"
+              onClick={() => setBioEdit(true)}
+            >
+              {" "}
+              <BiEditAlt size="25px" />{" "}
+            </div>
           </div>
 
           <div>
@@ -259,7 +269,7 @@ function Candidate() {
       </section>
       <section className="w-full  mt-2 md:rounded-xl overflow-hidden bg-secondaryL">
         <div className="w-full border-t-2 border-white relative  text-black py-5 px-5 ">
-          <div className="flex justify-between mb-1">
+          <div className="flex justify-between mb-3">
             <h2 className="font-bold text-2xl text-textBlack">Experience</h2>
 
             {isCandidate && (
@@ -295,7 +305,7 @@ function Candidate() {
             )}
           </div>
           <div className="experienceBox">
-            {user?.candidate?.experience ? (
+            {user?.candidate?.experience?.length > 0 ? (
               user.candidate.experience.map((experience) => (
                 <Experience
                   experience={experience}
@@ -325,7 +335,7 @@ function Candidate() {
 
       <section className="w-full  mt-2 md:rounded-xl overflow-hidden  bg-secondaryL ">
         <div className="w-full border-t-2 border-white relative  text-black py-5 px-5 ">
-          <div className="flex justify-between mb-5">
+          <div className="flex justify-between mb-3">
             <h2 className="font-bold text-2xl text-textBlack">Education</h2>
 
             {isCandidate && (
@@ -361,7 +371,7 @@ function Candidate() {
             )}
           </div>
           <div>
-            {user?.candidate?.education ? (
+            {user?.candidate?.education?.length > 0 ? (
               user.candidate.education.map((school) => (
                 <Education
                   school={school}
@@ -390,7 +400,7 @@ function Candidate() {
       </section>
       <section className="w-full  mt-2 md:rounded-xl overflow-hidden  bg-secondaryL mb-5">
         <div className="w-full border-t-2 border-white relative  text-black py-5 px-5 ">
-          <div className="flex justify-between mb-5">
+          <div className="flex justify-between mb-3">
             <h2 className="font-bold text-2xl text-textBlack">Skills</h2>
 
             {isCandidate && (
@@ -443,7 +453,7 @@ function Candidate() {
                 </button>
               </div>
             )}
-            {user?.candidate?.skills ? (
+            {user?.candidate?.skills?.length > 0 ? (
               <div className="w-full flex flex-wrap ">
                 {user.candidate.skills.map((skill, index) => (
                   <p
@@ -491,6 +501,13 @@ function Candidate() {
         <AboutEdit
           about={user?.candidate?.about}
           toggle={() => setAboutEdit(!aboutEdit)}
+          updateCandidate={(data) => candidateUpdate(data)}
+        />
+      )}
+      {bioEdit && (
+        <BioEdit
+          bio={user?.candidate?.bio}
+          toggle={() => setBioEdit(!bioEdit)}
           updateCandidate={(data) => candidateUpdate(data)}
         />
       )}

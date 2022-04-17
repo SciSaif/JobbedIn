@@ -186,7 +186,15 @@ const updateUser = asyncHandler(async (req, res) => {
     {
       new: true, //if not already there then create it
     }
-  );
+  ).populate({
+    path: "candidate",
+    populate: {
+      path: "experience",
+      populate: {
+        path: "company",
+      },
+    },
+  });
 
   // @todo remove password form user
   res.status(200).json(updatedData);
@@ -276,7 +284,15 @@ const updateProfilePic = asyncHandler(async (req, res) => {
       {
         new: true, //if not already there then create it
       }
-    );
+    ).populate({
+      path: "candidate",
+      populate: {
+        path: "experience",
+        populate: {
+          path: "company",
+        },
+      },
+    });
     res.status(200).json(updatedUser);
   }
 
@@ -303,7 +319,15 @@ const updateProfilePic = asyncHandler(async (req, res) => {
     {
       new: true, //if not already there then create it
     }
-  );
+  ).populate({
+    path: "candidate",
+    populate: {
+      path: "experience",
+      populate: {
+        path: "company",
+      },
+    },
+  });
 
   res.status(200).json(updatedProfilePic);
 });
