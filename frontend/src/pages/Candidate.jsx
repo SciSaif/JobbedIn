@@ -42,13 +42,12 @@ function Candidate() {
 
   const [experienceEdit, setExperienceEdit] = useState(false);
   const [experienceEditMode, setExperienceEditMode] = useState(false);
-  const [experienceType, setExperienceType] = useState("addExperience");
+  const [type, setType] = useState("");
   const [experienceData, setExperienceData] = useState("");
 
   const [educationEdit, setEducationEdit] = useState(false);
   const [educationEditMode, setEducationEditMode] = useState(false);
-  const [educationType, setEducationType] = useState("addEducation");
-  const [educationCompany, setEducationCompany] = useState("");
+  const [educationData, setEducationData] = useState("");
 
   const [skillEdit, setSkillEdit] = useState(false);
   const [skillEditMode, setSkillEditMode] = useState(false);
@@ -134,6 +133,11 @@ function Candidate() {
     setExperienceEdit(false);
     setExperienceData("");
     setSkillEdit(false);
+    setSkillEditMode(false);
+    setSkillsToRemove([]);
+    setEducationEdit(false);
+    setEducationEditMode(false);
+    setEducationData("");
   };
 
   const candidateUpdate = (data) => {
@@ -263,7 +267,7 @@ function Candidate() {
                 <div
                   onClick={() => {
                     setExperienceEdit(true);
-                    setExperienceType("addExperience");
+                    setType("addExperience");
                   }}
                   className="hover:cursor-pointer"
                 >
@@ -298,7 +302,7 @@ function Candidate() {
                   key={experience._id}
                   editMode={experienceEditMode}
                   editExperience={(experienceD) => {
-                    setExperienceType("editExperience");
+                    setType("editExperience");
                     setExperienceEdit(true);
                     setExperienceData(experienceD);
                   }}
@@ -329,7 +333,7 @@ function Candidate() {
                 <div
                   onClick={() => {
                     setEducationEdit(true);
-                    setEducationType("addEducation");
+                    setType("addEducation");
                   }}
                   className="hover:cursor-pointer"
                 >
@@ -339,7 +343,7 @@ function Candidate() {
                   <div
                     onClick={() => {
                       setEducationEditMode(false);
-                      setEducationCompany("");
+                      setEducationData("");
                     }}
                     className="hover:cursor-pointer"
                   >
@@ -364,9 +368,9 @@ function Candidate() {
                   key={school._id}
                   editMode={educationEditMode}
                   editEducation={(school) => {
-                    setEducationType("editEducation");
+                    setType("editEducation");
                     setEducationEdit(true);
-                    setEducationCompany(school);
+                    setEducationData(school);
                   }}
                 />
               ))
@@ -502,21 +506,21 @@ function Candidate() {
             }
           }}
           updateCandidate={(data) => candidateUpdate(data)}
-          type={experienceType}
+          type={type}
         />
       )}
 
       {educationEdit && (
         <EducationEdit
-          education={educationCompany}
+          education={educationData}
           toggle={() => {
             setEducationEdit(!educationEdit);
             if (educationEdit === true) {
-              setEducationCompany("");
+              setEducationData("");
             }
           }}
           updateCandidate={(data) => candidateUpdate(data)}
-          type={educationType}
+          type={type}
         />
       )}
 

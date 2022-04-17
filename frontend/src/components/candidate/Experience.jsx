@@ -1,16 +1,27 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { BiEditAlt } from "react-icons/bi";
 import { Image, Transformation } from "cloudinary-react";
 
 import companyLogo from "../assets/companyLogo.png";
 
 function Experience({ experience, editMode, editExperience }) {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    if (experience.company) {
+      navigate(`/company/${experience.company._id}`);
+    }
+  };
+
   return (
     <div className="flex flex-row justify-between py-3 border-b text-textBlack  border-black/20 forLastChild">
       <div className="flex flex-col w-full">
         <div className="flex flex-row w-full">
-          <div className=" w-[50px] h-[50px]">
+          <div
+            className=" w-[50px] h-[50px] cursor-pointer"
+            onClick={handleClick}
+          >
             {experience.company ? (
               <Image cloudName="duqfwygaf" publicId={experience.company.logo}>
                 <Transformation
@@ -29,8 +40,16 @@ function Experience({ experience, editMode, editExperience }) {
             {experience.roles.length === 1 ? (
               <div className="flex flex-row justify-between">
                 <div className="">
-                  <div className="font-bold ">{experience.roles[0].title}</div>
-                  <div className="text-sm">
+                  <div
+                    className="font-bold cursor-pointer"
+                    onClick={handleClick}
+                  >
+                    {experience.roles[0].title}
+                  </div>
+                  <div
+                    className="text-sm cursor-pointer font-semibold"
+                    onClick={handleClick}
+                  >
                     {experience.companyName} ·{" "}
                     {experience.roles[0].employmentType}
                   </div>
@@ -65,7 +84,9 @@ function Experience({ experience, editMode, editExperience }) {
               </div>
             ) : (
               <div className="">
-                <div className="font-bold ">{experience.companyName}</div>
+                <div className="font-bold cursor-pointer" onClick={handleClick}>
+                  {experience.companyName}
+                </div>
                 <div>1 yr 5 mos</div>
               </div>
             )}

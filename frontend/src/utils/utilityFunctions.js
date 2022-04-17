@@ -22,11 +22,13 @@ export function validateDates(startYear, startMonth, endYear, endMonth) {
       return "Start Date can't be in the future";
     }
   }
-  if (startYear > endYear) {
-    return "End date can't be earlier than start date";
-  } else if (startYear == endYear) {
-    if (months.indexOf(startMonth) > months.indexOf(endMonth)) {
+  if (endYear) {
+    if (startYear > endYear) {
       return "End date can't be earlier than start date";
+    } else if (startYear == endYear) {
+      if (months.indexOf(startMonth) > months.indexOf(endMonth)) {
+        return "End date can't be earlier than start date";
+      }
     }
   }
 

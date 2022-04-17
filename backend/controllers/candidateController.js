@@ -108,7 +108,6 @@ const updateCandidate = asyncHandler(async (req, res) => {
       );
     }
   } else if (type === "editExperience") {
-    console.log(req.body.data._id, req.body.data.role._id);
     let updatedExperience = item.experience.map((e) => {
       if (e._id == req.body.data._id) {
         let roles = e.roles.map((e1) => {
@@ -121,8 +120,6 @@ const updateCandidate = asyncHandler(async (req, res) => {
         return experience;
       } else return e;
     });
-
-    console.log(updatedExperience[1].roles);
 
     updatedCandidate = await Candidate.findByIdAndUpdate(
       req.user.candidate,
@@ -173,6 +170,38 @@ const updateCandidate = asyncHandler(async (req, res) => {
       req.user.candidate,
       {
         skills: updatedItem,
+      },
+      {
+        new: true, //if not already there then create it
+      }
+    );
+  } else if (type == "addEducation") {
+    updatedCandidate = await Candidate.findByIdAndUpdate(req.user.candidate, {
+      $push: { education: req.body.data },
+    });
+  } else if (type == "deleteEducation") {
+    updatedCandidate = await Candidate.findOneAndUpdate(
+      { _id: req.user.candidate },
+      {
+        $pull: {
+          education: {
+            _id: req.body.id,
+          },
+        },
+      },
+      { new: true }
+    );
+  } else if (type == "editEducation") {
+    let updatedEducation = item.education.map((e) => {
+      if (e._id == req.body.data.id) {
+        return req.body.data;
+      } else return e;
+    });
+
+    updatedCandidate = await Candidate.findByIdAndUpdate(
+      req.user.candidate,
+      {
+        education: updatedEducation,
       },
       {
         new: true, //if not already there then create it
