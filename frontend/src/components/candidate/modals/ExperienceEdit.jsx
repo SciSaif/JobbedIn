@@ -163,9 +163,10 @@ function ExperienceEdit({
             year: experienceData.endYear,
             month: experienceData.endMonth,
           },
+          _id: experienceData.roleId,
         },
+        _id: experienceData.id,
       },
-      id: experienceData.id,
     };
 
     updateCandidate(formData);
@@ -192,7 +193,7 @@ function ExperienceEdit({
     >
       <div className="relative w-full rounded-t-xl md:w-1/2 lg:w-1/3">
         <h1 className="text-white/75 text-2xl px-7 bg-[#030b16] py-5 border-b rounded-t-xl border-white/40">
-          {type === "edit" ? "Edit Experience" : "Add Experience"}
+          {type === "editExperience" ? "Edit Experience" : "Add Experience"}
         </h1>
         <div
           className="text-white/75 text-4xl absolute top-2 right-4 cursor-pointer "
@@ -217,8 +218,15 @@ function ExperienceEdit({
             searchable
             clearable
             creatable
+            disabled={type === "editExperience" ? true : false}
             getCreateLabel={(query) => `+ Add ${query}`}
-            styles={{ input: { background: "#030b16", color: "white" } }}
+            styles={{
+              input: {
+                background: "#030b16",
+                color: "white",
+                "&:disabled": { backgroundColor: "#030b16", opacity: "25%" },
+              },
+            }}
             maxDropdownHeight={400}
             nothingFound="You have not added any companies"
             filter={(value, item) =>

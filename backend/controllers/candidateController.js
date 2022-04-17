@@ -68,8 +68,6 @@ const updateCandidate = asyncHandler(async (req, res) => {
         }
       });
 
-      console.log(updatedExperience);
-
       updatedCandidate = await Candidate.findByIdAndUpdate(
         req.user.candidate,
         {
@@ -98,7 +96,6 @@ const updateCandidate = asyncHandler(async (req, res) => {
         companyName: req.body.data.companyName,
         roles: [req.body.data.role],
       });
-      console.log(updatedExperience);
 
       updatedCandidate = await Candidate.findByIdAndUpdate(
         req.user.candidate,
@@ -111,15 +108,26 @@ const updateCandidate = asyncHandler(async (req, res) => {
       );
     }
   } else if (type === "editExperience") {
-    const updatedItem = item.experience.map((exp) => {
-      if (exp._id == req.body.id) return req.body.data;
-      else return exp;
+    console.log(req.body.data._id, req.body.data.role._id);
+    let updatedExperience = item.experience.map((e) => {
+      if (e._id == req.body.data._id) {
+        let roles = e.roles.map((e1) => {
+          if (e1._id == req.body.data.role._id) {
+            return req.body.data.role;
+          } else return e1;
+        });
+        let experience = e;
+        experience.roles = roles;
+        return experience;
+      } else return e;
     });
+
+    console.log(updatedExperience[1].roles);
 
     updatedCandidate = await Candidate.findByIdAndUpdate(
       req.user.candidate,
       {
-        experience: updatedItem,
+        experience: updatedExperience,
       },
       {
         new: true, //if not already there then create it
