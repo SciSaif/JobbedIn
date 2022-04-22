@@ -101,21 +101,16 @@ function Experience({ experience, editMode, editExperience }) {
                 <div className="flex flex-row justify-between">
                   <div>
                     <div className="font-bold">{r.title} </div>
-                    <div className="text-sm">
-                      {experience.roles[0].employmentType}
-                    </div>
+                    <div className="text-sm">{r.employmentType}</div>
                     <div className="text-black/75 text-sm">
-                      {experience.roles[0].startDate.month.substring(0, 3)}{" "}
-                      {experience.roles[0].startDate.year} -{" "}
-                      {experience.roles[0].endDate.present
+                      {r.startDate.month.substring(0, 3)} {r.startDate.year} -{" "}
+                      {r.endDate.present
                         ? "Present"
-                        : experience.roles[0].endDate.month.substring(0, 3) +
+                        : r.endDate.month.substring(0, 3) +
                           " " +
-                          experience.roles[0].endDate.year}
+                          r.endDate.year}
                     </div>
-                    <div className="text-black/75 text-sm">
-                      {experience.roles[0].location}
-                    </div>
+                    <div className="text-black/75 text-sm">{r.location}</div>
                   </div>
                   {editMode && (
                     <div

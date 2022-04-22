@@ -220,6 +220,17 @@ function ExperienceEdit({
             creatable
             disabled={type === "editExperience" ? true : false}
             getCreateLabel={(query) => `+ Add ${query}`}
+            onCreate={(query) =>
+              setCompanyData((current) => [
+                ...current,
+                {
+                  image: companyLogo,
+                  label: query,
+                  value: query,
+                  description: query,
+                },
+              ])
+            }
             styles={{
               input: {
                 background: "#030b16",

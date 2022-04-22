@@ -211,13 +211,15 @@ function Candidate() {
                 )}
               </div>
             )}
-            <div
-              className="hover:cursor-pointer"
-              onClick={() => setBioEdit(true)}
-            >
-              {" "}
-              <BiEditAlt size="25px" />{" "}
-            </div>
+            {isCandidate && (
+              <div
+                className="hover:cursor-pointer"
+                onClick={() => setBioEdit(true)}
+              >
+                {" "}
+                <BiEditAlt size="25px" />{" "}
+              </div>
+            )}
           </div>
 
           <div>
