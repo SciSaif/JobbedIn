@@ -47,11 +47,20 @@ const jobSchema = mongoose.Schema(
       high: Number,
       required: false,
     },
-    applicants: {
+    numberOfApplicants: {
       type: Number,
       min: 0,
       required: true,
     },
+    applicants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        unique: true,
+      },
+    ],
+
     status: {
       type: String,
       required: true,

@@ -71,6 +71,14 @@ const candidateSchema = mongoose.Schema({
   skills: {
     type: [],
   },
+  applications: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
+      required: true,
+      unique: true,
+    },
+  ],
 });
 
 module.exports = mongoose.model("Candidate", candidateSchema);

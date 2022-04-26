@@ -138,6 +138,29 @@ const getMe = asyncHandler(async (req, res) => {
   res.status(200).json(user);
 });
 
+// @desc get new user details
+// @route POST /api/users/refresh
+// @access Private
+const refreshUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).populate({
+    path: "candidate",
+    populate: {
+      path: "experience",
+      populate: {
+        path: "company",
+      },
+    },
+  });
+
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  // @todo remove password form user
+  res.status(200).json(user);
+});
+
 // @desc Get user details by id
 // @route GET /api/users/:id
 // @access Public
@@ -348,4 +371,5 @@ module.exports = {
   deleteUser,
   changePassword,
   updateProfilePic,
+  refreshUser,
 };

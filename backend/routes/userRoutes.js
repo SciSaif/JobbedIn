@@ -7,7 +7,7 @@ const {
   getUserById,
   loginUser,
   getMe,
-
+  refreshUser,
   changePassword,
   updateProfilePic,
 } = require("../controllers/userController");
@@ -26,6 +26,8 @@ router.get("/:id", getUserById);
 router.put("/:id/updateProfilePic", protect, updateProfilePic);
 
 router.post("/login", loginUser);
+router.post("/refresh", protect, refreshUser);
+
 router.post("/me", protect, getMe);
 
 module.exports = router;

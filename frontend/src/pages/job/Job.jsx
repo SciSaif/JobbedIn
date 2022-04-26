@@ -6,25 +6,38 @@ import { MdLocationOn } from "react-icons/md";
 import { FcOk } from "react-icons/fc";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { HiExternalLink } from "react-icons/hi";
-import { reset, getJob, emptyJob } from "../../features/jobs/jobsSlice";
+import { TiTickOutline } from "react-icons/ti";
+import {
+  reset,
+  getJob,
+  emptyJob,
+  applyJob,
+} from "../../features/jobs/jobsSlice";
 import {
   reset as resetCompany,
   getCompany,
 } from "../../features/companies/companiesSlice";
+import { refreshUser } from "../../features/auth/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import formatDistance from "date-fns/formatDistance";
+import ConfirmApply from "../../components/candidate/modals/ConfirmApply";
+import { useSnackbar } from "notistack";
 
 function Job() {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const [applied, setApplied] = useState(false);
+  const [applyModal, setApplyModal] = useState(false);
   const [timestamp, setTimestamp] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const { job, isLoading, isSuccess, isError, message } = useSelector(
+  const { job, isLoading, isSuccess, isError, message, onAction } = useSelector(
     (state) => state.jobs
   );
+  const { user } = useSelector((state) => state.auth);
 
   const {
     company,
@@ -48,7 +61,28 @@ function Job() {
 
     if (isSuccess) {
       dispatch(reset());
-      dispatch(getCompany(job.companyID));
+      if (job && job.companyID) {
+        dispatch(getCompany(job.companyID));
+      }
+      if (user?.candidate?.applications?.filter((e) => e === id).length !== 0) {
+        // already applied
+        setApplied(true);
+      }
+    }
+
+    if (isSuccess && onAction === "applyJob") {
+      dispatch(getJob(id));
+      enqueueSnackbar("Applied to job successfully!", {
+        variant: "success",
+      });
+      setApplied(true);
+      dispatch(refreshUser());
+    }
+
+    if (isError && onAction === "applyJob") {
+      enqueueSnackbar(message, {
+        variant: "error",
+      });
     }
 
     if (isErrorCompany) {
@@ -66,10 +100,13 @@ function Job() {
     isLoading,
     isErrorCompany,
     isSuccessCompany,
+    onAction,
   ]);
 
   useEffect(() => {
-    dispatch(getJob(id));
+    if (id) {
+      dispatch(getJob(id));
+    }
 
     return () => {
       dispatch(emptyJob());
@@ -79,6 +116,17 @@ function Job() {
   if (job.length === 0 || isLoading) {
     return <Spinner />;
   }
+
+  const handleApply = () => {
+    if (user?.designation === "candidate") {
+      setApplyModal(true);
+    }
+  };
+
+  const apply = () => {
+    dispatch(applyJob({ jobID: id }));
+    setApplyModal(false);
+  };
 
   return (
     <div className="flex justify-center  items-center  text-white min-w-screen min-h-screen md:w-1/2 lg:w-1/3 mx-auto shadow-lg">
@@ -100,7 +148,7 @@ function Job() {
             {"   "}
             <span className="text-black/50">
               {" "}
-              {timestamp ? timestamp : ""} | {job.applicants} applicants
+              {timestamp ? timestamp : ""} | {job.numberOfApplicants} applicants
             </span>
           </div>
 
@@ -141,9 +189,20 @@ function Job() {
                 <p className="text-blue font-bold ml-6 ">Not Available</p>
               )}
             </div>
-            <button className="p-2 px-4 rounded-full bg-[#0a66c2] hover:bg-[#03396f] text-white  mt-3 flex flex-row items-center">
-              <p className="mr-1">Apply</p> <HiExternalLink />
-            </button>
+            {user?.designation === "candidate" && applied ? (
+              <button className="p-2 px-4 rounded-full bg-[#45ef16] hover:bg-[#0ab234] text-white  mt-3 flex flex-row items-center">
+                <p className="mr-1">Applied</p> <TiTickOutline size="25px" />
+              </button>
+            ) : (
+              user?.designation === "candidate" && (
+                <button
+                  className="p-2 px-4 rounded-full bg-[#0a66c2] hover:bg-[#03396f] text-white  mt-3 flex flex-row items-center"
+                  onClick={handleApply}
+                >
+                  <p className="mr-1">Apply</p> <HiExternalLink />
+                </button>
+              )
+            )}
           </div>
         </section>
         <section className="block mx-3 bg-white rounded-3xl my-3 p-4">
@@ -183,6 +242,13 @@ function Job() {
           </div>
         </section>
       </main>
+      {applyModal && (
+        <ConfirmApply
+          toggle={() => setApplyModal(false)}
+          candidate={user}
+          apply={() => apply()}
+        />
+      )}
     </div>
   );
 }

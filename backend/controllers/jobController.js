@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const Job = require("../models/jobModel");
 const Company = require("../models/companyModel");
+const Candidate = require("../models/candidateModel");
 
 // @desc Get jobs by user
 // @route GET /api/jobs
@@ -83,9 +84,9 @@ const createJob = asyncHandler(async (req, res) => {
     description,
     payRange,
     companyID,
-    applicants: 0,
+    numberOfApplicants: 0,
+    applicants: [],
   });
-  console.log("jobc", job);
 
   if (job) {
     res.status(201).json({
@@ -98,7 +99,8 @@ const createJob = asyncHandler(async (req, res) => {
       description: job.description,
       payRange: job.payRange,
       companyID,
-      applicants: job.applicants,
+      numberOfApplicants: job.numberOfApplicants,
+      applicants: [],
     });
   } else {
     res.status(400);
@@ -186,6 +188,62 @@ const getAllJobs = asyncHandler(async (req, res) => {
   res.status(200).json(jobs);
 });
 
+// @desc Apply to job
+// @route PUT /api/jobs/:id/apply
+// @access private
+const applyJob = asyncHandler(async (req, res) => {
+  const job = await Job.findById(req.params.id);
+  if (!job) {
+    res.status(404);
+    throw new Error("Job not found");
+  }
+
+  // make sure that candidate exists
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error("User does not exist");
+  }
+  if (user.designation !== "candidate") {
+    res.status(404);
+    throw new Error("User is not a candidate");
+  }
+
+  // check if already applied
+  const candidate = await Candidate.findById(req.user.candidate);
+
+  if (!candidate) {
+    res.status(404);
+    throw new Error("Candidate not found");
+  }
+
+  if (candidate.applications.filter((e) => e == req.params.id).length !== 0) {
+    // already applied to job
+    res.status(400);
+    throw new Error("Already applied to job");
+  }
+
+  const updatedJob = await Job.findByIdAndUpdate(
+    req.params.id,
+    { $push: { applicants: user._id }, $inc: { numberOfApplicants: 1 } },
+    {
+      new: true, //if not already there then create it
+    }
+  );
+
+  const updatedCandidate = await Candidate.findByIdAndUpdate(
+    candidate._id,
+    {
+      $push: { applications: req.params.id },
+    },
+    {
+      new: true, //if not already there then create it
+    }
+  );
+
+  res.status(200).json(updatedJob);
+});
+
 module.exports = {
   getJobsByUser,
   createJob,
@@ -193,4 +251,5 @@ module.exports = {
   deleteJob,
   updateJob,
   getAllJobs,
+  applyJob,
 };

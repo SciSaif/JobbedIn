@@ -28,6 +28,21 @@ const logoutUser = () => {
   localStorage.removeItem("user");
 };
 
-const authService = { registerUser, loginUser, logoutUser };
+// refresh user
+const refreshUser = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.post(API_URL + "refresh", {}, config);
+  if (response.data) {
+    localStorage.setItem("user", JSON.stringify(response.data));
+  }
+
+  return response.data;
+};
+
+const authService = { registerUser, loginUser, logoutUser, refreshUser };
 
 export default authService;

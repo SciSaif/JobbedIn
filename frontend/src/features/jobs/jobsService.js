@@ -92,6 +92,28 @@ const getJobsByCompany = async (id) => {
   return response.data;
 };
 
+//Apply to job
+const applyJob = async ({ jobID }, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put("/api/jobs/" + jobID + "/apply", {}, config);
+
+  if (
+    response &&
+    response.data &&
+    response.data.success &&
+    response.data.success === true
+  ) {
+    return { jobID };
+  }
+
+  return response.data;
+};
+
 const jobsService = {
   getJobs,
   createJob,
@@ -100,6 +122,7 @@ const jobsService = {
   editJob,
   getAllJobs,
   getJobsByCompany,
+  applyJob,
 };
 
 export default jobsService;

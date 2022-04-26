@@ -6,6 +6,7 @@ const {
   updateJob,
   deleteJob,
   getAllJobs,
+  applyJob,
 } = require("../controllers/jobController");
 const router = express.Router();
 
@@ -20,5 +21,7 @@ router
   .get(getJobById)
   .delete(protect, deleteJob)
   .put(protect, updateJob);
+
+router.route("/:id/apply").put(protect, applyJob);
 
 module.exports = router;
