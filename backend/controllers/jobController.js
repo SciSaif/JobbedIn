@@ -33,6 +33,29 @@ const getJobById = asyncHandler(async (req, res) => {
   res.status(200).json(job);
 });
 
+// @desc Get a particular job with applicants field populated
+// @route GET /api/jobs/:id/applicants
+// @access Private
+const getJobWithApplicants = asyncHandler(async (req, res) => {
+  const job = await Job.findById(req.params.id).populate({
+    path: "applicants",
+    populate: {
+      path: "candidate",
+    },
+  });
+  if (!job) {
+    res.status(404);
+    throw new Error("Job not found");
+  }
+
+  if (job.user.toString() != req.user._id.toString()) {
+    res.status(401);
+    throw new Error("Not authorised");
+  }
+
+  res.status(200).json(job);
+});
+
 // @desc Create a job by user
 // @route POST /api/jobs
 // @access Private
@@ -252,4 +275,5 @@ module.exports = {
   updateJob,
   getAllJobs,
   applyJob,
+  getJobWithApplicants,
 };

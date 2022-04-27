@@ -19,6 +19,7 @@ import AddCompany from "./pages/company/AddCompany";
 import Company from "./pages/company/Company";
 import EditCompany from "./pages/company/EditCompany";
 import Candidate from "./pages/Candidate";
+import { Applicants } from "./pages/job/Applicants";
 
 function App() {
   return (
@@ -60,6 +61,9 @@ function App() {
               path="/set-new-password/:id/:resetString"
               element={<SetNewPassword />}
             />
+            <Route path="/job/:id/applicants" element={<PrivateRoute />}>
+              <Route path="/job/:id/applicants" element={<Applicants />} />
+            </Route>
           </Routes>
         </div>
       </SnackbarProvider>

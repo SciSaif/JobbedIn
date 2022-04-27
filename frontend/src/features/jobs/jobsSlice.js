@@ -88,6 +88,26 @@ export const getJob = createAsyncThunk(
   }
 );
 
+// Get a particular job with applicants
+export const getJobWithApplicants = createAsyncThunk(
+  "jobs/getJobWithApplicants",
+  async (jobId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await jobsService.getJobWithApplicants(jobId, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // Delete a particular job
 export const deleteJob = createAsyncThunk(
   "jobs/deleteJob",
@@ -226,6 +246,20 @@ export const jobsSlice = createSlice({
         state.job = action.payload;
       })
       .addCase(getJob.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getJobWithApplicants.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getJobWithApplicants.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.onAction = "getJobWithApplicants";
+        state.job = action.payload;
+      })
+      .addCase(getJobWithApplicants.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

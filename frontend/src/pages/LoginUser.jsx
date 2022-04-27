@@ -27,11 +27,9 @@ function LoginUser() {
   const [inputMessage, setInputMessage] = useState(null);
 
   const [formData, setFormData] = useState({
-    email: userEmail,
+    email: userEmail ? userEmail : "",
     password: "",
   });
-
-  const { email, password } = formData;
 
   const dispatch = useDispatch();
 
@@ -100,7 +98,7 @@ function LoginUser() {
                 id="email"
                 placeholder="Email"
                 className="px-3 py-1 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
-                value={email}
+                value={formData?.email}
                 onChange={onChange}
                 required
               />
@@ -121,7 +119,7 @@ function LoginUser() {
                 id="password"
                 placeholder="Password"
                 className="px-3 py-1 mb-3 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full min-w-[300px]"
-                value={password}
+                value={formData?.password}
                 onChange={onChange}
                 required
               />

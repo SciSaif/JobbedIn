@@ -7,6 +7,7 @@ import { FcOk } from "react-icons/fc";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { HiExternalLink } from "react-icons/hi";
 import { TiTickOutline } from "react-icons/ti";
+import { BsArrowBarRight } from "react-icons/bs";
 import {
   reset,
   getJob,
@@ -31,6 +32,7 @@ function Job() {
   const [applyModal, setApplyModal] = useState(false);
   const [timestamp, setTimestamp] = useState("");
   const [inputMessage, setInputMessage] = useState("");
+  const [isOwner, setIsOwner] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
 
@@ -67,6 +69,9 @@ function Job() {
       if (user?.candidate?.applications?.filter((e) => e === id).length !== 0) {
         // already applied
         setApplied(true);
+      }
+      if (user?._id === job?.user?._id) {
+        setIsOwner(true);
       }
     }
 
@@ -131,7 +136,21 @@ function Job() {
   return (
     <div className="flex justify-center  items-center  text-white min-w-screen min-h-screen md:w-1/2 lg:w-1/3 mx-auto shadow-lg">
       <main className=" flex flex-col  w-full min-h-screen  text-textBlack">
-        <section className="block mx-3 bg-secondaryL rounded-3xl my-3 mt-8 p-4">
+        {isOwner && job?.numberOfApplicants !== 0 && (
+          <section className=" bg-secondary my-3 mt-8  flex flex-row justify-between">
+            <div className="font-semibold px-2 py-3 flex justify-center items-center">
+              {job.numberOfApplicants} candidates have applied to this job
+            </div>
+            <Link
+              to={`/job/${id}/applicants`}
+              className="flex flex-row justify-center items-center bg-accent p-3 text-white font-bold cursor-pointer md:hover:bg-accentD"
+            >
+              <div className="mr-3">check </div> <BsArrowBarRight size="20px" />
+            </Link>
+          </section>
+        )}
+
+        <section className="block mx-3 bg-secondaryL rounded-3xl my-3 mt-8 p-4 ">
           <div className="font-bold text-2xl">{job.title}</div>
           <div className="text-black/75 mt-2">
             {company ? (

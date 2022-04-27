@@ -7,6 +7,7 @@ const {
   deleteJob,
   getAllJobs,
   applyJob,
+  getJobWithApplicants,
 } = require("../controllers/jobController");
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router
   .put(protect, updateJob);
 
 router.route("/:id/apply").put(protect, applyJob);
+router.route("/:id/applicants").get(protect, getJobWithApplicants);
 
 module.exports = router;

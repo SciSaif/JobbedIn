@@ -400,7 +400,7 @@ function Candidate() {
           </div>
         </div>
       </section>
-      <section className="w-full  mt-2 md:rounded-xl overflow-hidden  bg-secondaryL mb-5">
+      <section className="w-full  mt-2 md:rounded-xl overflow-hidden  bg-secondaryL pb-7">
         <div className="w-full border-t-2 border-white relative  text-black py-5 px-5 ">
           <div className="flex justify-between mb-3">
             <h2 className="font-bold text-2xl text-textBlack">Skills</h2>
@@ -487,6 +487,15 @@ function Candidate() {
           </div>
         </div>
       </section>
+
+      {/* {isCandidate && (
+        <section className="w-full  mt-2 md:rounded-xl overflow-hidden  bg-secondaryL  text-textBlack px-5 pt-7 pb-10">
+          <div className="font-semibold">You have applied to 3 Jobs</div>
+          <Link to="/" className="underline text-[#3db4fe]">
+            List of jobs that you have applied to{" "}
+          </Link>
+        </section>
+      )} */}
 
       {photoState && (
         <ProfilePicEdit
