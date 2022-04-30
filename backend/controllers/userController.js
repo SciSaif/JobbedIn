@@ -157,8 +157,16 @@ const refreshUser = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
-  // @todo remove password form user
-  res.status(200).json(user);
+  res.status(200).json({
+    _id: user.id,
+    name: user.name,
+    email: user.email,
+    mobileNumber: user.mobileNumber,
+    designation: user.designation,
+    profilePic: user.profilePic,
+    candidate: user.candidate,
+    token: generateToken(user._id),
+  });
 });
 
 // @desc Get user details by id

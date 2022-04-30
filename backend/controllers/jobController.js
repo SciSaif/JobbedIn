@@ -245,19 +245,24 @@ const applyJob = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Already applied to job");
   }
+  let updatedJob;
 
-  const updatedJob = await Job.findByIdAndUpdate(
-    req.params.id,
-    { $push: { applicants: user._id }, $inc: { numberOfApplicants: 1 } },
-    {
-      new: true, //if not already there then create it
-    }
-  );
+  try {
+    updatedJob = await Job.findByIdAndUpdate(
+      req.params.id,
+      { $push: { applicants: user._id }, $inc: { numberOfApplicants: 1 } },
+      {
+        new: true, //if not already there then create it
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
 
   const updatedCandidate = await Candidate.findByIdAndUpdate(
     candidate._id,
     {
-      $push: { applications: req.params.id },
+      $push: { applications: job._id },
     },
     {
       new: true, //if not already there then create it

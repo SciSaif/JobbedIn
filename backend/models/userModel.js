@@ -13,6 +13,7 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: [true, "Please add an email"],
+      unique: true,
     },
     password: {
       type: String,
@@ -29,6 +30,7 @@ const userSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "Candidate",
+      unique: true,
     },
     verified: Boolean,
     isAdmin: {

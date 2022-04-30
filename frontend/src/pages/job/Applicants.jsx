@@ -86,7 +86,10 @@ export const Applicants = () => {
         </div>
         {job?.applicants?.length > 0 ? (
           job.applicants.map((applicant) => (
-            <div className=" flex flex-row mb-3 border-b border-black/20 forLastChild">
+            <div
+              className=" flex flex-row mb-3 border-b border-black/20 forLastChild"
+              key={applicant._id}
+            >
               <Link
                 to={`/candidate/${applicant._id}`}
                 className="min-w-[56px] h-[56px] border-white border-2 rounded-full md:cursor-pointer overflow-hidden"

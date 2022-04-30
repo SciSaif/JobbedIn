@@ -1,6 +1,9 @@
 const errorHandler = (err, req, res, next) => {
-  const statusCode = res.statusCode ? res.statusCode : 500;
-  console.log(err.message);
+  let statusCode = res.statusCode ? res.statusCode : 500;
+  if (statusCode == 200) {
+    statusCode = 500;
+  }
+  console.log("errros in middleware: ", err.message);
   res.status(statusCode);
   res.json({
     message: err.message,

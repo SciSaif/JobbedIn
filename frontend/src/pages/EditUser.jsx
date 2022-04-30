@@ -5,6 +5,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUser, reset } from "../features/user/userSlice";
 import { refresh } from "../features/auth/authSlice";
+import { useSnackbar } from "notistack";
 import InputError from "../components/InputError";
 
 function EditUser() {
@@ -13,6 +14,7 @@ function EditUser() {
   const [inputMessage, setInputMessage] = useState(null);
   const { user } = useSelector((state) => state.auth);
   const { isSuccess, isError, message } = useSelector((state) => state.user);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -30,10 +32,16 @@ function EditUser() {
 
     if (isSuccess) {
       dispatch(refresh(formData));
-      navigate(`/user/${user._id}`);
+      enqueueSnackbar("Profile edited successfully!", {
+        variant: "success",
+      });
+      navigate(`/`);
+      dispatch(reset());
     }
 
-    return () => {};
+    return () => {
+      dispatch(reset());
+    };
   }, [isSuccess, isError, message]);
 
   useEffect(() => {

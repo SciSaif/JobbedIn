@@ -14,7 +14,6 @@ router.get("/verify/:userId/:uniqueString", verifyEmail);
 router.get("/verified", verifiedEmail);
 
 //forgot password routes
-console.log("pr");
 router.post("/passwordReset", passwordReset);
 router.post("/executeResetPassword", executeResetPassword);
 
