@@ -80,7 +80,7 @@ const sendVerificationEmail = asyncHandler(async ({ _id, email }, res) => {
       });
     } else if (info.rejected) {
       res.status(400);
-      throw new Error("Failed to send mail");
+      throw new Error("Failed to send mail2");
     }
   } else {
     res.status(400);
@@ -117,7 +117,6 @@ const verifyEmail = asyncHandler(async (req, res) => {
         //string match
 
         await User.updateOne({ _id: userId }, { verified: true });
-        console.log("rf");
         await UserVerification.deleteOne({ userId });
         res.sendFile(path.join(__dirname, "./../views/verified.html"));
       } else {

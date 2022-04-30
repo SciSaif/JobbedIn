@@ -28,7 +28,6 @@ const userSchema = mongoose.Schema(
     },
     candidate: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: "Candidate",
       unique: true,
     },

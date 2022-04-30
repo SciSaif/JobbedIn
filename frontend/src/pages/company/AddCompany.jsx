@@ -131,7 +131,7 @@ function AddCompany() {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setPreviewSource(reader.result);
-      // setFormData((prevData) => ({ ...prevData, logo: reader.result }));
+      setFormData((prevData) => ({ ...prevData, logo: reader.result }));
     };
   };
 

@@ -33,6 +33,7 @@ const updateCandidate = asyncHandler(async (req, res) => {
   const item = await Candidate.findById(req.user.candidate);
 
   if (type === "about") {
+    console.log(req.user);
     updatedCandidate = await Candidate.findByIdAndUpdate(
       req.user.candidate,
       { about: req.body.data },

@@ -10,7 +10,6 @@ const { cloudinary } = require("../utils/cloudinary");
 // @route POST /api/company
 // @access Private
 const addCompany = asyncHandler(async (req, res) => {
-  // console.log("p");
   let {
     name,
     website,
@@ -31,19 +30,22 @@ const addCompany = asyncHandler(async (req, res) => {
 
   if (req.user.designation !== "employer") {
     res.status(400);
-    throw new Error("User is not an employer");
+    throw new Error("User is not an employer2");
   }
 
-  const fileStr = logo;
-  const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
-    upload_preset: "JobbedIn_company",
-  });
+  if (logo) {
+    const fileStr = logo;
+    let uploadedResponse;
+    uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+      upload_preset: "JobbedIn_company",
+    });
 
-  if (uploadedResponse && uploadedResponse.public_id) {
-    logo = uploadedResponse.public_id;
-  } else {
-    req.statusCode(400);
-    throw new Error("Failed to upload LOGO");
+    if (uploadedResponse && uploadedResponse.public_id) {
+      logo = uploadedResponse.public_id;
+    } else {
+      res.status(400);
+      throw new Error("Failed to upload LOGO");
+    }
   }
 
   const company = await Company.create({
@@ -59,7 +61,7 @@ const addCompany = asyncHandler(async (req, res) => {
   });
 
   if (company) {
-    // console.log(company);
+    console.log(company);
     res.status(201).json({
       _id: company._id,
       name: company.name,

@@ -179,7 +179,7 @@ function Candidate() {
             className="w-[100px] h-[100px] border-white border-2 rounded-full absolute top-[-50px] left-1/2 translate-x-[-50px] z-7  overflow-hidden md:cursor-pointer"
             onClick={togglePhoto}
           >
-            {/* {isLoadingUser && onAction === "editPic" && <SpinnerC />} */}
+            {isLoadingUser && onAction === "editPic" && <SpinnerC />}
 
             {user?.profilePic ? (
               <Image cloudName="duqfwygaf" publicId={user?.profilePic}>

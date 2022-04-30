@@ -7,9 +7,9 @@ const User = require("../models/userModel");
 const Job = require("../models/jobModel");
 const Company = require("../models/companyModel");
 const Candidate = require("../models/candidateModel");
+const UserVerification = require("../models/UserVerification");
 
 const { cloudinary } = require("../utils/cloudinary");
-
 const { sendVerificationEmail } = require("./verifyEmailController");
 
 // @desc Register a user
@@ -29,12 +29,19 @@ const registerUser = asyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email: email });
 
   if (userExists) {
-    res.status(400);
-    throw new Error("User already exists");
+    // if user exists but is not verified yet then delete the UserVerification model, user, and candidate associated with this userid
+    if (userExists.verified === false) {
+      await User.findByIdAndDelete(userExists._id);
+      await Candidate.findOneAndDelete({ email: email });
+      await UserVerification.findOneAndDelete({ userId: userExists._id });
+    } else {
+      res.status(400);
+      throw new Error("User already exists");
+    }
   }
 
   let candidate;
-  if (designation === "candidate") {
+  if (designation == "candidate") {
     candidate = await Candidate.create({
       name,
       email,
@@ -47,7 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
     });
   }
 
-  if (!candidate) {
+  if (designation == "candidate" && !candidate) {
     res.status(400);
     throw new Error("Invalid candidate data");
   }
@@ -64,7 +71,7 @@ const registerUser = asyncHandler(async (req, res) => {
     mobileNumber,
     designation,
     profilePic: "",
-    candidate: candidate._id,
+    candidate: candidate?._id ?? null,
     verified: false,
   });
 
