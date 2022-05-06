@@ -256,6 +256,8 @@ const deleteUser = asyncHandler(async (req, res) => {
     await Company.deleteMany({ postedBy: user._id });
     if (user.designation === "candidate") {
       await Candidate.findByIdAndDelete(user.candidate);
+      await Job.updateMany({}, { $pull: { applicants: user._id } });
+      await Job.updateMany({}, { $pull: { applicants: user._id } });
     }
     await user.remove();
     res.status(200).json({ success: true, type: "deleteUser" });

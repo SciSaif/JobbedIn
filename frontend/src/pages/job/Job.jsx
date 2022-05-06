@@ -18,7 +18,7 @@ import {
   reset as resetCompany,
   getCompany,
 } from "../../features/companies/companiesSlice";
-import { refreshUser } from "../../features/auth/authSlice";
+import { refreshUser, reset as resetUser } from "../../features/auth/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
@@ -39,7 +39,11 @@ function Job() {
   const { job, isLoading, isSuccess, isError, message, onAction } = useSelector(
     (state) => state.jobs
   );
-  const { user } = useSelector((state) => state.auth);
+  const {
+    user,
+    isSuccess: isSuccessUser,
+    onAction: onActionUser,
+  } = useSelector((state) => state.auth);
 
   const {
     company,
@@ -84,6 +88,10 @@ function Job() {
       dispatch(refreshUser());
     }
 
+    if (isSuccessUser && onActionUser === "refreshUser") {
+      dispatch(reset());
+    }
+
     if (isError && onAction === "applyJob") {
       enqueueSnackbar(message, {
         variant: "error",
@@ -105,6 +113,8 @@ function Job() {
     isLoading,
     isErrorCompany,
     isSuccessCompany,
+    isSuccessUser,
+    onActionUser,
     onAction,
   ]);
 
