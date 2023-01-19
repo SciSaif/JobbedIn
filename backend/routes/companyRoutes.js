@@ -15,11 +15,13 @@ const { protect } = require("../middlewares/authMiddleware");
 
 router.route("/").post(protect, addCompany).get(getCompaniesByUser);
 router.route("/all").get(getAllCompanies);
+
 router
   .route("/:id")
   .get(getCompanyById)
   .delete(protect, deleteCompany)
-  .put(protect, updateCompany);
+  .put(protect, updateCompany)
+  .post(protect, addCompany);
 
 router.route("/:id/jobs").get(getAllJobsByCompany);
 router.route("/:id/updateLogo").put(protect, updateCompanyLogo);

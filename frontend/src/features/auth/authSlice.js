@@ -94,6 +94,7 @@ export const authSlice = createSlice({
       localStorage.setItem("user", JSON.stringify(state.user));
     },
   },
+
   //since we are dealing with async stuff we need to handle them here
   extraReducers: (builder) => {
     builder
