@@ -3,7 +3,7 @@ A Job portal with interfaces for both employers and candidates
 
 
 A job portal. <br>
-Demo: https://jobbedin.herokuapp.com/
+Demo: https://jobbedin.up.railway.app/
 
 
 A Job portal website with interface for both employers and candidates. 
