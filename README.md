@@ -32,4 +32,4 @@ brcyptjs
 jsonwebtoken
 nodemailer
 
-I have learned a lot of MERN concepts through this project. 
+I have learned a lot of MERN concepts through this project. :)
